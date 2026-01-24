@@ -1,3 +1,5 @@
+import { authContext } from "@/lib/ContextAPI/authContext";
+import { useContext } from "react";
 
 
 
@@ -96,10 +98,10 @@ class ApiServices{
 &populate[optionGroups][populate][options]=true
 &populate[vendor][populate]=true
 &populate[category][populate]=true
-&populate[reviews][populate]=true`, {
+&populate[reviews][populate]=true
+&populate[businessType][populate]=true`, {
             method: 'get'
         }).then(res => res.json());
-        console.log(response.data[0]);
         return response.data[0];
     }
 
@@ -117,6 +119,169 @@ class ApiServices{
         } else {
             return data;
         }
+    }
+
+    async login(userData: any){
+        const response = await fetch(`${this.baseUrl}auth/login`,{
+            method: 'POST',
+            headers: {
+                'content-type' : 'application/json'
+            },
+            body: JSON.stringify(userData),
+        });
+        const data= await response.json();
+        if(response.ok){
+            return data;
+            console.log(data);
+            
+        } else {
+            return data.error;
+        }
+    }
+
+    async cartAdd(cartData: any){
+        const raw = localStorage.getItem("user");
+
+        let token: string | null = raw;
+
+        // If it's a JSON string like:  "eyJ...."
+        if (token && token.trim().startsWith('"')) {
+            token = JSON.parse(token); // removes the quotes
+        }
+        const response = await fetch(`${this.baseUrl}carts/add-item`,{
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+                ...(token ? { Authorization: `Bearer ${token}` } : {}),
+            },
+            body: JSON.stringify(cartData)
+        });
+        const data = await response.json();
+    }
+
+    async cartUpdate(itemId: number){
+        const raw = localStorage.getItem("user");
+        let token: string|null = raw;
+        if(token && token.trim().startsWith('"')){
+            token = JSON.parse(token);
+        };
+        
+        const response = await fetch(`${this.baseUrl}carts/update-item`,{
+            method: 'PUT',
+            headers: {
+                'content-type': 'application/json',
+                ...(token ? {Authorization: `Bearer: ${token}`} : {})
+            },
+        })
+    }
+
+    async userProfile(){
+        const raw = localStorage.getItem("user");
+        let token: string|null = raw;
+        if(token && token.trim().startsWith('"')){
+            token = JSON.parse(token)
+        }
+        const response = await fetch(`${this.baseUrl}me?&populate[image][populate]=true`,{
+            headers: {
+                'content-type': 'application/json',
+                ...(token ? { Authorization: `Bearer ${token}` }: {})
+            }
+        });
+        const data = await response.json();
+        const data2 = await data.user;
+        
+        return data2;
+    }
+
+    async addItemToCart(itemDetails: any){
+        const raw = localStorage.getItem("user");
+        let token: string|null = raw;
+        if(token && token.trim().startsWith('"')){
+            token = JSON.parse(token);
+        };
+        const response = await fetch(`${this.baseUrl}carts/add-item`,{
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+                ...(token ? {Authorization: `Bearer ${token}`} : {}),
+            },
+            body: JSON.stringify(itemDetails)
+        });
+        const data = await response.json();
+        return data;
+    }
+
+    async updateItemsInCart(items: any){
+        const raw = localStorage.getItem("user");
+        let token: string|null = raw;
+        if(token && token.trim().startsWith('"')){
+            token = JSON.parse(token);
+        }
+        const response = await fetch(`${this.baseUrl}carts/update-item`, {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+                ...(token ? {Authorization: `Bearer ${token}`} : {})
+            },
+            body: JSON.stringify(items)
+        });
+        const data = await response.json();
+        console.log('Increase', data);
+        return data;
+    }
+
+    async getCartItems(businessId: number){
+        const raw = localStorage.getItem("user");
+        let token: string|null = raw;
+        if(token && token.trim().startsWith('"')){
+            token= JSON.parse(token);
+        }
+        const response = await fetch(`${this.baseUrl}carts/me?businessTypeId=1`,{
+            headers: {
+                'content-type': 'application/json',
+                ...(token ? {Authorization: `Bearer ${token}`} : {})
+            }
+        });
+        const data = await response.json();
+        return data.data;
+    }
+
+    async removeItemFromCart(cartItemId: number){
+        const raw = localStorage.getItem("user");
+        let token: string|null = raw;
+        if(token && token.trim().startsWith('"')){
+            token = JSON.parse(token);
+        }
+        const response = await fetch(`${this.baseUrl}carts/remove-item`,{
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+                ...(token ? {Authorization: `Bearer ${token}`} : {})
+            },
+            body: JSON.stringify({cartItemId})
+        });
+        const data = await response.json();
+        console.log(data);
+        return data;
+    }
+
+    async applyCoupon(couponData){
+        const raw = localStorage.getItem("user");
+        let token: string|null = raw;
+        if(token && token.trim().startsWith('"')){
+            token = JSON.parse(token);
+        }
+        const response = await fetch(`${this.baseUrl}carts/apply-coupon`, {
+            method: 'POST',
+            headers:{
+                'content-type': 'application/json',
+                ...(token ? {Authorization: `Bearer ${token}`} : {})
+            },
+            body: JSON.stringify(couponData)
+        });
+        const data = await response.json();
+        console.log('Coupon Response:', data);
+        return data;
     }
 
     async currency(){

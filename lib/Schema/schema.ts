@@ -30,3 +30,12 @@ export const registerSchema = zod.object({
         .nonempty("Gender must be selected")
         .regex(/^(male|female)$/),
 }).refine((data) => data.password === data.rePassword, {message: "Passwords don't match", path: ['rePassword']});
+
+
+export const loginSchema = zod.object({
+    email: zod.string()
+        .nonempty("Email is required")
+        .regex(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, "Invalid email address"),
+    password: zod.string()
+        .nonempty("Password is required")
+})

@@ -12,7 +12,7 @@ const cartSlice = createSlice({
         },
 
         addToCart: (state, action) => {
-            const { id, name, quantity, variantName, price, deliveryFee, vendorName } = action.payload;
+            const { id, name, quantity, variantName, price, deliveryFee, vendorName, businesstype, variantId, selectedOptions } = action.payload;
             const existingItem = state.find((item) => item.id === id);
             const sameVendor = state.find((item) => item.vendorName != vendorName);
             if(sameVendor){
@@ -20,7 +20,7 @@ const cartSlice = createSlice({
             } else if(existingItem){
                 existingItem.quantity++;
             } else{
-                state.push({id, name, quantity, variantName, price, deliveryFee, vendorName});
+                state.push({id, name, quantity, variantName, price, deliveryFee, vendorName, businesstype, variantId, selectedOptions});
             }
         },
 
