@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
@@ -25,7 +25,7 @@ export default function Register() {
     });
     const [isRegistered, setIsRegistered] = useState(false);
     const [error, setError] = useState("");
-    const router = useRouter();
+    // const router = useRouter();
 
     async function sendData(myData: any){
         const userType = {
