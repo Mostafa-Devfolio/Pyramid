@@ -43,15 +43,21 @@ export default function CartPage() {
   }
 
   async function applyCoupon(couponData){
-    console.log(couponData);
     const coupon = {
       "businessTypeId": cartApi[0]?.product.businessType.id,
       "code" : couponData
     }
     const data = await getClass.applyCoupon(coupon);
     setCouponError(data);
-    console.log(data);
-    
+    getCart();
+  }
+
+  async function clearCart(){
+    const clear = {
+      "businessTypeId": cartApi[0]?.product.businessType.id,
+    }
+    const data = await getClass.clearCart(clear);
+    getCart();
   }
 
   function decrease(itemId: number){
@@ -85,7 +91,9 @@ export default function CartPage() {
   return (
     <div className="container mx-auto p-4">
       {/* <h1 className='mb-4'>Cart ({cartItems[0].vendorName})</h1> */}
-      {cartItems.length > 0 ? <div className="grid grid-cols-3 gap-3">
+      {cartApi.length > 0 || cartItems.length > 0 ? <div className="">
+      <Button variant={'outline'} className='mb-3' onClick={() => clearCart()}>Clear</Button>
+      <div className="grid grid-cols-3 gap-3">
         <div className="col-span-2">
         {auth ? <div className=""> {cartApi.map((item: any) => {
         return <div key={item.id} className="border rounded-2xl mb-5">
@@ -167,7 +175,7 @@ export default function CartPage() {
                 <input type="text" onChange={(e) => setCouponCode(e.target.value)} name="coupon" id="coupon" className='border rounded-2xl p-4' placeholder='Enter Coupon Code'/>
                 <Button className={`p-7 rounded-2xl`} onClick={() => applyCoupon(couponCode)}>APPLY</Button>
               </div>
-              {(couponError?.data !== null && subAndTotal.discount !== null) && <h4 className='text-green-600 mt-2'>* Coupon is already applied!</h4>}
+              {(couponError?.data !== null && subAndTotal.discount !== 0) && <h4 className='text-green-600 mt-2'>* Coupon is already applied!</h4>}
               {couponError?.data == null && <h4 className='text-red-600 mt-2'>{couponError?.error?.message}</h4>}
               {couponError?.data != null && <h4 className='text-green-600 mt-2'>* Coupon Applied Successfully</h4>}
             </div>
@@ -189,14 +197,19 @@ export default function CartPage() {
               <h3>{subtotal + cartItems[0]?.deliveryFee}</h3>
             </div>
             <Button className='w-full mt-5'><Link href={'/checkout'}>Checkout</Link></Button>
-            <div className="flex gap-2 items-center mt-10">
-              <label className='text-lg text-black' htmlFor="coupon">Coupon Code</label>
-              <input type="text" onChange={(e) => setCouponCode(e.target.value)} name="coupon" id="coupon" className='border rounded-2xl p-4' placeholder='Enter Coupon Code'/>
-              <Button onClick={() => applyCoupon(couponCode)}>APPLY</Button>
-            </div>
+            {/* <div className='mt-10'>
+              <h4 className='text-lg text-black cursor-default'>Coupon Code</h4>
+              <div className="flex gap-2 items-center mt-1">
+                <input type="text" onChange={(e) => setCouponCode(e.target.value)} name="coupon" id="coupon" className='border rounded-2xl p-4' placeholder='Enter Coupon Code'/>
+                <Button className={`p-7 rounded-2xl`} onClick={() => applyCoupon(couponCode)}>APPLY</Button>
+              </div>
+              {(couponError?.data !== null && subAndTotal.discount !== null) && <h4 className='text-green-600 mt-2'>* Coupon is already applied!</h4>}
+              {couponError?.data == null && <h4 className='text-red-600 mt-2'>{couponError?.error?.message}</h4>}
+              {couponError?.data != null && <h4 className='text-green-600 mt-2'>* Coupon Applied Successfully</h4>}
+            </div> */}
           </div>
         </div>}
-      </div> : <div className="flex flex-col justify-center items-center text-gray-950">
+      </div> </div> : <div className="flex flex-col justify-center items-center text-gray-950">
         <h1>No products in your cart</h1>
         <Button className='mt-5' variant={'outline'}><Link href={'//'}>SHOP NOW</Link></Button>
       </div> }

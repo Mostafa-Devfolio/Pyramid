@@ -265,7 +265,7 @@ class ApiServices{
         return data;
     }
 
-    async applyCoupon(couponData){
+    async applyCoupon(couponData: any){
         const raw = localStorage.getItem("user");
         let token: string|null = raw;
         if(token && token.trim().startsWith('"')){
@@ -280,7 +280,175 @@ class ApiServices{
             body: JSON.stringify(couponData)
         });
         const data = await response.json();
-        console.log('Coupon Response:', data);
+        return data;
+    }
+
+    async clearCart(clear: any){
+        const raw = localStorage.getItem("user");
+        let token: string|null = raw;
+        if(token && token.trim().startsWith('"')){
+            token = JSON.parse(token);
+        }
+        const response = await fetch(`${this.baseUrl}carts/clear`, {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+                ...(token ? {Authorization: `Bearer ${token}`} : {})
+            },
+            body: JSON.stringify(clear)
+        });
+        const data = await response.json();
+        console.log(data);
+        return data;
+    }
+
+    async checkout(checkoutData: any){
+        const raw = localStorage.getItem("user");
+        let token: string|null = raw;
+        if(token && token.trim().startsWith('"')){
+            token = JSON.parse(token);
+        }
+        const response = await fetch(`${this.baseUrl}orders/checkout`,{
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+                ...(token ? {Authorization: `Bearer ${token}`} : {})
+            },
+            body: JSON.stringify(checkoutData)
+        });
+        const data = await response.json();
+        console.log(data);
+        return data;
+    }
+
+    async addAddress(userData: any){
+        const raw = localStorage.getItem("user");
+        let token: string|null = raw;
+        if(token && token.trim().startsWith('"')){
+            token = JSON.parse(token);
+        }
+        const response = await fetch(`${this.baseUrl}addresses`,{
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+                ...(token ? {Authorization: `Bearer ${token}`} : {})
+            },
+            body: JSON.stringify({
+            data: userData,
+        }),
+        })
+        const data = await response.json();
+        return data;
+    }
+
+    async getAddress(){
+        const raw = localStorage.getItem("user");
+        let token: string|null = raw;
+        if(token && token.trim().startsWith('"')){
+            token = JSON.parse(token);
+        }
+        const response = await fetch(`${this.baseUrl}addresses`, {
+            method: 'GET',
+            headers: {
+                'content-type': 'application/json',
+                ...(token ? {Authorization: `Bearer ${token}`} : {})
+            }
+        });
+        const data = await response.json();
+        return data.data;
+    }
+
+    async updateAddress(addressId: any, update: any){
+        const raw = localStorage.getItem("user");
+        let token: string|null = raw;
+        if(token && token.trim().startsWith('"')){
+            token = JSON.parse(token);
+        }
+        const response = await fetch(`${this.baseUrl}addresses/${addressId}`, {
+            method: 'PUT',
+            headers: {
+                'content-type': 'application/json',
+                ...(token ? {Authorization: `Bearer ${token}`} : {})
+            },
+            body: JSON.stringify({
+                data: update
+            })
+        });
+        const data = await response.json();
+        console.log(data);
+        return data;
+    }
+
+    async getOrders(){
+        const raw = localStorage.getItem("user");
+        let token: string|null = raw;
+        if(token && token.trim().startsWith('"')){
+            token = JSON.parse(token);
+        }
+        const response = await fetch(`${this.baseUrl}orders`, {
+            method: 'GET',
+            headers: {
+                'content-type': 'application/json',
+                ...(token ? {Authorization: `Bearer ${token}`} : {})
+            }
+        });
+        const data = await response.json();
+        console.log(data);
+        return data.data;
+    }
+
+    async cancelOrder(id: number, cancel: any){
+        const raw = localStorage.getItem("user");
+        let token: string|null = raw;
+        if(token && token.trim().startsWith('"')){
+            token = JSON.parse(token);
+        }
+        const response = await fetch(`${this.baseUrl}orders/${id}`, {
+            method: 'PUT',
+            headers: {
+                'content-type': 'application/json',
+                ...(token ? {Authorization: `Bearer ${token}`} : {})
+            },
+            body: JSON.stringify({data: cancel})
+        });
+        const data = await response.json();
+        return data;
+    }
+
+    async refundRequest(orderId: number, body: any){
+        const raw = localStorage.getItem("user");
+        let token: string|null = raw;
+        if(token && token.trim().startsWith('"')){
+            token = JSON.parse(token);
+        }
+        const response = await fetch(`${this.baseUrl}orders/${orderId}/refund-request`, {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+                ...(token ? {Authorization: `Bearer ${token}`} : {})
+            },
+            body: JSON.stringify({data: body})
+        });
+        const data = await response.json();
+        console.log(data);
+        return data;
+    }
+
+    async returnRequest(orderId: number, body: any){
+        const raw = localStorage.getItem("user");
+        let token: string|null = raw;
+        if(token && token.trim().startsWith('"')){
+            token = JSON.parse(token);
+        }
+        const response = await fetch(`${this.baseUrl}orders/${orderId}/return-request`, {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+                ...(token ? {Authorization: `Bearer ${token}`} : {})
+            },
+            body: JSON.stringify({data: body})
+        })
+        const data = await response.json();
         return data;
     }
 

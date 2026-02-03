@@ -39,3 +39,20 @@ export const loginSchema = zod.object({
     password: zod.string()
         .nonempty("Password is required")
 })
+
+export const addressSchema = zod.object({
+    label: zod.string()
+        .nonempty("You must enter the label"),
+    street: zod.string()
+        .nonempty("street is required"),
+    building: zod.string()
+        .nonempty("Building is required"),
+    floor: zod.string()
+        .nonempty("Floor is required"),
+    apartment: zod.string()
+        .nonempty("Apartment is required"),
+    city: zod.string()
+        .nonempty("City is required"),
+    other: zod.string(),
+    isDefault: zod.boolean()
+})
