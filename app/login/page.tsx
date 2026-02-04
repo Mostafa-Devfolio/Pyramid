@@ -8,9 +8,10 @@ import { useContext, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { ICart } from '../interface/Cart/cart';
+import { loginTo } from './login';
 
 export default function Login() {
-  const {auth, setAuth, userData, setUserData, token, setToken} = useContext(authContext);
+  const {auth, setAuth, userData, setUserData, setToken, token} = useContext(authContext);
   const router = useRouter();
   
 
@@ -26,7 +27,6 @@ export default function Login() {
 
   async function login(myData: any){
     const login = await getClass.login(myData);
-    console.log('login::: ',login);
     
     const items = {
       "businessTypeId": cartItems.map((item:any) => item.businesstype),
@@ -37,10 +37,11 @@ export default function Login() {
     }
     
     if(login.jwt){
-      localStorage.setItem('user', JSON.stringify(login.jwt));
+      // localStorage.setItem('user', JSON.stringify(login.jwt));
+      loginTo(login.jwt);
       setToken(login.jwt);
       setAuth(true);
-      const cart = await getClass.cartAdd(items);
+      const cart = await getClass.cartAdd(items, token);
       console.log(cart);
       router.push('/');
     } else {

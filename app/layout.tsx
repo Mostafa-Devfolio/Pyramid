@@ -11,6 +11,7 @@ import ReduxProviders from "@/redux/ReduxProviders/Providers";
 import CartSave from "./_Components/BusinessHomeComponents/CartSaveComponents/page";
 import { Toaster } from 'react-hot-toast';
 import AuthContextProvider from "@/lib/ContextAPI/authContext";
+import NavBar from "./_Components/Navbar/Navbar";
 
 config.autoAddCss = false;
 
@@ -50,7 +51,7 @@ export default function RootLayout({
               <AuthContextProvider>
                 <ReactQueryProviders>
                   <Toaster />
-                  <Navbar/>
+                  <NavBar/>
                   <div className="w-[90%] mx-auto">
                     {children}
                   </div>

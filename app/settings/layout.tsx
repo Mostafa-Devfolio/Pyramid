@@ -10,9 +10,9 @@ export default function SettingsLayout({children}: {children: React.ReactNode}) 
   const pathName = usePathname();
   
   useEffect(() => {
-  if(pathName == '/'){
+  if(pathName == '/settings'){
     setIsSelected(0);
-  } else if(pathName == '/user-edit'){
+  } else if(pathName == '/settings/user-edit'){
     setIsSelected(1);
   }
 }, []);

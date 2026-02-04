@@ -4,21 +4,24 @@ import { getClass } from '@/services/ApiServices'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { IAddress } from '../interface/addressInterface'
+import { getLoginTo } from '../login/login';
 
 export default function Address() {
   const [addresses, setAddresses] = useState([]);
   
   async function getAddress(){
-    const data = await getClass.getAddress();
+    const token = await getLoginTo();
+    const data = await getClass.getAddress(token);
     console.log(data);
     setAddresses(data);
   }
 
   async function updateAddress(addressId: any) {
+    const token: string = await getLoginTo();
     await Promise.all(
       addresses.map((address: any) =>
         address.isDefault
-          ? getClass.updateAddress(address.id, { isDefault: false })
+          ? getClass.updateAddress(address.id, { isDefault: false }, token)
           : Promise.resolve()
       )
     );
@@ -26,7 +29,7 @@ export default function Address() {
     const updatedDefault = {
       isDefault: true,
     }
-    const data = await getClass.updateAddress(addressId, updatedDefault);
+    const data = await getClass.updateAddress(addressId, updatedDefault, token);
     getAddress();
   }
 

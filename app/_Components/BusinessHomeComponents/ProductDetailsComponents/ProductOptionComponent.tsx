@@ -47,7 +47,7 @@ export default function ProductOptionComponent({products}: optiongroup) {
     },[getCar, products.id, auth])
 
     async function getCartItems() {
-        const getCart = await getClass.getCartItems(1);  
+        const getCart = await getClass.getCartItems(1, token);  
         setGetCar(getCart);
         console.log('cart itemssssssssssssssssssssssssssssssssss:', getCart);
     }
@@ -78,7 +78,7 @@ export default function ProductOptionComponent({products}: optiongroup) {
                 }
             ]
         }
-        const data = await getClass.addItemToCart(cart);
+        const data = await getClass.addItemToCart(cart, token);
         getCartItems();
     }
 

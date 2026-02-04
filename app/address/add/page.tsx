@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button'
 import { addressSchema } from '@/lib/Schema/schema';
 import { getClass } from '@/services/ApiServices';
+import { getLoginTo } from '@/app/login/login';
 
 export default function AddAddress() {
 
@@ -24,8 +25,8 @@ export default function AddAddress() {
     });
 
     async function addAddress(myData: any) {
-        console.log(myData);
-        const data = await getClass.addAddress(myData);
+        const token = await getLoginTo();
+        const data = await getClass.addAddress(myData, token);
         console.log(data);
     }
   return (

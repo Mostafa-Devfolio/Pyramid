@@ -6,12 +6,13 @@ import { useRouter } from 'next/navigation';
 import React, { useContext, useEffect, useState } from 'react'
 import { showToast } from "nextjs-toast-notify";
 import { authContext } from '@/lib/ContextAPI/authContext';
+import { getLoginTo } from '../login/login';
 
 export default function CheckoutPage() {
     const [address, setAddress] = useState([]);
     const [payment, setPayment] = useState("cod")
     const router = useRouter();
-    const {auth} = useContext(authContext);
+    const {auth, token} = useContext(authContext);
 
     async function checkout(){
         console.log(address[0].id);
@@ -22,7 +23,7 @@ export default function CheckoutPage() {
             paymentMethod: payment,
             businessTypeId: 1,
         };
-        const data = await getClass.checkout(body);
+        const data = await getClass.checkout(body, token);
         setTimeout(() => {
             showToast.success("The order is placed successfully!", {
                 duration: 4000,
@@ -38,7 +39,8 @@ export default function CheckoutPage() {
     }
 
     async function getAddress(){
-        const data = await getClass.getAddress();
+        const tokens = await getLoginTo();
+        const data = await getClass.getAddress(tokens);
         setAddress(data);
     }
 

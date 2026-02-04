@@ -9,11 +9,12 @@ import { decreaseQuantity, increaseQuantity, removeFromCart } from '@/redux/slic
 import Link from 'next/link';
 import { getClass } from '@/services/ApiServices';
 import { authContext } from '@/lib/ContextAPI/authContext';
+import { getLoginTo } from '../login/login';
 
 export default function CartPage() {
   const cartItems = useSelector((state: any) => state.cart);
   const [businessId, setBusinessId] = useState(cartItems.businessType);
-  const { auth } = useContext(authContext);
+  const { auth, token } = useContext(authContext);
   const [cartApi, setCartApi] = useState([]);
   const [subAndTotal, setSubAndTotal] = useState([]);
   const [couponCode, setCouponCode] = useState<string|null>(null);
@@ -24,7 +25,7 @@ export default function CartPage() {
 
   async function removeItem(itemId: number){
     if(auth){
-      const data = await getClass.removeItemFromCart(itemId);
+      const data = await getClass.removeItemFromCart(itemId, token);
       getCart();
     } else {
       dispatch(removeFromCart(itemId));
@@ -37,7 +38,7 @@ export default function CartPage() {
         cartItemId: itemId,
         quantity: itemQuantity,
     }
-    const data = await getClass.updateItemsInCart(cart);
+    const data = await getClass.updateItemsInCart(cart, token);
     const data2 = data.data;
     getCart();
   }
@@ -47,7 +48,7 @@ export default function CartPage() {
       "businessTypeId": cartApi[0]?.product.businessType.id,
       "code" : couponData
     }
-    const data = await getClass.applyCoupon(coupon);
+    const data = await getClass.applyCoupon(coupon, token);
     setCouponError(data);
     getCart();
   }
@@ -56,7 +57,7 @@ export default function CartPage() {
     const clear = {
       "businessTypeId": cartApi[0]?.product.businessType.id,
     }
-    const data = await getClass.clearCart(clear);
+    const data = await getClass.clearCart(clear, token);
     getCart();
   }
 
@@ -64,7 +65,7 @@ export default function CartPage() {
     dispatch(decreaseQuantity(itemId));
   }
   async function decreaseQty(itemId: number){
-    const data = await getClass.cartUpdate(itemId)
+    const data = await getClass.cartUpdate(itemId, token)
   }
   function increase(itemId: number){
     dispatch(increaseQuantity(itemId));
@@ -74,19 +75,17 @@ export default function CartPage() {
   
   async function getCart(){
     setBusinessId(cartItems.businessType);
-    const getCart = await getClass.getCartItems(businessId);    
+    const getCart = await getClass.getCartItems(businessId, token); 
     const getItems = getCart.items;
     setCartApi(getItems);
     setSubAndTotal(getCart);
-    console.log('sss',getItems);
-    
   }
 
   useEffect(() => {
     setBusinessId(cartItems.businessType);
     getCart();
     setTimeout(() => getCart(), 3000);
-  },[cartItems.businessType])
+  },[cartItems.businessType]);
   
   return (
     <div className="container mx-auto p-4">

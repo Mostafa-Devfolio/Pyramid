@@ -1,11 +1,12 @@
 "use client"
+import { getLogout } from '@/app/login/login';
 import { authContext } from '@/lib/ContextAPI/authContext';
 import Link from 'next/link'
 import { usePathname } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux'
+import { useSelector } from 'react-redux';
 
-export default function Navbar() {
+export default function NavBar() {
     const pathName = usePathname();
     const cartItem = useSelector((state: any) => state.cart);
     const [hide, setHide] = useState(false);
@@ -13,8 +14,8 @@ export default function Navbar() {
     const [isSelected, setIsSelected] = useState(-1);
 
     function logout(){
+        getLogout();
         setAuth(false);
-        localStorage.removeItem("user");
         setToken(null);
     }
 

@@ -10,14 +10,14 @@ import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 
 export default function Completed() {
     const [saveOrders, setSaveOrders] = useState([]);
-    const {auth} = useContext(authContext);
+    const {auth, token} = useContext(authContext);
     const [open, setOpen] = useState(false);
     const router = useRouter();
     const [orderIDD, setOrderIDD] = useState(0);
     const [dialog, setDialog] = useState(false);
     const [isReturn, setIsReturn] = useState(false);
     async function getOrder(){
-        const data = await getClass.getOrders();
+        const data = await getClass.getOrders(token);
         
         const orders = data.filter((order: any) => order.fulfillmentStatus === "delivered" || order.fulfillmentStatus === "returned" || order.fulfillmentStatus === "processing_return");
         setSaveOrders(orders);
@@ -29,7 +29,7 @@ export default function Completed() {
         "message": "<optional>",
         "reason": "<optional>"
       }
-      const data = await getClass.returnRequest(orderId, body);
+      const data = await getClass.returnRequest(orderId, body, token);
       console.log(data);
     }
 
@@ -38,7 +38,7 @@ export default function Completed() {
         "message": "<optional>",
         "reason": "<optional>"
       }
-      const data = await getClass.refundRequest(orderId, body);
+      const data = await getClass.refundRequest(orderId, body, token);
       console.log(data);
     }
 

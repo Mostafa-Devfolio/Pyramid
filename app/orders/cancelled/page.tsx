@@ -8,10 +8,10 @@ import React, { useContext, useEffect, useState } from 'react'
 
 export default function Cancelled() {
     const [saveOrders, setSaveOrders] = useState([]);
-    const {auth} = useContext(authContext);
+    const {auth, token} = useContext(authContext);
     const router = useRouter();
     async function getOrder(){
-        const data = await getClass.getOrders();
+        const data = await getClass.getOrders(token);
         console.log('data',data);
         
         const orders = data.filter((order: any) => order.fulfillmentStatus === "cancelled" || order.fulfillmentStatus === "returned" || order.fulfillmentStatus === "returned");

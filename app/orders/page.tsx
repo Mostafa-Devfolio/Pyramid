@@ -10,12 +10,12 @@ import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 
 export default function Processing() {
     const [saveOrders, setSaveOrders] = useState([]);
-    const {auth} = useContext(authContext);
+    const {auth, token} = useContext(authContext);
     const [open, setOpen] = useState(false);
     const [orderIDD, setOrderIDD] = useState(0);
     const router = useRouter();
     async function getOrder(){
-        const data = await getClass.getOrders();
+        const data = await getClass.getOrders(token);
         const orders = data.filter((order: any) => order.fulfillmentStatus === "pending" || order.fulfillmentStatus === "confirmed" || order.fulfillmentStatus === "processing" || order.fulfillmentStatus === "out_for_delivery");
         setSaveOrders(orders);
     }
@@ -26,7 +26,7 @@ export default function Processing() {
             fulfillmentStatus: "cancelled",
             paymentStatus: "unpaid",
         }
-        const data = await getClass.cancelOrder(orderId, cancel);
+        const data = await getClass.cancelOrder(orderId, cancel, token);
         getOrder();
     }
 
