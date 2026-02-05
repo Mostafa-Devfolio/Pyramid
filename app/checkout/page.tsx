@@ -57,7 +57,7 @@ export default function CheckoutPage() {
             <div className="grid grid-cols-4 gap-3 mt-3">
                 <div className="col-span-3 border stroke-1 p-5 rounded-2xl">
                     <h2>Address</h2>
-                    <div className='grid grid-cols-3 gap-3 mt-2'>
+                    <div className='grid grid-cols-1 sm:grid-cols-3 gap-3 mt-2'>
                         {address.map((add: any) => (add.isDefault) && <div className='border stroke-1 p-2 rounded-2xl' key={add.id}>
                             <h4 className='truncate'><span className='text-black'>Label:</span> {add.label}</h4>
                             <h4 className='truncate'><span className='text-black'>Floor:</span> {add.floor}</h4>
@@ -79,8 +79,8 @@ export default function CheckoutPage() {
                         </select>
                     </div>
                 </div>
-                <div className="col-span-1"></div>
-                <Button className='cursor-pointer' onClick={() => checkout()}>Place Order</Button>
+                <div className="col-span-1 text-center"></div>
+                <Button className='cursor-pointer w-[150px] sm:w-[500px]' onClick={() => checkout()}>Place Order</Button>
             </div>
         </div>
     )

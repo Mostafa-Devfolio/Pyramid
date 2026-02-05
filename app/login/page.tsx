@@ -44,10 +44,12 @@ export default function Login() {
       const cart = await getClass.cartAdd(items, token);
       console.log(cart);
       router.push('/');
+      console.log('good');
     } else {
       setAuth(false);
       setToken(null);
       setUserData(null);
+      console.log('I will not login');
     }
     
   }
@@ -59,7 +61,7 @@ export default function Login() {
               <h1>Login</h1>
               <input type="email" className='w-[60%] border rounded-2xl p-4 mt-5' placeholder='Enter Your Email Address' {...register("email")} id="" />
               <input type="password" className='w-[60%] border rounded-2xl p-4' placeholder='Enter Your Password' {...register("password")} id="" />
-              <button type="submit" className="bg-black text-white p-2 rounded-2xl w-[60%] my-5">Login</button>
+              <button type="submit" className="bg-black cursor-pointer text-white p-2 rounded-2xl w-[60%] my-5">Login</button>
           </div>
         </form>
     </div>

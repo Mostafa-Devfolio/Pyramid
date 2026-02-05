@@ -20,7 +20,7 @@ export default function HomeVendorsClient({mainType, businessTypee, vendors}: ma
                 {businessTypee == `latest` && <h2 className='my-4'>Latest Vendors</h2>}
                 {businessTypee == `all` && <h2 className='my-4'>All Vendors</h2>}
             </div>
-            <div className={`grid gap-4 lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1`}>
+            <div className={`grid gap-4 md:grid-cols-4 grid-cols-2`}>
                 {vendors.map((vendor: IDiscountedVendorsHome) => {
                     return <HomeVendorsMainComponent key={vendor.id} businessTypee={businessTypee} vendor={vendor}/>
                     })

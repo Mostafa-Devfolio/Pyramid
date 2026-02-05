@@ -30,11 +30,11 @@ export default async function ProductPage({params}: {params: Promise<{product: s
             <i className="fa-solid fa-angle-right"></i>
             <Link href={''}><p>{products.title}</p></Link>
         </div>
-        <div className="grid grid-cols-2 my-5 gap-5">
-            <div className="col-span-1">
+        <div className="grid grid-cols-1 sm:grid-cols-2 my-5 gap-5">
+            <div className="sm:col-span-1">
                 <ProductDetailsImagesComponent products={products} />
             </div>
-            <div className="col-span-1">
+            <div className="sm:col-span-1">
                 <h2 className='cursor-default'>{products.title}</h2>
                 <div className="flex items-center gap-1 text-yellow-500 my-3 border-b pb-5">
                     {[1, 2, 3, 4, 5].map((star) => {

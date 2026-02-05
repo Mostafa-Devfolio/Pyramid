@@ -19,12 +19,12 @@ export default async function Home() {
   
   
   return (
-    <div className="container mx-auto">
-      <div className="m-3">
+    <div className="container mx-auto pt-3">
+      <div className="mx-3 w-[80%] md:w-full mx-auto">
         <CarouselHome typee='main_home'/>
       </div>
       <h2 className="my-5">Choose your type</h2>
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {businessData.map((business:IBusiness) => {
           return <div className="text-center" key={business.id}>
             <Link className="group" href={`${business.slug}`}>

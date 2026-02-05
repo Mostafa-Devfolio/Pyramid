@@ -1,10 +1,23 @@
 "use client"
 import { getLogout } from '@/app/login/login';
 import { authContext } from '@/lib/ContextAPI/authContext';
-import Link from 'next/link'
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import React from "react";
+import {
+  Navbar,
+  NavbarBrand,
+  NavbarContent,
+  NavbarItem,
+  NavbarMenuToggle,
+  NavbarMenu,
+  NavbarMenuItem,
+  Button,
+} from "@heroui/react";
+import Link from 'next/link';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 
 export default function NavBar() {
     const pathName = usePathname();
@@ -27,7 +40,92 @@ export default function NavBar() {
         } else if(pathName == '/contact-us'){
             setIsSelected(2);
         }
-    },[])
+    },[]);
+
+    const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+
+  const menuItems = [
+    {name: "Home", url: "/"},
+    {name: "About", url: "/about"},
+    {name: "Contact US", url: "/contact-us"},
+  ];
+  const router = useRouter();
+
+  return (<>
+    <div className="text-center grid grid-cols-3 border-b block sm:hidden">
+        {/* <div className="w-[50%]"></div> */}
+            <div className=""></div>
+            <h2 className='my-3 text-center'>Pyramids</h2>
+            <div className='flex justify-end pr-3'>
+                <button onClick={() => router.push('/cart')} className="p-2 text-blue-600 rounded">
+                    <FontAwesomeIcon icon={faShoppingCart} />
+                </button>
+            </div>
+    </div>
+    <Navbar className='hidden sm:block' onMenuOpenChange={setIsMenuOpen}>
+      <NavbarContent>
+        <NavbarMenuToggle
+          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+          className="sm:hidden"
+        />
+        <NavbarBrand>
+            <h3 className="font-bold text-inherit"><Link href={'/'}>PYRAMIDS</Link></h3>
+        </NavbarBrand>
+      </NavbarContent>
+
+      <NavbarContent className="hidden sm:flex gap-4 text-4xl" justify="center">
+        <NavbarItem>
+          <Link onClick={() => setIsSelected(0)} className={`p-2 rounded-[40px] ${isSelected == 0 ? 'bg-blue-400 text-black' : ''}`} href={'/'}>Home</Link>
+        </NavbarItem>
+        <NavbarItem>
+            <Link onClick={() => setIsSelected(1)} className={`p-2 rounded-[40px] ${isSelected == 1 ? 'bg-blue-400 text-black' : ''}`} href={'/about'}>About</Link>
+        </NavbarItem>
+        <NavbarItem>
+          <Link onClick={() => setIsSelected(2)} className={`p-2 rounded-[40px] ${isSelected == 2 ? 'bg-blue-400 text-black' : ''}`} href={'/contact-us'}>Contact US</Link>
+        </NavbarItem>
+      </NavbarContent>
+      <NavbarContent justify="end">
+        <Link href={'/cart'}>
+                    <div className='flex gap-10 items-center'>
+                        <div className='relative'>
+                            <h2 className='counter'><i className="fa-solid fa-cart-shopping"></i></h2>
+                            <div className="absolute bg-red-600 w-[22px] h-[22px] rounded-2xl top-[-5px] right-[-10px] text-white flex justify-center items-center">{cartItem.length}</div>
+                        </div>
+                    </div>
+                </Link>
+        {!auth ? <> <NavbarItem className="hidden lg:flex">
+          <Button className='mx-2' as={Link} color="primary" href="/register" variant="flat">
+            Register
+          </Button>
+        </NavbarItem>
+        <NavbarItem>
+          <Button as={Link} color="primary" href="/login" variant="flat">
+            Login
+          </Button>
+        </NavbarItem> </> : <NavbarItem>
+          <Button as={Link} onClick={() => {logout()}} color="primary" href="#" variant="flat">
+            Logout
+          </Button>
+        </NavbarItem>}
+      </NavbarContent>
+      <NavbarMenu>
+        {menuItems.map((item, index) => (
+          <NavbarMenuItem key={`${item}-${index}`}>
+            <Link
+              className="w-full"
+              color={
+                index === 2 ? "primary" : index === menuItems.length - 1 ? "danger" : "foreground"
+              }
+              href={`${item.url}`}
+              size="lg"
+            >
+                {item.name}
+            </Link>
+          </NavbarMenuItem>
+        ))}
+      </NavbarMenu>
+    </Navbar></>
+  );
 
   return (
     <div className="border-b-2 border-gray-300 pt-2">
@@ -54,16 +152,16 @@ export default function NavBar() {
                     </div>
                 </Link>
                 <div className="relative">
-                        <h2 onClick={() => setHide(!hide)}><i className="fa-solid fa-user"></i></h2>
-                        {auth ? <div className={`flex flex-col gap-3 absolute z-1000 top-10 right-0 bg-gray-50 p-5 pr-15 rounded-2xl rounded-tl-none ${hide ? '' : 'hidden'}`}>
-                            <Link href={'/settings'} onClick={() => setHide(false)}><h4 className='cursor-pointer'>Settings</h4></Link>
-                            <Link href={'/orders'} onClick={() => setHide(false)}><h4 className='cursor-pointer'>Orders</h4></Link>
-                            <h4 className='cursor-pointer' onClick={() => {setHide(false); logout()}}>Logout</h4>
-                        </div> : <div className={`flex flex-col gap-3 absolute z-1000 top-10 right-0 bg-gray-50 p-5 pr-15 rounded-2xl rounded-tl-none ${hide ? '' : 'hidden'}`}>
-                            <Link onClick={() => setHide(false)} className='hover:text-green-600' href={'/login'}><h4>Login</h4></Link>
-                            <Link onClick={() => setHide(false)} className='hover:text-green-600' href={'/register'}><h4>Signup</h4></Link>
-                        </div>}
-                    </div>
+                    <h2 onClick={() => setHide(!hide)}><i className="fa-solid fa-user"></i></h2>
+                    {auth ? <div className={`flex flex-col gap-3 absolute z-1000 top-10 right-0 bg-gray-50 p-5 pr-15 rounded-2xl rounded-tl-none ${hide ? '' : 'hidden'}`}>
+                        <Link href={'/settings'} onClick={() => setHide(false)}><h4 className='cursor-pointer'>Settings</h4></Link>
+                        <Link href={'/orders'} onClick={() => setHide(false)}><h4 className='cursor-pointer'>Orders</h4></Link>
+                        <h4 className='cursor-pointer' onClick={() => {setHide(false); logout()}}>Logout</h4>
+                    </div> : <div className={`flex flex-col gap-3 absolute z-1000 top-10 right-0 bg-gray-50 p-5 pr-15 rounded-2xl rounded-tl-none ${hide ? '' : 'hidden'}`}>
+                        <Link onClick={() => setHide(false)} className='hover:text-green-600' href={'/login'}><h4>Login</h4></Link>
+                        <Link onClick={() => setHide(false)} className='hover:text-green-600' href={'/register'}><h4>Signup</h4></Link>
+                    </div>}
+                </div>
             </div>
             {/* <Button onClick={() => dispatch(decreaseOne())}>-</Button>
             <Button onClick={() => dispatch(increase(20))}>+</Button>

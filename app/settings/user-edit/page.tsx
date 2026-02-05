@@ -1,7 +1,7 @@
 "use client";
 import { baseURL2 } from '@/app/page';
+import { Button } from '@/components/ui/button';
 import { authContext } from '@/lib/ContextAPI/authContext';
-import { Button } from '@headlessui/react';
 import React, { useContext, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
 
@@ -85,7 +85,7 @@ export default function UserEdit() {
                   {userEdit && <div className="p-5">
                     <h3>User Edit Information</h3>
                     <div className="pt-5">
-                      <form className='grid grid-cols-2 gap-3' onSubmit={handleSubmit(sendData)} action="">
+                      <form className='grid grid-cols-1 sm:grid-cols-2 gap-3' onSubmit={handleSubmit(sendData)} action="">
                         <input className='border rounded-2xl p-5' placeholder='User Name' {...register("username")} type="text" />
                         <input className='border rounded-2xl p-5' placeholder='Phone number' {...register("phone")} type="tel" />
                         <input className='border rounded-2xl p-5' placeholder='Email' {...register("email")} type="email" />

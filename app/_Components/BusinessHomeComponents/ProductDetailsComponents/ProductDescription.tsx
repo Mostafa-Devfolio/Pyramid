@@ -38,7 +38,7 @@ export default function ProductDescription({products}: products) {
     {selected1 && <div className="my-5">
         {products.reviews.length !== 0 ? <h4>{products.reviews}</h4> : <h4>No reviews yet.</h4>}
     </div> }
-    {selected2 && <div className="my-5 grid grid-cols-4 gap-5">
+    {selected2 && <div className="my-5 grid grid-cols-2 sm:grid-cols-4 gap-5">
         {products.relatedProducts.map((related) => {
             return <div key={related.id} className="text-center">
                 <Link href={`/vendors/${related.vendor.slug}/${related.slug}`}>
@@ -54,7 +54,7 @@ export default function ProductDescription({products}: products) {
     </div>}
     <div className="mt-3">
         <h2 className='my-5'>You Might Also Like</h2>
-        <div className="grid grid-cols-4 gap-5">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-5">
             {products.vendorRandomProducts.map((random: any) => {
                 return <div key={random.id} className="">
                 <Link href={`/vendors/${random.vendor.slug}/${random.slug}`}>

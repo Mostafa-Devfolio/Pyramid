@@ -3,7 +3,7 @@ import React from 'react'
 
 export default function Footer() {
   return (
-    <footer className='bg-black p-5 mt-5 text-xl'>
+    <footer className='bg-black p-5 mt-5 text-xl hidden sm:block'>
         <div className='grid grid-cols-2 container mx-auto'>
           <div className='text-white space-y-4'>
             <h2>PYRAMIDS</h2>

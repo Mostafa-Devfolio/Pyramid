@@ -12,7 +12,7 @@ export default async function Category({params}: {params: Promise<{category: str
   return (
     <div>
       <h3 className='container mx-auto my-3'>{catName.category.name}</h3>
-        <div className={`grid gap-4 lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 container mx-auto`}>
+        <div className={`grid gap-4 lg:grid-cols-4 grid-cols-2 container mx-auto`}>
           {vendors.map((vendor: IVendorsInCategory) => 
               <HomeVendorsMainComponent key={vendor.id} businessTypee={id} vendor={vendor}/>
               )
