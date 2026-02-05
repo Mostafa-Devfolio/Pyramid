@@ -92,15 +92,22 @@ export default function CartPage() {
       {/* <h1 className='mb-4'>Cart ({cartItems[0].vendorName})</h1> */}
       {cartApi.length > 0 || cartItems.length > 0 ? <div className="">
       <Button variant={'outline'} className='mb-3' onClick={() => clearCart()}>Clear</Button>
-      <div className="grid grid-cols-3 gap-3">
-        <div className="col-span-2">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className="sm:col-span-2">
         {auth ? <div className=""> {cartApi.map((item: any) => {
         return <div key={item.id} className="border rounded-2xl mb-5">
-            <div className="grid grid-cols-3">
-              <div className='col-span-1 rounded-2xl'>
-                <Image width={300} height={300} className='rounded-2xl' src={item.product.images == null ? IMAGE_PLACEHOLDER : IMAGE_PLACEHOLDER} alt={item.product.title} />
+            <div className="grid grid-cols-1 sm:grid-cols-3">
+              <div className='sm:col-span-1 rounded-2xl'>
+                <div className="relative w-full aspect-square overflow-hidden rounded-2xl">
+    <Image
+      src={item.image ?? IMAGE_PLACEHOLDER}
+      alt={item.name}
+      fill
+      className="object-cover"
+    />
+  </div>
               </div>
-              <div className="col-span-2 p-3 flex flex-col justify-center gap-4">
+              <div className="sm:col-span-2 p-3 flex flex-col justify-center gap-4">
                 <div className='flex justify-between'>
                   <h2>{item.product.title}</h2>
                   <Button variant={'outline'} onClick={() => removeItem(item.id)}>Delete</Button>
@@ -123,11 +130,18 @@ export default function CartPage() {
           </div>
       })} </div> : <div className=""> {cartItems.map((item: ICart) => {
           return <div key={item.id} className="border rounded-2xl mb-5">
-            <div className="grid grid-cols-3">
-              <div className='col-span-1 rounded-2xl'>
-                <Image width={300} height={300} className='rounded-2xl' src={item.image == null ? IMAGE_PLACEHOLDER : IMAGE_PLACEHOLDER} alt={item.name} />
+            <div className="grid grid-cols-1 sm:grid-cols-3">
+              <div className='sm:col-span-1 rounded-2xl'>
+                <div className="relative w-full aspect-square overflow-hidden rounded-2xl">
+    <Image
+      src={item.image ?? IMAGE_PLACEHOLDER}
+      alt={item.name}
+      fill
+      className="object-cover"
+    />
+  </div>
               </div>
-              <div className="col-span-2 p-3 flex flex-col justify-center gap-4">
+              <div className="sm:col-span-2 p-3 flex flex-col justify-center gap-4">
                 <div className='flex justify-between'>
                   <h2>{item.name}</h2>
                   <Button variant={'outline'} onClick={() => removeItem(item.id)}>Delete</Button>

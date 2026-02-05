@@ -13,9 +13,9 @@ export default function OrderLayout({children}: {children: React.ReactNode}) {
     const router = useRouter();
     
     useEffect(() => {
-        if(!auth){
-            router.push('/login')
-        }
+        // if(!auth){
+        //     router.push('/login')
+        // }
         if(pathname == '/orders'){
             setIsSelected(0);
         } else if(pathname == '/orders/completed'){

@@ -23,7 +23,6 @@ export default function AuthContextProvider({children}: {children: ReactNode}){
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        loginOk();
         async function loginOk(){
             const isOk = await getLoginTo();
             if(isOk){

@@ -11,8 +11,8 @@ type types={
 };
 export default function ReuseBusinessTypes({id, busType}: types) {
   return (<>
-    {id == busType && <div className="container mx-auto">
-        <div>
+    {id == busType && <div className="container mx-auto pt-3">
+        <div className='mx-3 w-[80%] md:w-full mx-auto'>
           <CarouselHome mainType={id} typee='business_home'/>
         </div>
         <div className="">

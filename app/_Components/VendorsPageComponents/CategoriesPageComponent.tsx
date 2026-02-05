@@ -45,7 +45,7 @@ export default function CategoriesPageComponent({categories, coupons, banners, d
     },[whichSubCat, id])
 
     return (<>
-        <div className="col-span-1 border rounded-2xl p-4">
+        <div className="sm:col-span-1 border rounded-2xl p-4">
             <h3 className='mb-2'>Categories</h3>
             {/* <h4 className='text-lg cursor-pointer p-2 hover:bg-gray-200 mb-1 rounded-2xl'>All</h4> */}
             {categories.map((category: IVendorPageCategory, index) => {
@@ -54,7 +54,7 @@ export default function CategoriesPageComponent({categories, coupons, banners, d
                 </div>
             })}
         </div>
-        <div className="col-span-3 px-3">
+        <div className="sm:col-span-3 px-3">
             <div className="mb-3 mx-10">
                 <Carousel className="w-full">
                     <CarouselContent>            
@@ -75,7 +75,7 @@ export default function CategoriesPageComponent({categories, coupons, banners, d
                     </CarouselContent>
                 </Carousel>
             </div>
-            <div className='flex gap-2'>
+            <div className='grid grid-cols-1 sm:flex gap-2'>
                 {coupons.map((coupon: IVendorPageCoupon) => {
                     return <div key={coupon.id}>
                         <div className="p-5 bg-linear-to-r from-purple-500 to-pink-900 rounded-2xl">
@@ -106,7 +106,7 @@ export default function CategoriesPageComponent({categories, coupons, banners, d
             </div>
             <div className="">
                 <h3>Products</h3>
-                <div className='grid grid-cols-3 gap-4 mt-3'>
+                <div className='grid grid-cols-2 sm:grid-cols-3 gap-4 mt-3'>
                     {products.map((product: IVendorPageProduct) => {
                         return <div key={product.id} className="text-center">
                             <Link href={`/vendors/${id}/${product.slug}`}>
@@ -122,7 +122,7 @@ export default function CategoriesPageComponent({categories, coupons, banners, d
                 </div>
             </div>
             <h3 className='my-3'>Discounted Products</h3>
-            <div className="grid grid-cols-4 gap-5">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-5">
                     {discountedProduct.map((discountedProduct: IVendorPageProductDiscounted) => {
                         return <div key={discountedProduct.id} className="text-center">
                             <Image width={500} height={500} className='w-full object-cover rounded-2xl' src={IMAGE_PLACEHOLDER} alt={discountedProduct.title} />
