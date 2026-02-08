@@ -55,9 +55,15 @@ export default function Cancelled() {
                     <h4>
                       Discount: {order.discount} {order.currencySnapshot.code}
                     </h4>
+                    <h4>
+                      Driver Tip: {order.tipAmount} {order.currencySnapshot.code}
+                    </h4>
+                    {order.walletUsedAmount != 0 && <h4>
+                      Wallet Used Amount: {order.walletUsedAmount} {order.currencySnapshot.code}
+                    </h4>}
                     <div className="mt-2 border-b"></div>
                     <h4 className="mt-1">
-                      Total: {order.total} {order.currencySnapshot.code}
+                      Total: {order.amountDue} {order.currencySnapshot.code}
                     </h4>
                   </div>
                   <div className="flex justify-end">
