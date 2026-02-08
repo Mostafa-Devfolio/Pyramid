@@ -8,7 +8,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 
-export default function Processing() {
+export default function Subscription() {
   const [saveOrders, setSaveOrders] = useState([]);
   const { auth, token } = useContext(authContext);
   const [open, setOpen] = useState(false);
@@ -19,10 +19,10 @@ export default function Processing() {
     const orders = data
       .filter(
         (order: any) =>
-          order.fulfillmentStatus === 'pending' ||
+          ((order.fulfillmentStatus === 'pending' ||
           order.fulfillmentStatus === 'confirmed' ||
           order.fulfillmentStatus === 'processing' ||
-          order.fulfillmentStatus === 'out_for_delivery'
+          order.fulfillmentStatus === 'out_for_delivery') && order.subscription?.status === "active")
       )
       .sort((a: any, b: any) => b.id - a.id);
     setSaveOrders(orders);
@@ -55,6 +55,8 @@ export default function Processing() {
                     <h4>Payment Method: {order.paymentMethod}</h4>
                     <h4>Payment Status: {order.paymentStatus}</h4>
                     <h4>Delivery Time: {order.deliveryTimingType}</h4>
+                    <h4>Order Subscription Frequency: {order.subscription.frequency}</h4>
+                    <h4>Order Subscription Next Time: {order.subscription.nextRunAt}</h4>
                   </div>
                   <div className="mt-3 text-green-600">
                     <h3 className="text-black">Summary</h3>
@@ -187,7 +189,7 @@ export default function Processing() {
         </div>
       ) : (
         <div className="text-center">
-          <h1 className="my-3 text-center">No current orders</h1>
+          <h1 className="my-3 text-center">No subscribed orders</h1>
           <Button className="cursor-pointer" onClick={() => router.push('/')}>
             Shop Now
           </Button>

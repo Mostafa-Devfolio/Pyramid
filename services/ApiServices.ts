@@ -285,17 +285,25 @@ class ApiServices {
   }
 
   async checkout(checkoutData: any, token: string) {
-    const response = await fetch(`${this.baseUrl}orders/checkout`, {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      },
-      body: JSON.stringify(checkoutData),
-    });
-    const data = await response.json();
-    console.log(data);
-    return data;
+    try{
+      const response = await fetch(`${this.baseUrl}orders/checkout`, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify(checkoutData),
+      });
+      const data = await response.json();
+      if(!response.ok){
+        throw data;
+      }
+      console.log('success',data);
+      return data;
+    }catch(err){
+      console.log('failed', err);
+      return err;
+    }
   }
 
   async addAddress(userData: any, token: string) {

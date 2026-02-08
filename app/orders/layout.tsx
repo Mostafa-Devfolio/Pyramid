@@ -22,6 +22,8 @@ export default function OrderLayout({ children }: { children: React.ReactNode })
       setIsSelected(1);
     } else if (pathname == '/orders/cancelled') {
       setIsSelected(2);
+    } else if (pathname == '/orders/subscription'){
+      setIsSelected(3);
     }
   }, []);
   return (
@@ -29,7 +31,7 @@ export default function OrderLayout({ children }: { children: React.ReactNode })
       {auth ? (
         <div>
           <h1>Orders</h1>
-          <div className="mx-auto mt-3 grid grid-cols-3">
+          <div className="mx-auto mt-3 grid grid-cols-4">
             <Link
               onClick={() => setIsSelected(0)}
               className={`rounded-xl p-2 text-center hover:bg-gray-300 ${isSelected == 0 ? 'bg-gray-300' : ''}`}
@@ -50,6 +52,13 @@ export default function OrderLayout({ children }: { children: React.ReactNode })
               href={'/orders/cancelled'}
             >
               <h3>Cancelled</h3>
+            </Link>
+            <Link
+              onClick={() => setIsSelected(3)}
+              className={`rounded-xl p-2 text-center hover:bg-gray-300 ${isSelected == 3 ? 'bg-gray-300' : ''}`}
+              href={'/orders/subscription'}
+            >
+              <h3>Subscribed</h3>
             </Link>
           </div>
           <div className="mt-5">{children}</div>
