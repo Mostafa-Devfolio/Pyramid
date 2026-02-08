@@ -1,8 +1,8 @@
-"use client"
+'use client';
 import { authContext } from '@/lib/ContextAPI/authContext';
-import { loginSchema } from '@/lib/Schema/schema'
-import { getClass } from '@/services/ApiServices'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { loginSchema } from '@/lib/Schema/schema';
+import { getClass } from '@/services/ApiServices';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useContext, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -11,11 +11,15 @@ import { ICart } from '../interface/Cart/cart';
 import { loginTo } from './login';
 
 export default function Login() {
-  const {auth, setAuth, userData, setUserData, setToken, token} = useContext(authContext);
+  const { auth, setAuth, userData, setUserData, setToken, token } = useContext(authContext);
   const router = useRouter();
-  
 
-  const {handleSubmit, register, formState:{errors}, reset} = useForm({
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+    reset,
+  } = useForm({
     defaultValues: {
       email: '',
       password: '',
@@ -25,18 +29,18 @@ export default function Login() {
   });
   const cartItems = useSelector((state: any) => state.cart);
 
-  async function login(myData: any){
+  async function login(myData: any) {
     const login = await getClass.login(myData);
-    
+
     const items = {
-      "businessTypeId": cartItems.map((item:any) => item.businesstype),
-      "productId": cartItems.map((item:any) => item.id),
-      "quantity": cartItems.map((item:any) => item.quantity),
-      "variantId": null,
-      "selectedOptions": cartItems.map((item:any) => item.selectedOptions) ?? [],
-    }
-    
-    if(login.jwt){
+      businessTypeId: cartItems.map((item: any) => item.businesstype),
+      productId: cartItems.map((item: any) => item.id),
+      quantity: cartItems.map((item: any) => item.quantity),
+      variantId: null,
+      selectedOptions: cartItems.map((item: any) => item.selectedOptions) ?? [],
+    };
+
+    if (login.jwt) {
       // localStorage.setItem('user', JSON.stringify(login.jwt));
       loginTo(login.jwt);
       setToken(login.jwt);
@@ -51,19 +55,32 @@ export default function Login() {
       setUserData(null);
       console.log('I will not login');
     }
-    
   }
 
   return (
     <div className="container mx-auto my-5">
-        <form onSubmit={handleSubmit(login)}>
-          <div className="border flex flex-col gap-3 rounded-2xl p-5 w-[70%] mx-auto items-center">
-              <h1>Login</h1>
-              <input type="email" className='w-[60%] border rounded-2xl p-4 mt-5' placeholder='Enter Your Email Address' {...register("email")} id="" />
-              <input type="password" className='w-[60%] border rounded-2xl p-4' placeholder='Enter Your Password' {...register("password")} id="" />
-              <button type="submit" className="bg-black cursor-pointer text-white p-2 rounded-2xl w-[60%] my-5">Login</button>
-          </div>
-        </form>
+      <form onSubmit={handleSubmit(login)}>
+        <div className="mx-auto flex w-[70%] flex-col items-center gap-3 rounded-2xl border p-5">
+          <h1>Login</h1>
+          <input
+            type="email"
+            className="mt-5 w-[60%] rounded-2xl border p-4"
+            placeholder="Enter Your Email Address"
+            {...register('email')}
+            id=""
+          />
+          <input
+            type="password"
+            className="w-[60%] rounded-2xl border p-4"
+            placeholder="Enter Your Password"
+            {...register('password')}
+            id=""
+          />
+          <button type="submit" className="my-5 w-[60%] cursor-pointer rounded-2xl bg-black p-2 text-white">
+            Login
+          </button>
+        </div>
+      </form>
     </div>
-  )
+  );
 }

@@ -1,10 +1,10 @@
-"use client"
-import { getLogout } from '@/app/login/login';
+'use client';
+import { getLoginTo, getLogout } from '@/app/login/login';
 import { authContext } from '@/lib/ContextAPI/authContext';
 import { usePathname, useRouter } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import React from "react";
+import React from 'react';
 import {
   Navbar,
   NavbarBrand,
@@ -14,159 +14,271 @@ import {
   NavbarMenu,
   NavbarMenuItem,
   Button,
-} from "@heroui/react";
+} from '@heroui/react';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
+import { getClass } from '@/services/ApiServices';
+import { cartCount } from '@/lib/ContextAPI/cartCount';
 
 export default function NavBar() {
-    const pathName = usePathname();
-    const cartItem = useSelector((state: any) => state.cart);
-    const [hide, setHide] = useState(false);
-    const {auth, setAuth, setToken} = useContext(authContext);
-    const [isSelected, setIsSelected] = useState(-1);
+  const pathName = usePathname();
+  const cartItem = useSelector((state: any) => state.cart);
+  const [hide, setHide] = useState(false);
+  const { auth, setAuth, setToken } = useContext(authContext);
+  const [isSelected, setIsSelected] = useState(-1);
+  const [apiCount, setApiCount] = useState(0);
 
-    function logout(){
-        getLogout();
-        setAuth(false);
-        setToken(null);
+  function logout() {
+    getLogout();
+    setAuth(false);
+    setToken(null);
+  }
+
+  useEffect(() => {
+    if (pathName == '/') {
+      setIsSelected(0);
+    } else if (pathName == '/about') {
+      setIsSelected(1);
+    } else if (pathName == '/contact-us') {
+      setIsSelected(2);
     }
+  }, []);
 
-    useEffect(() => {
-        if(pathName == '/'){
-            setIsSelected(0);
-        } else if(pathName == '/about'){
-            setIsSelected(1);
-        } else if(pathName == '/contact-us'){
-            setIsSelected(2);
-        }
-    },[]);
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const { countt, setCountt } = useContext(cartCount);
+  async function getCartCount() {
+    const tokens = await getLoginTo();
+    const data = await getClass.getCartItems(1, tokens);
+    setApiCount(data.items.length);
+  }
 
-    const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  useEffect(() => {
+    getCartCount();
+  }, [apiCount, setApiCount]);
 
   const menuItems = [
-    {name: "Home", url: "/"},
-    {name: "About", url: "/about"},
-    {name: "Contact US", url: "/contact-us"},
+    { name: 'Home', url: '/' },
+    { name: 'About', url: '/about' },
+    { name: 'Contact US', url: '/contact-us' },
   ];
   const router = useRouter();
 
-  return (<>
-    <div className="text-center grid grid-cols-3 border-b block sm:hidden">
+  return (
+    <>
+      <div className="grid grid-cols-3 border-b text-center sm:hidden">
         {/* <div className="w-[50%]"></div> */}
-            <div className=""></div>
-            <h2 className='my-3 text-center'>Pyramids</h2>
-            <div className='flex justify-end pr-3'>
-                <button onClick={() => router.push('/cart')} className="p-2 text-blue-600 rounded">
-                    <FontAwesomeIcon icon={faShoppingCart} />
-                </button>
+        <div className=""></div>
+        <h2 className="my-3 text-center">Pyramids</h2>
+        <div className="relative flex justify-end pr-3">
+          <button onClick={() => router.push('/cart')} className="rounded p-2 text-blue-600">
+            <FontAwesomeIcon icon={faShoppingCart} />
+          </button>
+          {auth ? (
+            <div className="absolute flex h-[18px] w-[18px] items-center justify-center rounded-4xl bg-gray-200">
+              {countt}
             </div>
-    </div>
-    <Navbar className='hidden sm:block' onMenuOpenChange={setIsMenuOpen}>
-      <NavbarContent>
-        <NavbarMenuToggle
-          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-          className="sm:hidden"
-        />
-        <NavbarBrand>
-            <h3 className="font-bold text-inherit"><Link href={'/'}>PYRAMIDS</Link></h3>
-        </NavbarBrand>
-      </NavbarContent>
+          ) : (
+            <div className="absolute flex h-[18px] w-[18px] items-center justify-center rounded-4xl bg-gray-200">
+              {cartItem.length}
+            </div>
+          )}
+        </div>
+      </div>
+      <Navbar className="hidden sm:flex" onMenuOpenChange={setIsMenuOpen}>
+        <NavbarContent>
+          <NavbarMenuToggle aria-label={isMenuOpen ? 'Close menu' : 'Open menu'} className="sm:hidden" />
+          <NavbarBrand>
+            <h3 className="font-bold text-inherit">
+              <Link href={'/'}>PYRAMIDS</Link>
+            </h3>
+          </NavbarBrand>
+        </NavbarContent>
 
-      <NavbarContent className="hidden sm:flex gap-4 text-4xl" justify="center">
-        <NavbarItem>
-          <Link onClick={() => setIsSelected(0)} className={`p-2 rounded-[40px] ${isSelected == 0 ? 'bg-blue-400 text-black' : ''}`} href={'/'}>Home</Link>
-        </NavbarItem>
-        <NavbarItem>
-            <Link onClick={() => setIsSelected(1)} className={`p-2 rounded-[40px] ${isSelected == 1 ? 'bg-blue-400 text-black' : ''}`} href={'/about'}>About</Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link onClick={() => setIsSelected(2)} className={`p-2 rounded-[40px] ${isSelected == 2 ? 'bg-blue-400 text-black' : ''}`} href={'/contact-us'}>Contact US</Link>
-        </NavbarItem>
-      </NavbarContent>
-      <NavbarContent justify="end">
-        <Link href={'/cart'}>
-                    <div className='flex gap-10 items-center'>
-                        <div className='relative'>
-                            <h2 className='counter'><i className="fa-solid fa-cart-shopping"></i></h2>
-                            <div className="absolute bg-red-600 w-[22px] h-[22px] rounded-2xl top-[-5px] right-[-10px] text-white flex justify-center items-center">{cartItem.length}</div>
-                        </div>
-                    </div>
-                </Link>
-        {!auth ? <> <NavbarItem className="hidden lg:flex">
-          <Button className='mx-2' as={Link} color="primary" href="/register" variant="flat">
-            Register
-          </Button>
-        </NavbarItem>
-        <NavbarItem>
-          <Button as={Link} color="primary" href="/login" variant="flat">
-            Login
-          </Button>
-        </NavbarItem> </> : <NavbarItem>
-          <Button as={Link} onClick={() => {logout()}} color="primary" href="#" variant="flat">
-            Logout
-          </Button>
-        </NavbarItem>}
-      </NavbarContent>
-      <NavbarMenu>
-        {menuItems.map((item, index) => (
-          <NavbarMenuItem key={`${item}-${index}`}>
+        <NavbarContent className="hidden gap-4 text-4xl sm:flex" justify="center">
+          <NavbarItem>
             <Link
-              className="w-full"
-              color={
-                index === 2 ? "primary" : index === menuItems.length - 1 ? "danger" : "foreground"
-              }
-              href={`${item.url}`}
-              size="lg"
+              onClick={() => setIsSelected(0)}
+              className={`rounded-[40px] p-2 ${isSelected == 0 ? 'bg-blue-400 text-black' : ''}`}
+              href={'/'}
             >
-                {item.name}
+              Home
             </Link>
-          </NavbarMenuItem>
-        ))}
-      </NavbarMenu>
-    </Navbar></>
+          </NavbarItem>
+          <NavbarItem>
+            <Link
+              onClick={() => setIsSelected(1)}
+              className={`rounded-[40px] p-2 ${isSelected == 1 ? 'bg-blue-400 text-black' : ''}`}
+              href={'/about'}
+            >
+              About
+            </Link>
+          </NavbarItem>
+          <NavbarItem>
+            <Link
+              onClick={() => setIsSelected(2)}
+              className={`rounded-[40px] p-2 ${isSelected == 2 ? 'bg-blue-400 text-black' : ''}`}
+              href={'/contact-us'}
+            >
+              Contact US
+            </Link>
+          </NavbarItem>
+        </NavbarContent>
+        <NavbarContent justify="end">
+          <Link href={'/cart'}>
+            <div className="flex items-center gap-10">
+              <div className="relative">
+                <h2 className="counter">
+                  <i className="fa-solid fa-cart-shopping"></i>
+                </h2>
+                {auth ? (
+                  <div className="absolute top-[-5px] right-[-10px] flex h-[22px] w-[22px] items-center justify-center rounded-2xl bg-red-600 text-white">
+                    {countt}
+                  </div>
+                ) : (
+                  <div className="absolute top-[-5px] right-[-10px] flex h-[22px] w-[22px] items-center justify-center rounded-2xl bg-red-600 text-white">
+                    {cartItem.length}
+                  </div>
+                )}
+              </div>
+            </div>
+          </Link>
+          {!auth ? (
+            <>
+              {' '}
+              <NavbarItem className="hidden lg:flex">
+                <Button className="mx-2" as={Link} color="primary" href="/register" variant="flat">
+                  Register
+                </Button>
+              </NavbarItem>
+              <NavbarItem>
+                <Button as={Link} color="primary" href="/login" variant="flat">
+                  Login
+                </Button>
+              </NavbarItem>{' '}
+            </>
+          ) : (
+            <NavbarItem>
+              <Button
+                as={Link}
+                onClick={() => {
+                  logout();
+                }}
+                color="primary"
+                href="#"
+                variant="flat"
+              >
+                Logout
+              </Button>
+            </NavbarItem>
+          )}
+        </NavbarContent>
+        <NavbarMenu>
+          {menuItems.map((item, index) => (
+            <NavbarMenuItem key={`${item}-${index}`}>
+              <Link
+                className="w-full"
+                color={index === 2 ? 'primary' : index === menuItems.length - 1 ? 'danger' : 'foreground'}
+                href={`${item.url}`}
+                size="lg"
+              >
+                {item.name}
+              </Link>
+            </NavbarMenuItem>
+          ))}
+        </NavbarMenu>
+      </Navbar>
+    </>
   );
 
   return (
     <div className="border-b-2 border-gray-300 pt-2">
-        <div className="container mx-auto flex justify-between items-center m-4">
-            <h1 className='cursor-default'>PYRAMIDS</h1>
-            <ul className='flex gap-5 bg-black rounded-[40px] text-white p-5 '>
-                <li>
-                    <Link onClick={() => setIsSelected(0)} className={`p-2 rounded-[40px] ${isSelected == 0 ? 'bg-white text-black' : ''}`} href={'/'}>Home</Link>
-                </li>
-                <li>
-                    <Link onClick={() => setIsSelected(1)} className={`p-2 rounded-[40px] ${isSelected == 1 ? 'bg-white text-black' : ''}`} href={'/about'}>About</Link>
-                </li>
-                <li>
-                    <Link onClick={() => setIsSelected(2)} className={`p-2 rounded-[40px] ${isSelected == 2 ? 'bg-white text-black' : ''}`} href={'/contact-us'}>Contact US</Link>
-                </li>
-            </ul>
-            <div className='flex gap-7 items-center'>
-                <Link href={'/cart'}>
-                    <div className='flex gap-10 items-center'>
-                        <div className='relative'>
-                            <h2 className='counter'><i className="fa-solid fa-cart-shopping"></i></h2>
-                            <div className="absolute bg-red-600 w-[22px] h-[22px] rounded-2xl top-[-5px] right-[-10px] text-white flex justify-center items-center">{cartItem.length}</div>
-                        </div>
-                    </div>
-                </Link>
-                <div className="relative">
-                    <h2 onClick={() => setHide(!hide)}><i className="fa-solid fa-user"></i></h2>
-                    {auth ? <div className={`flex flex-col gap-3 absolute z-1000 top-10 right-0 bg-gray-50 p-5 pr-15 rounded-2xl rounded-tl-none ${hide ? '' : 'hidden'}`}>
-                        <Link href={'/settings'} onClick={() => setHide(false)}><h4 className='cursor-pointer'>Settings</h4></Link>
-                        <Link href={'/orders'} onClick={() => setHide(false)}><h4 className='cursor-pointer'>Orders</h4></Link>
-                        <h4 className='cursor-pointer' onClick={() => {setHide(false); logout()}}>Logout</h4>
-                    </div> : <div className={`flex flex-col gap-3 absolute z-1000 top-10 right-0 bg-gray-50 p-5 pr-15 rounded-2xl rounded-tl-none ${hide ? '' : 'hidden'}`}>
-                        <Link onClick={() => setHide(false)} className='hover:text-green-600' href={'/login'}><h4>Login</h4></Link>
-                        <Link onClick={() => setHide(false)} className='hover:text-green-600' href={'/register'}><h4>Signup</h4></Link>
-                    </div>}
+      <div className="container m-4 mx-auto flex items-center justify-between">
+        <h1 className="cursor-default">PYRAMIDS</h1>
+        <ul className="flex gap-5 rounded-[40px] bg-black p-5 text-white">
+          <li>
+            <Link
+              onClick={() => setIsSelected(0)}
+              className={`rounded-[40px] p-2 ${isSelected == 0 ? 'bg-white text-black' : ''}`}
+              href={'/'}
+            >
+              Home
+            </Link>
+          </li>
+          <li>
+            <Link
+              onClick={() => setIsSelected(1)}
+              className={`rounded-[40px] p-2 ${isSelected == 1 ? 'bg-white text-black' : ''}`}
+              href={'/about'}
+            >
+              About
+            </Link>
+          </li>
+          <li>
+            <Link
+              onClick={() => setIsSelected(2)}
+              className={`rounded-[40px] p-2 ${isSelected == 2 ? 'bg-white text-black' : ''}`}
+              href={'/contact-us'}
+            >
+              Contact US
+            </Link>
+          </li>
+        </ul>
+        <div className="flex items-center gap-7">
+          <Link href={'/cart'}>
+            <div className="flex items-center gap-10">
+              <div className="relative">
+                <h2 className="counter">
+                  <i className="fa-solid fa-cart-shopping"></i>
+                </h2>
+                <div className="absolute top-[-5px] right-[-10px] flex h-[22px] w-[22px] items-center justify-center rounded-2xl bg-red-600 text-white">
+                  {cartItem.length}
                 </div>
+              </div>
             </div>
-            {/* <Button onClick={() => dispatch(decreaseOne())}>-</Button>
+          </Link>
+          <div className="relative">
+            <h2 onClick={() => setHide(!hide)}>
+              <i className="fa-solid fa-user"></i>
+            </h2>
+            {auth ? (
+              <div
+                className={`absolute top-10 right-0 z-1000 flex flex-col gap-3 rounded-2xl rounded-tl-none bg-gray-50 p-5 pr-15 ${hide ? '' : 'hidden'}`}
+              >
+                <Link href={'/settings'} onClick={() => setHide(false)}>
+                  <h4 className="cursor-pointer">Settings</h4>
+                </Link>
+                <Link href={'/orders'} onClick={() => setHide(false)}>
+                  <h4 className="cursor-pointer">Orders</h4>
+                </Link>
+                <h4
+                  className="cursor-pointer"
+                  onClick={() => {
+                    setHide(false);
+                    logout();
+                  }}
+                >
+                  Logout
+                </h4>
+              </div>
+            ) : (
+              <div
+                className={`absolute top-10 right-0 z-1000 flex flex-col gap-3 rounded-2xl rounded-tl-none bg-gray-50 p-5 pr-15 ${hide ? '' : 'hidden'}`}
+              >
+                <Link onClick={() => setHide(false)} className="hover:text-green-600" href={'/login'}>
+                  <h4>Login</h4>
+                </Link>
+                <Link onClick={() => setHide(false)} className="hover:text-green-600" href={'/register'}>
+                  <h4>Signup</h4>
+                </Link>
+              </div>
+            )}
+          </div>
+        </div>
+        {/* <Button onClick={() => dispatch(decreaseOne())}>-</Button>
             <Button onClick={() => dispatch(increase(20))}>+</Button>
             <Button onClick={() => dispatch(increaseOne())}>+</Button> */}
-        </div>
+      </div>
     </div>
-  )
+  );
 }

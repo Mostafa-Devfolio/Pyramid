@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 @plugin '../hero.ts';
 /* Note: You may need to change the path to fit your project structure */
 @source '../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
@@ -10,33 +10,32 @@
 }
 
 .no-scrollbar {
-  -ms-overflow-style: none;  /* IE & Edge */
-  scrollbar-width: none;     /* Firefox */
+  -ms-overflow-style: none; /* IE & Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
-@layer base{
-  h1{
-    @apply sm:text-3xl font-bold lg:text-4xl font-bold;
+@layer base {
+  h1 {
+    @apply font-bold sm:text-3xl lg:text-4xl;
   }
-  h2{
-    @apply sm:text-2xl font-bold lg:text-3xl font-bold relative;
+  h2 {
+    @apply relative font-bold sm:text-2xl lg:text-3xl;
   }
-  h3{
-    @apply sm:text-xl font-bold lg:text-2xl font-bold;
+  h3 {
+    @apply font-bold sm:text-xl lg:text-2xl;
   }
-  h4{
-    @apply sm:text-sm font-bold lg:text-xl font-bold;
+  h4 {
+    @apply font-bold sm:text-sm lg:text-xl;
   }
-  h5{
-    @apply sm:text-xs font-bold lg:text-sm font-bold;
+  h5 {
+    @apply font-bold sm:text-xs lg:text-sm;
   }
-  h6{
-    @apply sm:text-xs font-bold lg:text-xs font-bold;
+  h6 {
+    @apply font-bold sm:text-xs lg:text-xs;
   }
 }
 
 @theme inline {
-
   --radius-sm: calc(var(--radius) - 4px);
 
   --radius-md: calc(var(--radius) - 2px);
@@ -115,7 +114,6 @@
 }
 
 :root {
-
   --radius: 0.625rem;
 
   --background: oklch(1 0 0);
@@ -182,7 +180,6 @@
 }
 
 .dark {
-
   --background: oklch(0.145 0 0);
 
   --foreground: oklch(0.985 0 0);

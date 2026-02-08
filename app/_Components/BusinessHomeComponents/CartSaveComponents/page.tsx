@@ -11,7 +11,7 @@ export default function CartSave() {
 
   // Load cart on first mount
   useEffect(() => {
-    loadCart().then(cartFromDb => {
+    loadCart().then((cartFromDb) => {
       dispatch(setCart(cartFromDb));
     });
   }, [dispatch]);

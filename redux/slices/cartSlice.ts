@@ -1,59 +1,75 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = [];
 
 const cartSlice = createSlice({
-    name: 'cart',
-    initialState,
-    reducers: {
+  name: 'cart',
+  initialState,
+  reducers: {
+    setCart: (_, action) => {
+      return action.payload;
+    },
 
-        setCart: (_,action) => {
-            return action.payload;
-        },
+    addToCart: (state, action) => {
+      const {
+        id,
+        name,
+        quantity,
+        variantName,
+        price,
+        deliveryFee,
+        vendorName,
+        businesstype,
+        variantId,
+        selectedOptions,
+      } = action.payload;
+      const existingItem = state.find((item) => item.id === id);
+      const sameVendor = state.find((item) => item.vendorName != vendorName);
+      if (sameVendor) {
+        console.log('They are from 2 different vendors please add products from the same vendor');
+      } else if (existingItem) {
+        existingItem.quantity++;
+      } else {
+        state.push({
+          id,
+          name,
+          quantity,
+          variantName,
+          price,
+          deliveryFee,
+          vendorName,
+          businesstype,
+          variantId,
+          selectedOptions,
+        });
+      }
+    },
 
-        addToCart: (state, action) => {
-            const { id, name, quantity, variantName, price, deliveryFee, vendorName, businesstype, variantId, selectedOptions } = action.payload;
-            const existingItem = state.find((item) => item.id === id);
-            const sameVendor = state.find((item) => item.vendorName != vendorName);
-            if(sameVendor){
-                console.log('They are from 2 different vendors please add products from the same vendor');
-            } else if(existingItem){
-                existingItem.quantity++;
-            } else{
-                state.push({id, name, quantity, variantName, price, deliveryFee, vendorName, businesstype, variantId, selectedOptions});
-            }
-        },
+    removeFromCart: (state, action) => {
+      const itemId = action.payload;
+      return state.filter((item) => item.id != itemId);
+    },
 
-        removeFromCart: (state, action) => {
-            const itemId = action.payload;
-            return state.filter((item) => item.id != itemId);
-        },
+    decreaseQuantity: (state, action) => {
+      const itemId = action.payload;
+      const items = state.find((item) => item.id === itemId);
+      if (items.quantity && items.quantity > 1) {
+        items.quantity--;
+      }
+    },
 
-        decreaseQuantity: (state, action) => {
-            const itemId = action.payload;
-            const items = state.find((item) => item.id === itemId);
-            if(items.quantity && items.quantity > 1) {
-                items.quantity--;
-            }
-        },
-
-        increaseQuantity: (state, action) => {
-            const itemId = action.payload;
-            const items = state.find((item) => item.id === itemId);
-            if(items.quantity){
-                items.quantity++;
-            }
-        }
-    }
-})
+    increaseQuantity: (state, action) => {
+      const itemId = action.payload;
+      const items = state.find((item) => item.id === itemId);
+      if (items.quantity) {
+        items.quantity++;
+      }
+    },
+  },
+});
 
 export const { setCart, addToCart, removeFromCart, decreaseQuantity, increaseQuantity } = cartSlice.actions;
 export default cartSlice.reducer;
-
-
-
-
-
 
 // import { createSlice } from "@reduxjs/toolkit"
 

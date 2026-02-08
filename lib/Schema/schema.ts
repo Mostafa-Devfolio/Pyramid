@@ -1,58 +1,51 @@
 import * as zod from 'zod';
 
-
-
-export const registerSchema = zod.object({
-    name: zod.string()
-        .nonempty("Name is required")
-        .min(3, "Name must be at least 3 characters long"),
-    email: zod.string()
-        .nonempty("Email is required")
-        .regex(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, "Invalid email address"),
-    password: zod.string()
-        .nonempty("Password is required")
-        .min(6, "Password must be at least 6 characters long")
-        .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/, "Invalid password format"),
-    rePassword: zod.string()
-        .nonempty("Please re-enter your password"),
-    phoneNumber: zod.string()
-        .nonempty("Please enter your phone number")
-        .min(10, "Phone number must be at least 10 digits")
-        .max(11, "Phone number must be at most 11 digits"),
-    dateOfBirth: zod.coerce.date()
-        .refine((data) => {
-            const birthYear = data.getFullYear();
-            const currentYear = new Date().getFullYear();
-            const age = currentYear - birthYear;
-            return age >= 13;
-        }),
-    gender: zod.string()
-        .nonempty("Gender must be selected")
-        .regex(/^(male|female)$/),
-}).refine((data) => data.password === data.rePassword, {message: "Passwords don't match", path: ['rePassword']});
-
+export const registerSchema = zod
+  .object({
+    name: zod.string().nonempty('Name is required').min(3, 'Name must be at least 3 characters long'),
+    email: zod
+      .string()
+      .nonempty('Email is required')
+      .regex(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, 'Invalid email address'),
+    password: zod
+      .string()
+      .nonempty('Password is required')
+      .min(6, 'Password must be at least 6 characters long')
+      .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/, 'Invalid password format'),
+    rePassword: zod.string().nonempty('Please re-enter your password'),
+    phoneNumber: zod
+      .string()
+      .nonempty('Please enter your phone number')
+      .min(10, 'Phone number must be at least 10 digits')
+      .max(11, 'Phone number must be at most 11 digits'),
+    dateOfBirth: zod.coerce.date().refine((data) => {
+      const birthYear = data.getFullYear();
+      const currentYear = new Date().getFullYear();
+      const age = currentYear - birthYear;
+      return age >= 13;
+    }),
+    gender: zod
+      .string()
+      .nonempty('Gender must be selected')
+      .regex(/^(male|female)$/),
+  })
+  .refine((data) => data.password === data.rePassword, { message: "Passwords don't match", path: ['rePassword'] });
 
 export const loginSchema = zod.object({
-    email: zod.string()
-        .nonempty("Email is required")
-        .regex(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, "Invalid email address"),
-    password: zod.string()
-        .nonempty("Password is required")
-})
+  email: zod
+    .string()
+    .nonempty('Email is required')
+    .regex(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, 'Invalid email address'),
+  password: zod.string().nonempty('Password is required'),
+});
 
 export const addressSchema = zod.object({
-    label: zod.string()
-        .nonempty("You must enter the label"),
-    street: zod.string()
-        .nonempty("street is required"),
-    building: zod.string()
-        .nonempty("Building is required"),
-    floor: zod.string()
-        .nonempty("Floor is required"),
-    apartment: zod.string()
-        .nonempty("Apartment is required"),
-    city: zod.string()
-        .nonempty("City is required"),
-    other: zod.string(),
-    isDefault: zod.boolean()
-})
+  label: zod.string().nonempty('You must enter the label'),
+  street: zod.string().nonempty('street is required'),
+  building: zod.string().nonempty('Building is required'),
+  floor: zod.string().nonempty('Floor is required'),
+  apartment: zod.string().nonempty('Apartment is required'),
+  city: zod.string().nonempty('City is required'),
+  other: zod.string(),
+  isDefault: zod.boolean(),
+});
