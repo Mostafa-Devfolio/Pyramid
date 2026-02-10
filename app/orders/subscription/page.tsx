@@ -40,7 +40,7 @@ export default function Subscription() {
 
   useEffect(() => {
     getOrder();
-  }, []);
+  }, [token]);
   return (
     <div>
       {saveOrders.length > 0 ? (

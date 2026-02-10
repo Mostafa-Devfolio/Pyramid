@@ -150,6 +150,14 @@ class ApiServices {
     }
   }
 
+  async getVendorProduct(vendorId:string, whichSubCat:string) {
+    const response = await fetch(`${this.baseUrl}vendors/${vendorId}/subcategories/${whichSubCat}/products?&populate=*`, {
+      method: 'GET',
+    }).then((res) => res.json());
+    console.log(response);
+    return response;
+  }
+
   async login(userData: any) {
     const response = await fetch(`${this.baseUrl}auth/login`, {
       method: 'POST',
@@ -285,7 +293,7 @@ class ApiServices {
   }
 
   async checkout(checkoutData: any, token: string) {
-    try{
+    try {
       const response = await fetch(`${this.baseUrl}orders/checkout`, {
         method: 'POST',
         headers: {
@@ -295,12 +303,12 @@ class ApiServices {
         body: JSON.stringify(checkoutData),
       });
       const data = await response.json();
-      if(!response.ok){
+      if (!response.ok) {
         throw data;
       }
-      console.log('success',data);
+      console.log('success', data);
       return data;
-    }catch(err){
+    } catch (err) {
       console.log('failed', err);
       return err;
     }
@@ -440,6 +448,73 @@ class ApiServices {
     });
     const data = await response.json();
     console.log(data);
+    return data;
+  }
+
+  async getWalletHistory(token: string) {
+    const response = await fetch(`${this.baseUrl}wallet-transactions`, {
+      method: 'GET',
+      headers: {
+        'content-type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+    });
+    const data = await response.json();
+    console.log(data);
+    return data;
+  }
+
+  async addToWallet(token: string, body: any) {
+    const response = await fetch(`${this.baseUrl}wallet-transactions`, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      body: JSON.stringify({ data: body }),
+    });
+    const data = await response.json();
+    console.log(data);
+    return data;
+  }
+
+  async addWishList(token: string, body: any) {
+    const response = await fetch(`${this.baseUrl}wishlist`, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      body: JSON.stringify({ data: body }),
+    });
+    const data = await response.json();
+    console.log('WishList', data);
+    return data;
+  }
+
+  async getWishList(token: string) {
+    const response = await fetch(`${this.baseUrl}wishlist`, {
+      method: 'GET',
+      headers: {
+        'content-type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+    });
+    const data = await response.json();
+    console.log('GET WishList', data);
+    return data;
+  }
+
+  async removeWishList(token: string, wishlistId: number) {
+    const response = await fetch(`${this.baseUrl}wishlist/${wishlistId}`, {
+      method: 'DELETE',
+      headers: {
+        'content-type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+    });
+    const data = await response.json();
+    console.log();
     return data;
   }
 

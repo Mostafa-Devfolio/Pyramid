@@ -28,7 +28,7 @@ export default function Cancelled() {
 
   useEffect(() => {
     getOrder();
-  }, []);
+  }, [token]);
   return (
     <div>
       {saveOrders.length > 0 ? (

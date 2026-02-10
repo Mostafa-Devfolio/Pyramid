@@ -40,7 +40,7 @@ export default function Processing() {
 
   useEffect(() => {
     getOrder();
-  }, []);
+  }, [token]);
   return (
     <div>
       {saveOrders.length > 0 ? (

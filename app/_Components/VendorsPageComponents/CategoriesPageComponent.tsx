@@ -7,11 +7,14 @@ import { baseURL2 } from '@/app/page';
 import { Button } from '@/components/ui/button';
 import { IMAGE_PLACEHOLDER } from '@/lib/image';
 import Image from 'next/image';
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { IVendorPageProductDiscounted } from '@/app/interface/VendorPage/vendorPageProductsDiscounted';
 import Link from 'next/link';
+import FavoriteButton from '../Icons/FavouriteIcon';
+import { getClass } from '@/services/ApiServices';
+import { authContext } from '@/lib/ContextAPI/authContext';
 
 type Categories = {
   categories: IVendorPageCategory[];
@@ -29,6 +32,8 @@ export default function CategoriesPageComponent({ categories, coupons, banners, 
   const [copy, setCopy] = useState('');
   const [isCouponId, setIsCouponId] = useState<number | null>(null);
   const sectionRef = useRef<HTMLDivElement | null>(null);
+  const { token } = useContext(authContext);
+  const [saveWishList, setSaveWishList] = useState([]);
   const goToSection = () => {
     if (window.matchMedia('(max-width: 640px)').matches) {
       sectionRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -40,15 +45,36 @@ export default function CategoriesPageComponent({ categories, coupons, banners, 
     setTimeout(() => setIsCouponId(null), 3000);
   };
 
-  useEffect(() => {
-    async function vendorPageProducts() {
-      const response = await fetch(`${baseURL2}vendors/${id}/subcategories/${whichSubCat}/products?&populate=*`, {
-        method: 'get',
-      }).then((res) => res.json());
-      setProducts(response.data.products);
-    }
+  async function addToWishList(productId: number) {
+    const body = {
+      productId: productId,
+    };
+    const data = await getClass.addWishList(token, body);
     vendorPageProducts();
-  }, [whichSubCat, id]);
+    console.log(data);
+  }
+
+  async function getWishList() {
+    const data = await getClass.getWishList(token);
+    console.log(data);
+    setSaveWishList(data.data);
+    vendorPageProducts();
+  }
+
+  async function deleteWishList() {
+    const data = await getClass.removeWishList(token, 121);
+    vendorPageProducts();
+  }
+
+  async function vendorPageProducts(){
+    const data = await getClass.getVendorProduct(id, whichSubCat);
+    setProducts(data.data.products);
+  }
+
+  useEffect(() => {
+    getWishList();
+    vendorPageProducts();
+  }, [whichSubCat, id, token]);
 
   return (
     <>
@@ -158,8 +184,10 @@ export default function CategoriesPageComponent({ categories, coupons, banners, 
           <h3>Products</h3>
           <div className="mt-3 grid grid-cols-2 gap-4 sm:grid-cols-3">
             {products.map((product: IVendorPageProduct) => {
+              const data = saveWishList?.some((wish: any) => wish.product.id == product.id);
+              const data2 = saveWishList?.filter((wish: any) => wish.product.id == product.id);
               return (
-                <div key={product.id} className="text-center">
+                <div key={product.id} className="relative text-center">
                   <Link href={`/vendors/${id}/${product.slug}`}>
                     <Image
                       width={500}
@@ -169,6 +197,9 @@ export default function CategoriesPageComponent({ categories, coupons, banners, 
                       alt={product.title}
                     />
                   </Link>
+                  <div className="absolute top-2 right-2">
+                    <FavoriteButton onAdd={() => addToWishList(product.id)} saveWishList={data} saveWishList2={data2} productId={product.id} />
+                  </div>
                   <Link href={`/vendors/${id}/${product.slug}`}>
                     <h4 className="cursor-pointer">{product.title}</h4>
                   </Link>
@@ -188,8 +219,10 @@ export default function CategoriesPageComponent({ categories, coupons, banners, 
         <h3 className="my-3">Discounted Products</h3>
         <div className="grid grid-cols-2 gap-5 sm:grid-cols-4">
           {discountedProduct.map((discountedProduct: IVendorPageProductDiscounted) => {
+            const data = saveWishList?.some((wish: any) => wish.product.id == discountedProduct.id);
+            const data2 = saveWishList?.filter((wish: any) => wish.product.id == discountedProduct.id);
             return (
-              <div key={discountedProduct.id} className="text-center">
+              <div key={discountedProduct.id} className="relative text-center">
                 <Link href={`/vendors/${id}/${discountedProduct.slug}`}>
                   <Image
                     width={500}
@@ -199,6 +232,11 @@ export default function CategoriesPageComponent({ categories, coupons, banners, 
                     alt={discountedProduct.title}
                   />
                 </Link>
+                <div className="absolute top-2 right-2">
+                  <button onClick={() => addToWishList(discountedProduct.id)}>
+                    <FavoriteButton saveWishList={data} saveWishList2={data2} productId={discountedProduct.id} />
+                  </button>
+                </div>
                 <Link href={`/vendors/${id}/${discountedProduct.slug}`}>
                   <h4 className="cursor-pointer">{discountedProduct.title}</h4>
                 </Link>

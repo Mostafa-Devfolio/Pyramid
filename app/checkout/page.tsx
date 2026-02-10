@@ -122,7 +122,7 @@ export default function CheckoutPage() {
   }, [auth]);
 
   return (
-    <div className="my-3">
+    <div className="container mx-auto my-3">
       <h1>Checkout</h1>
       <div className="mt-3 grid grid-cols-4 gap-3">
         <div className="col-span-4 rounded-2xl border stroke-1 p-5">

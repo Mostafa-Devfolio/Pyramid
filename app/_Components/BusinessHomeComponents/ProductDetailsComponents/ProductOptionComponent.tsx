@@ -115,7 +115,7 @@ export default function ProductOptionComponent({ products }: optiongroup) {
       cartItemId: itemId,
       quantity: count,
     };
-    const data = await getClass.updateItemsInCart(cart);
+    const data = await getClass.updateItemsInCart(cart, token);
     getCartItems();
   }
 
@@ -204,7 +204,7 @@ export default function ProductOptionComponent({ products }: optiongroup) {
     setStock(haveVariants.stock);
     setTimeout(() => console.log(getCar), 3000);
     // const cartId = getCar?.items.
-  }, [haveVariants, getCartItems]);
+  }, [haveVariants]);
 
   // Decrease quantity
   function decrease() {

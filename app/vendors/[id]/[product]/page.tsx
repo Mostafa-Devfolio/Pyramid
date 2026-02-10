@@ -1,14 +1,18 @@
 import ProductDescription from '@/app/_Components/BusinessHomeComponents/ProductDetailsComponents/ProductDescription';
 import ProductDetailsImagesComponent from '@/app/_Components/BusinessHomeComponents/ProductDetailsComponents/ProductDetailsImagesComponent';
 import ProductOptionComponent from '@/app/_Components/BusinessHomeComponents/ProductDetailsComponents/ProductOptionComponent';
+import FavoriteButton from '@/app/_Components/Icons/FavouriteIcon';
 import { ICurrency } from '@/app/interface/currency';
 import { IProductDetailsPage } from '@/app/interface/ProductDetailsPage/productDetailsPageInterface';
+import { getLoginTo } from '@/app/login/login';
 import { baseURL, baseURL2 } from '@/app/page';
+import { authContext } from '@/lib/ContextAPI/authContext';
 import { IMAGE_PLACEHOLDER } from '@/lib/image';
 import { getClass } from '@/services/ApiServices';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FaStar, FaStarHalfAlt, FaRegStar } from 'react-icons/fa';
+import ProductWishlistClient from './ProductWishlistClient';
 
 type RatingStarsProps = {
   rating: number; // 0 - 5
@@ -18,6 +22,11 @@ export default async function ProductPage({ params }: { params: Promise<{ produc
 
   const products: IProductDetailsPage = await getClass.productPage(product);
   const currency: ICurrency = await getClass.currency();
+  const token = await getLoginTo();
+  const getWish = await getClass.getWishList(token);
+  const getWishArr = getWish.data;
+  const data = getWishArr?.some((wish: any) => wish.product.id === products.id);
+  const data2 = getWishArr?.filter((wish: any) => wish.product.id === products.id);
 
   return (
     <div className="container mx-auto my-4">
@@ -41,7 +50,12 @@ export default async function ProductPage({ params }: { params: Promise<{ produc
           <ProductDetailsImagesComponent products={products} />
         </div>
         <div className="sm:col-span-1">
-          <h2 className="cursor-default">{products.title}</h2>
+          <div className='flex items-center justify-between'>
+            <h2 className="cursor-default">{products.title}</h2>
+            <div className="">
+              <ProductWishlistClient productId={products.id} isWishlist={data} wishlistItem={data2} />
+            </div>
+          </div>
           <div className="my-3 flex items-center gap-1 border-b pb-5 text-yellow-500">
             {[1, 2, 3, 4, 5].map((star) => {
               if (products.ratingAverage >= star) {

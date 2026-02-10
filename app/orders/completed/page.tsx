@@ -106,7 +106,7 @@ export default function Completed() {
 
   useEffect(() => {
     getOrder();
-  }, []);
+  }, [token]);
   return (
     <div>
       {saveOrders.length > 0 ? (

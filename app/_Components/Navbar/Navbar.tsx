@@ -99,7 +99,7 @@ export default function NavBar() {
           <NavbarItem>
             <Link
               onClick={() => setIsSelected(0)}
-              className={`rounded-[40px] p-2 ${isSelected == 0 ? 'bg-blue-400 text-black' : ''}`}
+              className={`rounded-[40px] p-2 hover:bg-black hover:text-white ${isSelected == 0 ? 'bg-black text-white' : ''}`}
               href={'/'}
             >
               Home
@@ -108,7 +108,7 @@ export default function NavBar() {
           <NavbarItem>
             <Link
               onClick={() => setIsSelected(1)}
-              className={`rounded-[40px] p-2 ${isSelected == 1 ? 'bg-blue-400 text-black' : ''}`}
+              className={`rounded-[40px] p-2 hover:bg-black hover:text-white ${isSelected == 1 ? 'bg-black text-white' : ''}`}
               href={'/about'}
             >
               About
@@ -117,7 +117,7 @@ export default function NavBar() {
           <NavbarItem>
             <Link
               onClick={() => setIsSelected(2)}
-              className={`rounded-[40px] p-2 ${isSelected == 2 ? 'bg-blue-400 text-black' : ''}`}
+              className={`rounded-[40px] p-2 hover:bg-black hover:text-white ${isSelected == 2 ? 'bg-black text-white' : ''}`}
               href={'/contact-us'}
             >
               Contact US
