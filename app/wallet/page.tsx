@@ -5,12 +5,14 @@ import { getLoginTo } from '../login/login';
 import { getClass } from '@/services/ApiServices';
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from '@heroui/react';
 import { Button } from '@/components/ui/button';
+import { useRouter } from 'next/navigation';
 
 export default function Wallet() {
   const { userData } = useContext(authContext);
   const [wallet, setWallet] = useState([]);
   const [addWallet, setAddWallet] = useState(false);
   const [amount, setAmount] = useState(0);
+  const router = useRouter();
 
   async function getWallet() {
     const token = await getLoginTo();
@@ -36,7 +38,20 @@ export default function Wallet() {
 
   return (
     <div className="container mx-auto">
-      <h1 className="mt-3">Wallet</h1>
+      <div className="flex items-center gap-1">
+        <h2 onClick={() => router.push('/profile')} className="counter cursor-pointer">
+          <svg width="2em" height="2em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M16 12H8M8 12L12 8M8 12L12 16"
+              stroke="black"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </h2>
+        <h1 className="mt-3">Wallet</h1>
+      </div>
       <div className="my-3">
         <h3>Your Balance: {userData?.walletBalance}</h3>
         <div className="my-4">

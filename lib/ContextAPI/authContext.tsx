@@ -19,19 +19,21 @@ export const authContext = createContext<AuthContext | null>(null);
 export default function AuthContextProvider({ children }: { children: ReactNode }) {
   const [userData, setUserData] = useState<[] | null>(null);
   const [token, setToken] = useState<string>('');
-  const [auth, setAuth] = useState<boolean>(token != null);
+  const [auth, setAuth] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function loginOk() {
       const isOk = await getLoginTo();
       if (isOk) {
+        console.log("Tamam");
         setToken(isOk);
         setAuth(true);
-        const user = await getClass.userProfile(token);
+        const user = await getClass.userProfile(isOk);
         setUserData(user);
         setIsLoading(false);
       } else {
+        console.log("Msh Tamam");
         setAuth(false);
         setUserData(null);
         setIsLoading(true);

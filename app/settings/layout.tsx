@@ -24,7 +24,20 @@ export default function SettingsLayout({ children }: { children: React.ReactNode
     <div>
       {auth ? (
         <div className="container mx-auto my-5">
-          <h2>Settings</h2>
+          <div className="flex items-center gap-1">
+            <h2 onClick={() => router.push('/profile')} className="counter cursor-pointer">
+              <svg width="2em" height="2em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M16 12H8M8 12L12 8M8 12L12 16"
+                  stroke="black"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </h2>
+            <h2>Settings</h2>
+          </div>
           <div className="my-5 rounded-2xl border">
             <div className="grid grid-cols-1 gap-4 p-5 sm:grid-cols-3">
               <div className="col-span-1 flex flex-col gap-3 rounded-2xl border py-4">
