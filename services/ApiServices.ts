@@ -56,7 +56,7 @@ class ApiServices {
     const response = await fetch(`${this.baseUrl}business-types/${businessId}/categories/${categoryId}/target`, {
       method: 'get',
     }).then((res) => res.json());
-    return response.data.vendors;
+    return response.data?.vendors;
   }
   async categoryName(businessId: string, categoryId: string) {
     const response = await fetch(`${this.baseUrl}business-types/${businessId}/categories/${categoryId}/target`, {
@@ -168,9 +168,10 @@ class ApiServices {
     });
     const data = await response.json();
     if (response.ok) {
+      console.log('Success From api auth:::: ',data);
       return data;
-      console.log(data);
     } else {
+      console.log('Error From api auth:::: ',data.error);
       return data.error;
     }
   }
@@ -206,7 +207,7 @@ class ApiServices {
     });
     const data = await response.json();
     const data2 = await data.user;
-
+    console.log(data);
     return data2;
   }
 
@@ -515,6 +516,60 @@ class ApiServices {
     });
     const data = await response.json();
     console.log();
+    return data;
+  }
+
+  async getLoyalty(token: string){
+    const response = await fetch(`${this.baseUrl}loyalty/me`,{
+      method: 'GET',
+      headers: {
+        'content-type': 'application/json',
+        ...(token ? {Authorization: `Bearer ${token}`} : {})
+      }
+    });
+    const data = await response.json();
+    console.log(data);
+    return data;
+  }
+
+  async loyaltyHistory(token: string){
+    const response = await fetch(`${this.baseUrl}loyalty/transactions/me`,{
+      method: 'GET',
+      headers: {
+        'content-type': 'application/json',
+        ...(token ? {Authorization: `Bearer ${token}`} : {})
+      }
+    });
+    const data = await response.json();
+    console.log("history", data);
+    return data;
+  }
+
+  async convertLoyaltyToWallet(token: string, myData: any){
+    const response = await fetch(`${this.baseUrl}loyalty/convert-to-wallet`,{
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        ...(token ? {Authorization: `Bearer ${token}`} : {})
+      },
+      body: JSON.stringify({data: myData})
+    });
+    const data = await response.json();
+    console.log(data);
+    return data;
+  }
+
+  async withdrawalLoyaltyCash(token: string, myData: any){
+    const response = await fetch(`${this.baseUrl}loyalty/withdraw`, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        ...(token ? {Authorization: `Bearer ${token}`} : {})
+      },
+      body: JSON.stringify({data: myData})
+    });
+    const data = await response.json();
+    console.log(data);
     return data;
   }
 

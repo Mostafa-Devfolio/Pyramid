@@ -20,6 +20,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import { getClass } from '@/services/ApiServices';
 import { cartCount } from '@/lib/ContextAPI/cartCount';
+import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from '@heroui/react';
 
 export default function NavBar() {
   const pathName = usePathname();
@@ -28,9 +29,23 @@ export default function NavBar() {
   const { auth, setAuth, setToken } = useContext(authContext);
   const [isSelected, setIsSelected] = useState(-1);
   const [apiCount, setApiCount] = useState(0);
+  const [menu, setMenu] = useState(false);
+
+  async function getRoute(pageNumber: number) {
+    if (pageNumber == 0) {
+      router.push('/orders');
+    } else if (pageNumber == 1) {
+      router.push('address');
+    } else if (pageNumber == 2) {
+      router.push('loyalty');
+    } else if (pageNumber == 3) {
+      router.push('wallet');
+    }
+  }
 
   function logout() {
     getLogout();
+    router.push('/');
     setAuth(false);
     setToken(null);
   }
@@ -158,19 +173,82 @@ export default function NavBar() {
               </NavbarItem>{' '}
             </>
           ) : (
-            <NavbarItem>
-              <Button
-                as={Link}
-                onClick={() => {
-                  logout();
-                }}
-                color="primary"
-                href="#"
-                variant="flat"
-              >
-                Logout
-              </Button>
-            </NavbarItem>
+            <div className="flex items-center gap-7">
+              <Dropdown>
+                <DropdownTrigger>
+                  <h2 onClick={() => router.push('/profile')} className="counter cursor-pointer">
+                    <svg
+                      width="1.6em"
+                      height="1.6em"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <rect x="5" y="4" width="14" height="18" rx="2" fill="black" />
+
+                      <path d="M5 8V6C5 4.89543 5.89543 4 7 4H17C18.1046 4 19 4.89543 19 6V8H5Z" fill="#333333" />
+
+                      <circle cx="12" cy="11" r="2.5" fill="white" />
+
+                      <path d="M16.5 19.5H7.5V18.5C7.5 16.5 9 15 12 15C15 15 16.5 16.5 16.5 18.5V19.5Z" fill="white" />
+                    </svg>
+                  </h2>
+                </DropdownTrigger>
+                {menu && (
+                  <DropdownMenu>
+                    <DropdownItem
+                      onClick={() => {
+                        setMenu(false);
+                        getRoute(0);
+                      }}
+                      key={'orders'}
+                    >
+                      My Orders
+                    </DropdownItem>
+                    <DropdownItem
+                      onClick={() => {
+                        setMenu(false);
+                        getRoute(1);
+                      }}
+                      key={'address'}
+                    >
+                      My Address
+                    </DropdownItem>
+                    <DropdownItem
+                      onClick={() => {
+                        setMenu(false);
+                        getRoute(2);
+                      }}
+                      key={'loyalty'}
+                    >
+                      My Loyalty Points
+                    </DropdownItem>
+                    <DropdownItem
+                      onClick={() => {
+                        setMenu(false);
+                        getRoute(3);
+                      }}
+                      key={'wallet'}
+                    >
+                      My Wallet
+                    </DropdownItem>
+                  </DropdownMenu>
+                )}
+              </Dropdown>
+              <NavbarItem>
+                <Button
+                  as={Link}
+                  onClick={() => {
+                    logout();
+                  }}
+                  color="primary"
+                  href="#"
+                  variant="flat"
+                >
+                  Logout
+                </Button>
+              </NavbarItem>
+            </div>
           )}
         </NavbarContent>
         <NavbarMenu>

@@ -10,9 +10,9 @@ export default async function Category({ params }: { params: Promise<{ category:
 
   return (
     <div>
-      <h3 className="container mx-auto my-3">{catName.category.name}</h3>
+      <h3 className="container mx-auto my-3">{catName?.category.name}</h3>
       <div className={`container mx-auto grid grid-cols-2 gap-4 lg:grid-cols-4`}>
-        {vendors.map((vendor: IVendorsInCategory) => (
+        {vendors?.map((vendor: IVendorsInCategory) => (
           <HomeVendorsMainComponent key={vendor.id} businessTypee={id} vendor={vendor} />
         ))}
       </div>

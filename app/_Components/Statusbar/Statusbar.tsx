@@ -18,7 +18,7 @@ export default function Statusbar() {
       setIsSelected(1);
     } else if (pathName == '/orders') {
       setIsSelected(2);
-    } else if (pathName == '/settings') {
+    } else if (pathName == '/profile') {
       setIsSelected(3);
     }
   }, []);
@@ -46,11 +46,11 @@ export default function Statusbar() {
         <h2 className="p-2 text-center">Orders</h2>
       </Link>
       <Link
-        href={'/settings'}
+        href={'/profile'}
         onClick={() => setIsSelected(3)}
         className={`${isSelected == 3 ? 'rounded text-black' : ''}`}
       >
-        <h2 className="p-2 text-center">Setting</h2>
+        <h2 className="p-2 text-center">Profile</h2>
       </Link>
     </div>
   );
