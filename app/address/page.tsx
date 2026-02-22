@@ -60,25 +60,41 @@ export default function Address() {
       <div className="mt-5 grid grid-cols-3 gap-5">
         {addresses.map((address: any) => {
           return (
-            <div key={address.id} className="truncate rounded-2xl border stroke-1 p-5 text-gray-500">
+            <div key={address.id} className="relative truncate rounded-2xl border stroke-1 p-5 text-gray-500 shadow-sm">
+              <h4 className="mb-2 truncate text-lg font-bold text-black">{address.label || 'Address'}</h4>
+
               <h4 className="truncate">
-                <span className="text-black">Label:</span> {address.label}
+                <span className="font-semibold text-black">Street:</span> {address.street}
               </h4>
               <h4 className="truncate">
-                <span className="text-black">Floor:</span> {address.floor}
+                <span className="font-semibold text-black">Bldg/Apt:</span> {address.building}, Floor {address.floor},
+                Apt {address.apartment}
               </h4>
               <h4 className="truncate">
-                <span className="text-black">Apartment:</span> {address.apartment}
+                <span className="font-semibold text-black">City:</span> {address.city}
               </h4>
-              <h4 className="truncate">
-                <span className="text-black">Building:</span> {address.building}
+
+              {/* Show Google Maps Link if coordinates exist */}
+              {address.latitude && address.longitude && (
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${address.latitude},${address.longitude}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-2 block text-sm text-blue-500 underline"
+                >
+                  View on Map
+                </a>
+              )}
+
+              <h4 className="mt-2 text-sm">
+                Default:{' '}
+                <span className={address.isDefault ? 'font-bold text-green-600' : ''}>
+                  {address.isDefault ? 'Yes' : 'No'}
+                </span>
               </h4>
-              <h4 className="truncate">
-                <span className="text-black">City:</span> {address.city}
-              </h4>
-              <h4>Default: {address.isDefault ? 'Yes' : 'No'}</h4>
+
               {address.isDefault == false && (
-                <Button className="mt-2" onClick={() => updateAddress(address.id)}>
+                <Button className="mt-3 w-full" variant="outline" onClick={() => updateAddress(address.id)}>
                   Set Default
                 </Button>
               )}

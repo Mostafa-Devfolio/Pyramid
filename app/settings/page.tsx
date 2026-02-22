@@ -1,11 +1,11 @@
 'use client';
-import { authContext } from '@/lib/ContextAPI/authContext';
+import { authContext, useAuth } from '@/lib/ContextAPI/authContext';
 import { Button } from '@headlessui/react';
 import React, { useContext, useState } from 'react';
 
 export default function UserInfo() {
   const [userInfo, setUserInfo] = useState(true);
-  const { userData, setAuth, setUserData } = useContext(authContext);
+  const { userData, setAuth, setUserData } = useAuth();
   return (
     <div className="container mx-auto my-5">
       <div className="my-5">

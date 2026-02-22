@@ -1,7 +1,7 @@
 import { getLoginTo } from '@/app/login/login';
 
 class ApiServices {
-  baseUrl = 'https://pyramid.devfolio.net/api/';
+  baseUrl = 'https://devfolio.net/';
 
   async getAllVendor(businessTypee: string, mainType: string) {
     const query: string[] = [];
@@ -150,10 +150,13 @@ class ApiServices {
     }
   }
 
-  async getVendorProduct(vendorId:string, whichSubCat:string) {
-    const response = await fetch(`${this.baseUrl}vendors/${vendorId}/subcategories/${whichSubCat}/products?&populate=*`, {
-      method: 'GET',
-    }).then((res) => res.json());
+  async getVendorProduct(vendorId: string, whichSubCat: string) {
+    const response = await fetch(
+      `${this.baseUrl}vendors/${vendorId}/subcategories/${whichSubCat}/products?&populate=*`,
+      {
+        method: 'GET',
+      }
+    ).then((res) => res.json());
     console.log(response);
     return response;
   }
@@ -168,10 +171,10 @@ class ApiServices {
     });
     const data = await response.json();
     if (response.ok) {
-      console.log('Success From api auth:::: ',data);
+      console.log('Success From api auth:::: ', data);
       return data;
     } else {
-      console.log('Error From api auth:::: ',data.error);
+      console.log('Error From api auth:::: ', data.error);
       return data.error;
     }
   }
@@ -316,7 +319,8 @@ class ApiServices {
   }
 
   async addAddress(userData: any, token: string) {
-    const response = await fetch(`${this.baseUrl}addresses`, {
+    // CHANGE: Added "/from-coordinates" to the URL
+    const response = await fetch(`${this.baseUrl}addresses/from-coordinates`, {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
@@ -326,6 +330,7 @@ class ApiServices {
         data: userData,
       }),
     });
+
     const data = await response.json();
     return data;
   }
@@ -519,54 +524,184 @@ class ApiServices {
     return data;
   }
 
-  async getLoyalty(token: string){
-    const response = await fetch(`${this.baseUrl}loyalty/me`,{
+  async getLoyalty(token: string) {
+    const response = await fetch(`${this.baseUrl}loyalty/me`, {
       method: 'GET',
       headers: {
         'content-type': 'application/json',
-        ...(token ? {Authorization: `Bearer ${token}`} : {})
-      }
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
     });
     const data = await response.json();
     console.log(data);
     return data;
   }
 
-  async loyaltyHistory(token: string){
-    const response = await fetch(`${this.baseUrl}loyalty/transactions/me`,{
+  async loyaltyHistory(token: string) {
+    const response = await fetch(`${this.baseUrl}loyalty/transactions/me`, {
       method: 'GET',
       headers: {
         'content-type': 'application/json',
-        ...(token ? {Authorization: `Bearer ${token}`} : {})
-      }
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
     });
     const data = await response.json();
-    console.log("history", data);
+    console.log('history', data);
     return data;
   }
 
-  async convertLoyaltyToWallet(token: string, myData: any){
-    const response = await fetch(`${this.baseUrl}loyalty/convert-to-wallet`,{
+  async convertLoyaltyToWallet(token: string, myData: any) {
+    const response = await fetch(`${this.baseUrl}loyalty/convert-to-wallet`, {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
-        ...(token ? {Authorization: `Bearer ${token}`} : {})
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
       },
-      body: JSON.stringify({data: myData})
+      body: JSON.stringify({ data: myData }),
     });
     const data = await response.json();
     console.log(data);
     return data;
   }
 
-  async withdrawalLoyaltyCash(token: string, myData: any){
+  async withdrawalLoyaltyCash(token: string, myData: any) {
     const response = await fetch(`${this.baseUrl}loyalty/withdraw`, {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      body: JSON.stringify({ data: myData }),
+    });
+    const data = await response.json();
+    console.log(data);
+    return data;
+  }
+
+  async cancelTrip(token: string, tripDocId: string, tripId: number){
+    const response = await fetch(`${this.baseUrl}rides/${tripDocId || tripId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ data: { status: 'cancelled' } }),
+      });
+      const data = await response.json();
+      return data;
+  }
+
+  async getMaps(lat: number, lng: number) {
+    const response = await fetch(`${this.baseUrl}addresses/reverse-geocode`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ lat, lng }),
+    });
+    const data = await response.text();
+    let json;
+    try {
+      json = JSON.parse(data);
+    } catch (e) {
+      console.error('Received non-JSON response from server:', data);
+      return; // Stop execution if it's an HTML error page
+    }
+    if (response.ok) {
+      const mapDetails = json.data?.data || json.data || json;
+      return mapDetails;
+    } else {
+      console.error('Backend refused to geocode:', json);
+    }
+  }
+
+  async getTaxiCourier(token: string) {
+    const response = await fetch(`${this.baseUrl}pricing-config`, {
+      method: 'GET',
+      headers: {
+        'content-type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+    });
+    const data = await response.json();
+    console.log(data);
+    return data.data;
+  }
+
+  async getCourier(token: string){
+    const response = await fetch(`${this.baseUrl}parcel-types `,{
+      method: 'GET',
+      headers: {
+        'content-type': 'application/json',
+        ...(token ? {Authorization: `Bearer ${token}`} : {})
+      }
+    });
+    const data = await response.json();
+    return data.data;
+  }
+
+  async courierDeliveryFee(getData: any, token: string){
+    console.log("🚨 PAYLOAD LEAVING FETCH:", JSON.stringify(getData));
+
+    const response = await fetch(`${this.baseUrl}parcel-bookings/estimate`,{
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
         ...(token ? {Authorization: `Bearer ${token}`} : {})
       },
-      body: JSON.stringify({data: myData})
+      // ✅ FIX: Send getData exactly as is!
+      body: JSON.stringify(getData)
+    });
+    const data = await response.json();
+    console.log(data);
+    return data;
+  }
+
+  async placeCourier(token: string, myData: any){
+    console.log(myData);
+    const response = await fetch(`${this.baseUrl}parcel-bookings/request`,{
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        ...(token ? {Authorization: `Bearer ${token}`} : {})
+      },
+      body: JSON.stringify(myData)
+    });
+    const data = await response.json();
+    console.log(data);
+    return data;
+  }
+  
+  async universalCheckout(token: string, getData: any) {
+    const response = await fetch(`${this.baseUrl}checkout/universal`,{
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        ...(token ? {Authorization: `Bearer ${token}`} : {})
+      },
+      body: JSON.stringify(getData)
+    });
+    const data = await response.json();
+    console.log(data);
+    return data;
+  }
+
+  async getParcel(token: string, userId: number){
+    console.log(userId);
+    const response = await fetch(`${this.baseUrl}parcel-bookings/me`,{
+      method: 'GET',
+      headers: {
+        'content-type': 'application/json',
+        ...(token ? {Authorization: `Bearer ${token}`} : {})
+      }
+    });
+    const data = await response.json();
+    console.log(data.data);
+    return data.data;
+  }
+
+  async deleteParcelOrder(token: string, userId: string){
+    const response = await fetch(`${this.baseUrl}parcel-bookings/${userId}/cancel`,{
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        ...(token ? {Authorization: `Bearer ${token}`} : {})
+      }
     });
     const data = await response.json();
     console.log(data);

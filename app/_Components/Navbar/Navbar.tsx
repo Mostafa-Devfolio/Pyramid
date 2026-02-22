@@ -1,6 +1,6 @@
 'use client';
 import { getLoginTo, getLogout } from '@/app/login/login';
-import { authContext } from '@/lib/ContextAPI/authContext';
+import { authContext, useAuth } from '@/lib/ContextAPI/authContext';
 import { usePathname, useRouter } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -26,7 +26,7 @@ export default function NavBar() {
   const pathName = usePathname();
   const cartItem = useSelector((state: any) => state.cart);
   const [hide, setHide] = useState(false);
-  const { auth, setAuth, setToken } = useContext(authContext);
+  const { auth, setToken, setAuth } = useAuth();
   const [isSelected, setIsSelected] = useState(-1);
   const [apiCount, setApiCount] = useState(0);
   const [menu, setMenu] = useState(false);

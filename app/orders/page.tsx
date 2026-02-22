@@ -1,16 +1,16 @@
 'use client';
 import { Button } from '@/components/ui/button';
-import { authContext } from '@/lib/ContextAPI/authContext';
+import { useAuth } from '@/lib/ContextAPI/authContext';
 import { getClass } from '@/services/ApiServices';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 
 export default function Processing() {
   const [saveOrders, setSaveOrders] = useState([]);
-  const { auth, token } = useContext(authContext);
+  const { auth, token } = useAuth();
   const [open, setOpen] = useState(false);
   const [orderIDD, setOrderIDD] = useState(0);
   const router = useRouter();
@@ -48,7 +48,7 @@ export default function Processing() {
           {saveOrders.map((order: any) => {
             return (
               <div className="rounded border stroke-1 p-3" key={order.id}>
-                <div key={order.id} className="grid grid-cols-2 rounded p-3">
+                <div key={order.id} className="grid grid-cols-2 rounded p-4">
                   <div>
                     <h4>Order ID: {order.id}</h4>
                     <h4>Order Status: {order.fulfillmentStatus}</h4>
@@ -148,8 +148,8 @@ export default function Processing() {
                   )}
                 </div>
                 <div>
-                  <h2 className="my-4">Products</h2>
-                  <div className="grid grid-cols-2 gap-3">
+                  <h2 className="m-4">Products</h2>
+                  <div className="grid mx-4 grid-cols-2 gap-3">
                     {order.subOrders[0].items.map((item: any) => {
                       return (
                         <div key={item.id} className="flex">

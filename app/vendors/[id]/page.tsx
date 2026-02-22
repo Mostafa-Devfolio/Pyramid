@@ -13,6 +13,8 @@ export default async function VendorsPage({ params }: { params: Promise<{ id: st
   const { id } = await params;
 
   const vendor: IVendorInfo = await getClass.vendorPageInfo(id);
+  console.log('Here:::: ',vendor);
+  
   const categories: IVendorPageCategory[] = await getClass.vendorPageCategory(id);
   const coupons: IVendorPageCoupon[] = await getClass.vendorPageCoupon(id);
   const banners: IVendorPageBanner[] = await getClass.vendorPageBanners(id);
@@ -26,7 +28,7 @@ export default async function VendorsPage({ params }: { params: Promise<{ id: st
         </h1>
         <div className="grid grid-cols-2 md:flex md:w-full md:justify-between">
           <p className="text-white">
-            <Icon className="text-xl text-yellow-400" /> {vendor.rating} ({vendor.reviews.length} K)
+            <Icon className="text-xl text-yellow-400" /> {vendor.rating}
           </p>
           <p>Delivery Time: {vendor.deliveryTime}</p>
           <p>Delivery Fee: {vendor.deliveryFee} EGP</p>

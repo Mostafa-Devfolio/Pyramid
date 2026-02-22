@@ -8,14 +8,14 @@ import { Button } from '@/components/ui/button';
 import { decreaseQuantity, increaseQuantity, removeFromCart } from '@/redux/slices/cartSlice';
 import Link from 'next/link';
 import { getClass } from '@/services/ApiServices';
-import { authContext } from '@/lib/ContextAPI/authContext';
+import { authContext, useAuth } from '@/lib/ContextAPI/authContext';
 import { getLoginTo } from '../login/login';
 import { cartCount } from '@/lib/ContextAPI/cartCount';
 
 export default function CartPage() {
   const cartItems = useSelector((state: any) => state.cart);
   const [businessId, setBusinessId] = useState(cartItems.businessType);
-  const { auth, token } = useContext(authContext);
+  const { auth, token } = useAuth();
   const [cartApi, setCartApi] = useState([]);
   const [subAndTotal, setSubAndTotal] = useState([]);
   const [couponCode, setCouponCode] = useState<string | null>(null);

@@ -3,18 +3,17 @@ import { IVendorPageBanner } from '@/app/interface/VendorPage/vendorPageBanners'
 import { IVendorPageCategory } from '@/app/interface/VendorPage/vendorPageCategory';
 import { IVendorPageCoupon } from '@/app/interface/VendorPage/vendorPageCoupon';
 import { IVendorPageProduct } from '@/app/interface/VendorPage/vendorPageProduct';
-import { baseURL2 } from '@/app/page';
 import { Button } from '@/components/ui/button';
 import { IMAGE_PLACEHOLDER } from '@/lib/image';
 import Image from 'next/image';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { IVendorPageProductDiscounted } from '@/app/interface/VendorPage/vendorPageProductsDiscounted';
 import Link from 'next/link';
 import FavoriteButton from '../Icons/FavouriteIcon';
 import { getClass } from '@/services/ApiServices';
-import { authContext } from '@/lib/ContextAPI/authContext';
+import { useAuth } from '@/lib/ContextAPI/authContext';
 
 type Categories = {
   categories: IVendorPageCategory[];
@@ -32,7 +31,7 @@ export default function CategoriesPageComponent({ categories, coupons, banners, 
   const [copy, setCopy] = useState('');
   const [isCouponId, setIsCouponId] = useState<number | null>(null);
   const sectionRef = useRef<HTMLDivElement | null>(null);
-  const { token } = useContext(authContext);
+  const { token } = useAuth();
   const [saveWishList, setSaveWishList] = useState([]);
   const goToSection = () => {
     if (window.matchMedia('(max-width: 640px)').matches) {

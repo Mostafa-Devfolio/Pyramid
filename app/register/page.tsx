@@ -14,7 +14,7 @@ import {
 import { registerSchema } from '@/lib/Schema/schema';
 import { getClass } from '@/services/ApiServices';
 import { useState } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 export default function Register() {
   const {
@@ -38,7 +38,7 @@ export default function Register() {
   });
   const [isRegistered, setIsRegistered] = useState(false);
   const [error, setError] = useState('');
-  // const router = useRouter();
+  const router = useRouter();
 
   async function sendData(myData: any) {
     const userType = {

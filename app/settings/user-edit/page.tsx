@@ -1,14 +1,14 @@
 'use client';
 import { baseURL2 } from '@/app/page';
 import { Button } from '@/components/ui/button';
-import { authContext } from '@/lib/ContextAPI/authContext';
+import { authContext, useAuth } from '@/lib/ContextAPI/authContext';
 import React, { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 export default function UserEdit() {
   const [userEdit, setUserEdit] = useState(true);
   const [userInfo, setUserInfo] = useState(true);
-  const { userData, setAuth, setUserData } = useContext(authContext);
+  const { userData, setAuth, setUserData } = useAuth();
   const {
     handleSubmit,
     reset,

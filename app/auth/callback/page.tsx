@@ -1,6 +1,6 @@
 'use client';
 import { getLoginTo, getLogout, loginTo } from '@/app/login/login';
-import { authContext } from '@/lib/ContextAPI/authContext';
+import { useAuth } from '@/lib/ContextAPI/authContext';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useContext, useEffect, useState } from 'react';
 import { Spinner } from '@heroui/react';
@@ -8,7 +8,7 @@ import { Spinner } from '@heroui/react';
 export default function Callback() {
   const searchParams = useSearchParams();
   const jwt = searchParams.get('jwt');
-  const { setToken, setAuth } = useContext(authContext);
+  const { setAuth, setToken } = useAuth();
   const router = useRouter();
   const [isAuth, setIsAuth] = useState(true);
 

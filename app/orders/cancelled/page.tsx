@@ -1,6 +1,6 @@
 'use client';
 import { Button } from '@/components/ui/button';
-import { authContext } from '@/lib/ContextAPI/authContext';
+import { useAuth } from '@/lib/ContextAPI/authContext';
 import { getClass } from '@/services/ApiServices';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -8,7 +8,7 @@ import React, { useContext, useEffect, useState } from 'react';
 
 export default function Cancelled() {
   const [saveOrders, setSaveOrders] = useState([]);
-  const { auth, token } = useContext(authContext);
+  const { auth, token } = useAuth();
   const router = useRouter();
   async function getOrder() {
     const data = await getClass.getOrders(token);
@@ -35,7 +35,7 @@ export default function Cancelled() {
         <div className="mt-3 grid grid-cols-1 gap-3">
           {saveOrders.map((order: any) => {
             return (
-              <div key={order.id} className="rounded border stroke-1 p-3">
+              <div key={order.id} className="rounded border stroke-1 p-4">
                 <div className="grid grid-cols-2">
                   <div>
                     <h4>Order ID: {order.id}</h4>
@@ -76,8 +76,8 @@ export default function Cancelled() {
                   </div>
                 </div>
                 <div>
-                  <h2 className="my-4">Products</h2>
-                  <div className="grid grid-cols-2 gap-3">
+                  <h2 className="m-4">Products</h2>
+                  <div className="grid grid-cols-2 gap-3 mx-4">
                     {order.subOrders[0].items.map((item: any) => {
                       return (
                         <div key={item.id} className="flex">

@@ -3,13 +3,13 @@ import Link from 'next/link';
 import React, { useContext, useEffect, useState } from 'react';
 
 import { usePathname, useRouter } from 'next/navigation';
-import { authContext } from '@/lib/ContextAPI/authContext';
+import { useAuth } from '@/lib/ContextAPI/authContext';
 import { Button } from '@/components/ui/button';
 
 export default function SettingsLayout({ children }: { children: React.ReactNode }) {
   const [isSelected, setIsSelected] = useState(-1);
   const pathName = usePathname();
-  const { auth } = useContext(authContext);
+  const { auth } = useAuth();
   const router = useRouter();
 
   useEffect(() => {

@@ -1,26 +1,27 @@
 'use client';
-import { authContext } from '@/lib/ContextAPI/authContext';
+import { authContext, useAuth } from '@/lib/ContextAPI/authContext';
 import { getClass } from '@/services/ApiServices';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { IVendorPageProduct } from '../interface/VendorPage/vendorPageProduct';
 import Link from 'next/link';
 import Image from 'next/image';
 import { IMAGE_PLACEHOLDER } from '@/lib/image';
 import FavoriteButton from '../_Components/Icons/FavouriteIcon';
 import { useRouter } from 'next/navigation';
+import { IWishList } from '../interface/wishlist';
 
 export default function Wishlist() {
-  const { token } = useContext(authContext);
-  const [saveWishList, setSaveWishList] = useState([]);
-  async function getWishList() {
-    const data = await getClass.getWishList(token);
-    console.log(data);
-    setSaveWishList(data.data);
-    // vendorPageProducts();
-  }
+  const { token } = useAuth();
+  const [saveWishList, setSaveWishList] = useState<IWishList[]>([]);
   const router = useRouter();
 
   useEffect(() => {
+    async function getWishList() {
+      const data = await getClass.getWishList(token);
+      console.log(data);
+      setSaveWishList(data.data);
+      // vendorPageProducts();
+    }
     getWishList();
   }, [token]);
   return (
@@ -40,9 +41,9 @@ export default function Wishlist() {
         <h1>Wishlist</h1>
       </div>
       <div className="mt-3 grid grid-cols-2 gap-4 sm:grid-cols-3">
-        {saveWishList?.map((myWishlist: any) => {
-          const data = saveWishList?.some((wish: any) => wish.product.id == myWishlist.product.id);
-          const data2 = saveWishList?.filter((wish: any) => wish.product.id == myWishlist.product.id);
+        {saveWishList?.map((myWishlist: IWishList) => {
+          const data = saveWishList?.some((wish: IWishList) => wish.product.id == myWishlist.product.id);
+          const data2 = saveWishList?.filter((wish: IWishList) => wish.product.id == myWishlist.product.id);
           return (
             <div key={myWishlist.id} className="relative text-center">
               <Link href={`/vendors/${myWishlist.product.vendor.id}/${myWishlist.product.slug}`}>

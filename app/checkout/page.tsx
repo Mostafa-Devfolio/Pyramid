@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { showToast } from 'nextjs-toast-notify';
-import { authContext } from '@/lib/ContextAPI/authContext';
+import { useAuth } from '@/lib/ContextAPI/authContext';
 import { getLoginTo } from '../login/login';
 import { cartCount } from '@/lib/ContextAPI/cartCount';
 import { IMAGE_PLACEHOLDER } from '@/lib/image';
@@ -17,7 +17,7 @@ export default function CheckoutPage() {
   const [address, setAddress] = useState([]);
   const [payment, setPayment] = useState('cod');
   const router = useRouter();
-  const { auth, token, userData } = useContext(authContext);
+  const { auth, token, userData } = useAuth();
   const { countt, setCountt } = useContext(cartCount);
   const [cartItems, setCartItems] = useState([]);
   const [isCustom, setIsCustom] = useState(false);

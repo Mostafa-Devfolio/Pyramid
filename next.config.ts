@@ -11,6 +11,16 @@ const nextConfig: NextConfig = {
         port: '1337',
         pathname: '/uploads/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'pyramid.devfolio.net',
+        pathname: '/uploads/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'pyramid.devfolio.net',
+        pathname: '/uploads/**',
+      },
     ]
   }
 };

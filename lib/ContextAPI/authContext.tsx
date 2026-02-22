@@ -1,20 +1,29 @@
 'use client';
+import { IUser } from '@/app/interface/userData';
 import { getLoginTo } from '@/app/login/login';
 import { getClass } from '@/services/ApiServices';
-import { createContext, ReactNode, useEffect, useState } from 'react';
+import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 
 interface AuthContext {
   auth: boolean;
-  userData: any;
+  userData: IUser;
   setAuth: (value: boolean) => void;
-  setUserData: (value: any) => void;
-  token: any;
-  setToken: (value: any) => void;
+  setUserData: (value: IUser) => void;
+  token: string;
+  setToken: (value: string) => void;
   isLoading: boolean;
   setIsLoading: (value: boolean) => void;
 }
 
 export const authContext = createContext<AuthContext | null>(null);
+
+export function useAuth() {
+  const context = useContext(authContext);
+  if (!context) {
+    throw new Error('useAuth must be used within AuthContextProvider');
+  }
+  return context;
+}
 
 export default function AuthContextProvider({ children }: { children: ReactNode }) {
   const [userData, setUserData] = useState<[] | null>(null);

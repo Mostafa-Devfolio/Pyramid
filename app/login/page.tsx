@@ -1,5 +1,5 @@
 'use client';
-import { authContext } from '@/lib/ContextAPI/authContext';
+import { authContext, useAuth } from '@/lib/ContextAPI/authContext';
 import { loginSchema } from '@/lib/Schema/schema';
 import { getClass } from '@/services/ApiServices';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -13,7 +13,7 @@ import { Button } from '@heroui/react';
 import { baseURL2 } from '../page';
 
 export default function Login() {
-  const { auth, setAuth, userData, setUserData, setToken, token } = useContext(authContext);
+  const { auth, setAuth, userData, setUserData, setToken, token } = useAuth();
   const router = useRouter();
 
   const {

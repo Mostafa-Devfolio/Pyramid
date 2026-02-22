@@ -1,12 +1,12 @@
 'use client';
-import { authContext } from '@/lib/ContextAPI/authContext';
+import { useAuth } from '@/lib/ContextAPI/authContext';
 import { getClass } from '@/services/ApiServices';
 import React, { useContext, useEffect, useState } from 'react';
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button } from '@heroui/react';
 import { useRouter } from 'next/navigation';
 
 export default function Loyalty() {
-  const { token } = useContext(authContext);
+  const { token } = useAuth();
   const [loyalty, setloyalty] = useState();
   const [loyaltyHistory, setLoyaltyHistory] = useState();
   const [loyaltyNum, setLoyaltyNum] = useState(0);

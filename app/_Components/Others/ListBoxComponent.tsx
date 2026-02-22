@@ -1,8 +1,7 @@
 "use client"
-import { authContext } from '@/lib/ContextAPI/authContext';
+import { useAuth } from '@/lib/ContextAPI/authContext';
 import { Listbox, ListboxItem, ListboxSection, cn } from '@heroui/react';
 import { useRouter } from 'next/navigation';
-import { useContext } from 'react';
 import { logOutNow } from './Logout';
 
 export const AddNoteIcon = (props) => {
@@ -128,7 +127,7 @@ export const ListboxWrapper = ({ children }) => (
 export default function ListBoxComponent() {
   const iconClasses = 'text-xl text-default-500 pointer-events-none shrink-0';
   const router = useRouter();
-  const { auth, setAuth, setToken } = useContext(authContext);
+  const { auth, setAuth, setToken } = useAuth();
   function logout() {
     getLogout();
     setAuth(false);
