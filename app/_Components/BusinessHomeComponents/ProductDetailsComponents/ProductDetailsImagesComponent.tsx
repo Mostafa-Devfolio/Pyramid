@@ -15,7 +15,7 @@ export default function ProductDetailsImagesComponent({ products }: Product) {
         width={1000}
         height={1000}
         className="h-[500px] w-full rounded-2xl object-cover"
-        src={products.images == null ? IMAGE_PLACEHOLDER : `http://localhost:1337${selectedImage}`}
+        src={products.images == null ? IMAGE_PLACEHOLDER : `https://pyramid.devfolio.net${selectedImage}`}
         alt={products.title}
       />
       {products.images?.length > 0 && (
@@ -28,7 +28,7 @@ export default function ProductDetailsImagesComponent({ products }: Product) {
                   height={300}
                   className="h-full w-full rounded-2xl object-cover"
                   onClick={() => setSelectedImage(image.url)}
-                  src={`http://localhost:1337${image.url}`}
+                  src={`https://pyramid.devfolio.net${image.url}`}
                   alt={image.name}
                 />
               </div>

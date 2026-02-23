@@ -17,8 +17,8 @@ export default function Wishlist() {
 
   useEffect(() => {
     async function getWishList() {
+      if (!token) return; // 👈 guard
       const data = await getClass.getWishList(token);
-      console.log(data);
       setSaveWishList(data.data);
       // vendorPageProducts();
     }

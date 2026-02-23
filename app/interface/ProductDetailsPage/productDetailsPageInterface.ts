@@ -1,5 +1,6 @@
 export interface IProductDetailsPage {
   id: number;
+  businessType: BusinessType;
   documentId: string;
   title: string;
   slug: string;
@@ -23,6 +24,103 @@ export interface IProductDetailsPage {
   ratingAverage: number;
   ratingCount: number;
   shortDescription: string;
+  relatedProducts: RelatedProduct[];
+  vendorRandomProducts: VendorRandomProduct[];
+  images: images[];
+}
+
+export interface BusinessType {
+  id: number;
+  description: string;
+}
+
+export interface images {
+  id: number;
+  url: any;
+  name: string;
+}
+
+export interface RelatedProduct {
+  createdAt: string;
+  id: number;
+  documentId: string;
+  title: string;
+  slug: string;
+  description: string;
+  basePrice: number;
+  baseSalePrice: any;
+  sku: string;
+  stock: number;
+  isFeatured: boolean;
+  isActive: boolean;
+  attributes: Attributes2;
+  updatedAt: string;
+  publishedAt: string;
+  locale: string;
+  images: any;
+  vendor: Vendor2;
+  category: Category2;
+  businessType: BusinessType2;
+}
+
+export interface Attributes2 {
+  spicyLevel: number;
+}
+
+export interface Vendor2 {
+  id: number;
+  name: string;
+  slug: string;
+}
+
+export interface Category2 {
+  id: number;
+  name: string;
+  slug: string;
+}
+
+export interface BusinessType2 {
+  id: number;
+  name: string;
+  slug: string;
+}
+
+export interface VendorRandomProduct {
+  createdAt: string;
+  id: number;
+  documentId: string;
+  title: string;
+  slug: string;
+  description: string;
+  basePrice: number;
+  baseSalePrice?: number;
+  sku: string;
+  stock: number;
+  isFeatured: boolean;
+  isActive: boolean;
+  attributes: Attributes3;
+  updatedAt: string;
+  publishedAt: string;
+  locale: string;
+  images: any;
+  vendor: Vendor3;
+  category: Category3;
+}
+
+export interface Attributes3 {
+  spicyLevel: number;
+}
+
+export interface Vendor3 {
+  id: number;
+  name: string;
+  slug: string;
+}
+
+export interface Category3 {
+  id: number;
+  name: string;
+  slug: string;
 }
 
 export interface Variant {

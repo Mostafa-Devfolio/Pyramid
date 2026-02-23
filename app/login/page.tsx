@@ -12,6 +12,11 @@ import { loginTo } from './login';
 import { Button } from '@heroui/react';
 import { baseURL2 } from '../page';
 
+interface login {
+  email: string;
+  password: string;
+}
+
 export default function Login() {
   const { auth, setAuth, userData, setUserData, setToken, token } = useAuth();
   const router = useRouter();
@@ -31,7 +36,8 @@ export default function Login() {
   });
   const cartItems = useSelector((state: any) => state.cart);
 
-  async function login(myData: any) {
+  async function login(myData: login) {
+    if (!token) return;
     const login = await getClass.login(myData);
 
     const items = {
@@ -48,14 +54,11 @@ export default function Login() {
       setToken(login.jwt);
       setAuth(true);
       const cart = await getClass.cartAdd(items, token);
-      console.log(cart);
       router.push('/');
-      console.log('good');
     } else {
       setAuth(false);
       setToken(null);
       setUserData(null);
-      console.log('I will not login');
     }
   }
 
@@ -64,7 +67,7 @@ export default function Login() {
       <form onSubmit={handleSubmit(login)}>
         <div className="mx-auto flex w-[70%] flex-col items-center gap-3 rounded-2xl border p-5">
           <h1>Login</h1>
-          <h4 className='mt-3'>Now you can login using:</h4>
+          <h4 className="mt-3">Now you can login using:</h4>
           <div className="mt-1 flex gap-4">
             <a href={`${baseURL2}connect/google`}>
               <Button>

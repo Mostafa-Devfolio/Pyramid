@@ -1,15 +1,6 @@
 'use client';
 import { baseURL2 } from '@/app/page';
 import React, { useEffect, useState } from 'react';
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
 import { IDiscountedVendorsHome } from '@/app/interface/homePageDiscountedVendors';
 import HomeVendorsMainComponent from '../HomeVendorsMainComponent/HomeVendorsMainComponent';
 import VendorsSkeleton from '../VendorsSkeleton/VendorsSkeleton';

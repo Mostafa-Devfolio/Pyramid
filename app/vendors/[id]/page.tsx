@@ -13,7 +13,6 @@ export default async function VendorsPage({ params }: { params: Promise<{ id: st
   const { id } = await params;
 
   const vendor: IVendorInfo = await getClass.vendorPageInfo(id);
-  console.log('Here:::: ',vendor);
   
   const categories: IVendorPageCategory[] = await getClass.vendorPageCategory(id);
   const coupons: IVendorPageCoupon[] = await getClass.vendorPageCoupon(id);

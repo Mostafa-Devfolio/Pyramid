@@ -4,11 +4,12 @@ import { getClass } from '@/services/ApiServices';
 import React, { useContext, useEffect, useState } from 'react';
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button } from '@heroui/react';
 import { useRouter } from 'next/navigation';
+import { ILoyalty, ILoyaltyT } from '../interface/loyalty';
 
 export default function Loyalty() {
   const { token } = useAuth();
-  const [loyalty, setloyalty] = useState();
-  const [loyaltyHistory, setLoyaltyHistory] = useState();
+  const [loyalty, setloyalty] = useState<ILoyaltyT | undefined>(undefined);
+  const [loyaltyHistory, setLoyaltyHistory] = useState<ILoyalty[]>([]);
   const [loyaltyNum, setLoyaltyNum] = useState(0);
   const [loyaltyNum2, setLoyaltyNum2] = useState(0);
   const [bankName, setBankName] = useState('');
@@ -16,16 +17,19 @@ export default function Loyalty() {
   const [holderName, setHolderName] = useState('');
 
   async function getLoyaltyPoints() {
+    if (!token) return;
     const data = await getClass.getLoyalty(token);
     setloyalty(data.data);
   }
 
   async function getLoyaltyHistory() {
+    if (!token) return;
     const data = await getClass.loyaltyHistory(token);
     setLoyaltyHistory(data.data);
   }
 
   async function convertPointsToWallet(myPoints: number) {
+    if (!token) return;
     const body = {
       points: myPoints,
     };
@@ -35,6 +39,7 @@ export default function Loyalty() {
   }
 
   async function convertPointsToCash(myPoints: number) {
+    if (!token) return;
     const body = {
       points: myPoints,
       bankDetails: {
@@ -50,8 +55,18 @@ export default function Loyalty() {
   const router = useRouter();
 
   useEffect(() => {
-    getLoyaltyPoints();
-    getLoyaltyHistory();
+    async function getLoyaltyPoint() {
+      if (!token) return;
+      const data = await getClass.getLoyalty(token);
+      setloyalty(data.data);
+    }
+    getLoyaltyPoint();
+    async function getLoyaltyHistories() {
+      if (!token) return;
+      const data = await getClass.loyaltyHistory(token);
+      setLoyaltyHistory(data.data);
+    }
+    getLoyaltyHistories();
   }, [token]);
 
   return (
@@ -81,7 +96,7 @@ export default function Loyalty() {
             <TableColumn>Type</TableColumn>
           </TableHeader>
           <TableBody>
-            {loyaltyHistory?.map((loyalties: any) => {
+            {loyaltyHistory.map((loyalties: ILoyalty) => {
               return (
                 <TableRow key={loyalties.id}>
                   <TableCell>{loyalties.id}</TableCell>
@@ -107,11 +122,11 @@ export default function Loyalty() {
                 className="rounded-2xl border stroke-1 p-2"
                 placeholder="EX: 100"
                 min={0}
-                onChange={(e) => setLoyaltyNum(e.target.value)}
+                onChange={(e) => setLoyaltyNum(Number(e.target.value))}
               />
               <Button
                 className="absolute top-0 right-0 bottom-0 rounded-2xl"
-                onClick={() => setLoyaltyNum(loyalty?.loyaltyPoints)}
+                onClick={() => setLoyaltyNum(Number(loyalty?.loyaltyPoints))}
               >
                 Max
               </Button>
@@ -134,11 +149,11 @@ export default function Loyalty() {
                   className="rounded-2xl border stroke-1 p-2"
                   placeholder="EX: 100"
                   min={0}
-                  onChange={(e) => setLoyaltyNum2(e.target.value)}
+                  onChange={(e) => setLoyaltyNum2(Number(e.target.value))}
                 />
                 <Button
                   className="absolute top-0 right-0 rounded-2xl"
-                  onClick={() => setLoyaltyNum2(loyalty?.loyaltyPoints)}
+                  onClick={() => setLoyaltyNum2(Number(loyalty?.loyaltyPoints))}
                 >
                   Max
                 </Button>
@@ -163,7 +178,7 @@ export default function Loyalty() {
                 type="number"
                 id="accNumber"
                 required
-                onChange={(e) => setAccountNumber(e.target.value)}
+                onChange={(e) => setAccountNumber(Number(e.target.value))}
                 placeholder="Account Number (ex: xxxxxxxxxxx):"
                 className="rounded-2xl border stroke-1 p-2"
               />

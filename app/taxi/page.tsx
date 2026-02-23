@@ -161,7 +161,6 @@ export default function TaxiBookingPage() {
         { headers: token ? { Authorization: `Bearer ${token}` } : {} }
       );
       const json = await res.json();
-      console.log("Json Data:::::",json.data);
       setAvailableBuses(json.data || []);
     } catch (e) {
       alert('Network error finding buses.');

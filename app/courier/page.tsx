@@ -131,10 +131,7 @@ export default function Courier() {
       const address = await getClass.getAddress(token);
       const user = await getClass.userProfile(token);
       setUserData(user);
-      console.log(user);
       setCourier(couriers);
-      console.log(couriers);
-      console.log(address);
     }
     getCouriers();
   }, []);
@@ -194,7 +191,7 @@ export default function Courier() {
               </Switch>
             </div>
             <div className="flex items-center gap-5">
-              <h3 className="w-48" onClick={() => console.log(tripData)}>
+              <h3 className="w-48">
                 Reciever name
               </h3>
               <input

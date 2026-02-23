@@ -7,9 +7,10 @@ import { useRouter } from 'next/navigation';
 import React, { useContext, useEffect, useState } from 'react';
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
+import { IOrders, Item } from '@/app/interface/orders';
 
 export default function Completed() {
-  const [saveOrders, setSaveOrders] = useState([]);
+  const [saveOrders, setSaveOrders] = useState<IOrders[]>([]);
   const { auth, token } = useAuth();
   const [open, setOpen] = useState(false);
   const [openReview, setOpenReview] = useState(false);
@@ -24,46 +25,46 @@ export default function Completed() {
   const [isClicked, setIsClicked] = useState<number | null>(null);
   const [productIsReviewed, setProductIsReviewed] = useState(false);
   async function getOrder() {
+    if (!token) return;
     const data = await getClass.getOrders(token);
 
     const orders = data
       .filter(
-        (order: any) =>
+        (order: IOrders) =>
           order.fulfillmentStatus === 'delivered' ||
           order.fulfillmentStatus === 'returned' ||
           order.fulfillmentStatus === 'processing_return'
       )
-      .sort((a: any, b: any) => b.id - a.id);
+      .sort((a: IOrders, b: IOrders) => b.id - a.id);
     setSaveOrders(orders);
-    console.log('Helllo', orders);
   }
 
   async function returnOrder(orderId: number) {
+    if (!token) return;
     const body = {
       message: '<optional>',
       reason: '<optional>',
     };
     const data = await getClass.returnRequest(orderId, body, token);
     getOrder();
-    console.log(data);
   }
 
   async function refund(orderId: number) {
+    if (!token) return;
     const body = {
       message: '<optional>',
       reason: '<optional>',
     };
     const data = await getClass.refundRequest(orderId, body, token);
-    console.log(data);
   }
 
-  async function getProductDetails(productIdd: number) {
-    console.log(productIdd);
+  async function getProductDetails(productIdd: string) {
     const data = await getClass.getProductById(productIdd);
     setProductIsReviewed(data.data.reviews.length == 0);
   }
 
   async function rateReview(itemId: number, orderId: number) {
+    if (!token) return;
     const body = {
       rating: rate,
       comment: review,
@@ -74,6 +75,7 @@ export default function Completed() {
     getOrder();
   }
   async function rateReviewVendor(vendorId: number, orderId: number) {
+    if (!token) return;
     const body = {
       rating: rate,
       comment: review,
@@ -84,6 +86,7 @@ export default function Completed() {
     getOrder();
   }
   async function updateRateReview(itemId: number, orderId: number, reviewId: number) {
+    if (!token) return;
     const body = {
       rating: rate,
       comment: review,
@@ -94,6 +97,7 @@ export default function Completed() {
     getOrder();
   }
   async function updateRateReviewVendor(vendorId: number, orderId: number, reviewId: number) {
+    if (!token) return;
     const body = {
       rating: rate,
       comment: review,
@@ -105,13 +109,27 @@ export default function Completed() {
   }
 
   useEffect(() => {
-    getOrder();
+    async function getOrders() {
+      if (!token) return;
+      const data = await getClass.getOrders(token);
+
+      const orders = data
+        .filter(
+          (order: IOrders) =>
+            order.fulfillmentStatus === 'delivered' ||
+            order.fulfillmentStatus === 'returned' ||
+            order.fulfillmentStatus === 'processing_return'
+        )
+        .sort((a: IOrders, b: IOrders) => b.id - a.id);
+      setSaveOrders(orders);
+    }
+    getOrders();
   }, [token]);
   return (
     <div>
       {saveOrders.length > 0 ? (
         <div className="mt-3 grid grid-cols-1 gap-3">
-          {saveOrders.map((order: any) => {
+          {saveOrders.map((order: IOrders) => {
             return (
               <div key={order.id} className="rounded border stroke-1 p-4">
                 <div className="grid grid-cols-2">
@@ -204,9 +222,11 @@ export default function Completed() {
                     <h4>
                       Driver Tip: {order.tipAmount} {order.currencySnapshot.code}
                     </h4>
-                    {order.walletUsedAmount != 0 && <h4>
-                      Wallet Used Amount: {order.walletUsedAmount} {order.currencySnapshot.code}
-                    </h4>}
+                    {order.walletUsedAmount != 0 && (
+                      <h4>
+                        Wallet Used Amount: {order.walletUsedAmount} {order.currencySnapshot.code}
+                      </h4>
+                    )}
                     <div className="mt-2 border-b"></div>
                     <h4 className="mt-1">
                       Total: {order.amountDue} {order.currencySnapshot.code}
@@ -242,8 +262,8 @@ export default function Completed() {
                 </div>
                 <div>
                   <h2 className="m-4">Products</h2>
-                  <div className="grid grid-cols-2 mx-4">
-                    {order.subOrders[0].items.map((item: any) => {
+                  <div className="mx-4 grid grid-cols-2">
+                    {order.subOrders[0].items.map((item: Item) => {
                       return (
                         <div key={item.id} className="flex">
                           <Image
@@ -251,7 +271,7 @@ export default function Completed() {
                             height={500}
                             width={500}
                             src={item.product?.images?.[0]?.url}
-                            alt={order}
+                            alt={order.recipientName}
                           />
                           <div className="flex gap-10">
                             <div className="flex flex-col">
@@ -270,7 +290,7 @@ export default function Completed() {
                                   <h5>{item.product?.basePrice}</h5>
                                 ))}
                             </div>
-                            {order.subOrders[0].items.map((item: any) => {
+                            {order.subOrders[0].items.map((item: Item) => {
                               return (
                                 <div key={item.id} className="">
                                   {item.alreadyReviewed == false ? (
@@ -325,7 +345,7 @@ export default function Completed() {
                                                             <label htmlFor="reason">Rate: </label>
                                                             <input
                                                               className="rounded-2xl border stroke-1 p-3"
-                                                              onChange={(e) => setRate(e.target.value)}
+                                                              onChange={(e) => setRate(Number(e.target.value))}
                                                               type="number"
                                                               placeholder="Enter from 1 to 5"
                                                               min={1}
@@ -432,7 +452,7 @@ export default function Completed() {
                                                                 <label htmlFor="reason">Rate: </label>
                                                                 <input
                                                                   className="rounded-2xl border stroke-1 p-3"
-                                                                  onChange={(e) => setRate(e.target.value)}
+                                                                  onChange={(e) => setRate(Number(e.target.value))}
                                                                   type="number"
                                                                   placeholder="Enter from 1 to 5"
                                                                   min={1}
@@ -545,7 +565,7 @@ export default function Completed() {
                                             <label htmlFor="reason">Rate: </label>
                                             <input
                                               className="rounded-2xl border stroke-1 p-3"
-                                              onChange={(e) => setRate(e.target.value)}
+                                              onChange={(e) => setRate(Number(e.target.value))}
                                               type="number"
                                               placeholder="Enter from 1 to 5"
                                               min={1}
@@ -637,7 +657,7 @@ export default function Completed() {
                                           <label htmlFor="reason">Rate: </label>
                                           <input
                                             className="rounded-2xl border stroke-1 p-3"
-                                            onChange={(e) => setRate(e.target.value)}
+                                            onChange={(e) => setRate(Number(e.target.value))}
                                             type="number"
                                             placeholder="Enter from 1 to 5"
                                             min={1}

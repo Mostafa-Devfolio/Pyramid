@@ -1,19 +1,6 @@
 import { IHomeBestSellers } from '@/app/interface/homePageBestSellers';
 import { baseURL2 } from '@/app/page';
 import React from 'react';
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import Image from 'next/image';
-import Icon from '@/app/icon';
-import placeholderImg from '@/public/placeholder.png';
-import { IMAGE_PLACEHOLDER } from '@/lib/image';
 import HomeVendorsMainComponent from '../HomeVendorsMainComponent/HomeVendorsMainComponent';
 
 type mainType = { mainType: string };

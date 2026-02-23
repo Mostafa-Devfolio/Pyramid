@@ -16,6 +16,16 @@ import { getClass } from '@/services/ApiServices';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
+interface myData {
+  name: string;
+  email: string;
+  password: string;
+  rePassword: string;
+  phoneNumber: string;
+  dateOfBirth: Date;
+  gender: string;
+}
+
 export default function Register() {
   const {
     handleSubmit,
@@ -40,7 +50,7 @@ export default function Register() {
   const [error, setError] = useState('');
   const router = useRouter();
 
-  async function sendData(myData: any) {
+  async function sendData(myData: myData) {
     const userType = {
       username: myData.name,
       email: myData.email,
@@ -50,7 +60,6 @@ export default function Register() {
       phoneNumber: myData.phoneNumber,
     };
     const register = await getClass.Register(userType, 'customer');
-    console.log(register);
 
     if (register.message) {
       setIsRegistered(false);

@@ -9,7 +9,11 @@ import React, { useEffect, useState } from 'react';
 
 const TaxiRoutingMap = dynamic(() => import('@/components/TaxiRoutingMap'), {
   ssr: false,
-  loading: () => <div className="flex h-[500px] w-full items-center justify-center rounded-xl bg-gray-100 animate-pulse">Loading Map...</div>
+  loading: () => (
+    <div className="flex h-[500px] w-full animate-pulse items-center justify-center rounded-xl bg-gray-100">
+      Loading Map...
+    </div>
+  ),
 });
 
 export default function ParcelCancelled() {
@@ -18,7 +22,6 @@ export default function ParcelCancelled() {
   async function getParcel() {
     const token = await getLoginTo();
     const userData = await getClass.userProfile(token);
-    console.log('object', userData);
     const data = await getClass.getParcel(token, userData?.id);
     const pending = data.filter((par: IParcelOrders) => par.deliveryStatus == 'cancelled');
     setSaveParcel(pending);
@@ -32,17 +35,24 @@ export default function ParcelCancelled() {
   }
 
   useEffect(() => {
-    getParcel();
+    async function getParcels() {
+      const token = await getLoginTo();
+      const userData = await getClass.userProfile(token);
+      const data = await getClass.getParcel(token, userData?.id);
+      const pending = data.filter((par: IParcelOrders) => par.deliveryStatus == 'cancelled');
+      setSaveParcel(pending);
+    }
+    getParcels();
   }, []);
   return (
     <div className="">
-      {(saveParcel.length != 0) ? (
+      {saveParcel.length != 0 ? (
         <div className="my-3 grid grid-cols-1 gap-3">
           {saveParcel.map((parcel: IParcelOrders) => {
             return (
               <div key={parcel.id}>
                 {parcel.deliveryStatus == 'cancelled' && (
-                  <div className="grid grid-cols-2 rounded-xl border stroke-1 p-4 gap-6">
+                  <div className="grid grid-cols-2 gap-6 rounded-xl border stroke-1 p-4">
                     <div>
                       <h4>
                         Order Id: <span className="text-gray-800">{parcel.id}</span>
@@ -65,18 +75,18 @@ export default function ParcelCancelled() {
                       <h4>
                         Who pays the order? <span className="text-gray-800">{parcel.payer}</span>
                       </h4>
-                      <div className="h-64 my-5">
-                        <TaxiRoutingMap 
+                      <div className="my-5 h-64">
+                        <TaxiRoutingMap
                           readOnly={true}
-                          initialPickup={{ 
-                            lat: parcel.pickupLat || parcel.pickupLocation?.lat, 
+                          initialPickup={{
+                            lat: parcel.pickupLat || parcel.pickupLocation?.lat,
                             lng: parcel.pickupLng || parcel.pickupLocation?.lng,
-                            address: parcel.pickupLocation?.address
+                            address: parcel.pickupLocation?.address,
                           }}
-                          initialDest={{ 
-                            lat: parcel.dropoffLat || parcel.dropoffLocation?.lat, 
+                          initialDest={{
+                            lat: parcel.dropoffLat || parcel.dropoffLocation?.lat,
                             lng: parcel.dropoffLng || parcel.dropoffLocation?.lng,
-                            address: parcel.dropoffLocation?.address
+                            address: parcel.dropoffLocation?.address,
                           }}
                         />
                       </div>
@@ -126,7 +136,7 @@ export default function ParcelCancelled() {
           })}
         </div>
       ) : (
-        <div className="flex flex-col justify-center items-center gap-3">
+        <div className="flex flex-col items-center justify-center gap-3">
           <h2>No Parcel Cancelled Orders!</h2>
           <Button>Shop Now</Button>
         </div>

@@ -5,11 +5,12 @@ import { Heart } from 'lucide-react';
 import { getClass } from '@/services/ApiServices';
 import { authContext } from '@/lib/ContextAPI/authContext';
 import { getLoginTo } from '@/app/login/login';
+import { IWishList } from '@/app/interface/wishlist';
 
 interface FavoriteButtonProps {
   productId: string | number;
-  saveWishList: any;
-  saveWishList2: any;
+  saveWishList: IWishList[];
+  saveWishList2: IWishList[];
   onAdd: () => void;
   initialIsFavorite?: boolean;
   onToggle?: (isFavorite: boolean) => void;

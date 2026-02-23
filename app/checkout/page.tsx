@@ -11,15 +11,17 @@ import { cartCount } from '@/lib/ContextAPI/cartCount';
 import { IMAGE_PLACEHOLDER } from '@/lib/image';
 import Image from 'next/image';
 import { DatePicker } from '@heroui/react';
-import { now, getLocalTimeZone, CalendarDateTime } from '@internationalized/date';
+import { now, getLocalTimeZone, DateValue } from '@internationalized/date';
+import { ICartItems, Item } from '../interface/Cart/cartItems';
+import { IAddress } from '../interface/addressInterface';
 
 export default function CheckoutPage() {
-  const [address, setAddress] = useState([]);
+  const [address, setAddress] = useState<IAddress[]>([]);
   const [payment, setPayment] = useState('cod');
   const router = useRouter();
   const { auth, token, userData } = useAuth();
   const { countt, setCountt } = useContext(cartCount);
-  const [cartItems, setCartItems] = useState([]);
+  const [cartItems, setCartItems] = useState<Item[]>([]);
   const [isCustom, setIsCustom] = useState(false);
   const [tipValue, setTipValue] = useState(0);
   const [isSelected, setIsSelected] = useState(-1);
@@ -31,7 +33,7 @@ export default function CheckoutPage() {
   const [recipientName, setRecipientName] = useState('');
   const [recipientPhone, setRecipientPhone] = useState<number | null>(null);
   const [scheduleTime, setScheduleTime] = useState('');
-  const [selectedDataTime, setSelectedDataTime] = useState<CalendarDateTime | null>(now(getLocalTimeZone()));
+  const [selectedDataTime, setSelectedDataTime] = useState<DateValue | null>(now(getLocalTimeZone()));
   const [deductWallet, setDeductWallet] = useState(false);
   const [isError, setIsError] = useState(false);
   const [recurrence, setRecurrence] = useState('');
@@ -39,34 +41,14 @@ export default function CheckoutPage() {
   const [subscribtionDateWeekly, setSubscribtionDateWeekly] = useState<number | null>(null);
   const [subscribtionDateMonthly, setSubscribtionDateMonthly] = useState<number | null>(null);
 
-  async function getCartItems() {
-    const data = await getClass.getCartItems(1, token);
-    setCartItems(data.items);
-    console.log('Cart Items', data);
-  }
-
   async function checkout() {
-    console.log(userData);
+    if (!token) return;
     let dateTimeISO = null;
+
     if (selectedDataTime) {
-      try {
-        const jsDate = selectedDataTime.toDate();
-        dateTimeISO = jsDate.toISOString();
-      } catch (error) {
-        const jsDate = new Date(
-          selectedDataTime.year,
-          selectedDataTime.month - 1,
-          selectedDataTime.day,
-          selectedDataTime.hour,
-          selectedDataTime.minute,
-          selectedDataTime.second
-        );
-        dateTimeISO = jsDate.toISOString();
-      }
+      const jsDate = selectedDataTime.toDate(getLocalTimeZone());
+      dateTimeISO = jsDate.toISOString();
     }
-    console.log('Final ISO String sent to API:', dateTimeISO);
-    console.log(address[0].id);
-    console.log(payment);
 
     const body = {
       addressId: address[0].id,
@@ -87,7 +69,6 @@ export default function CheckoutPage() {
     };
     const data = await getClass.checkout(body, token);
     if (data.error) {
-      console.log('Error');
       setIsError(true);
     } else {
       setTimeout(() => {
@@ -102,22 +83,26 @@ export default function CheckoutPage() {
         setCountt(0);
       }, 200);
       setIsError(false);
-      console.log(data);
       router.push('/orders');
     }
   }
 
-  async function getAddress() {
-    const tokens = await getLoginTo();
-    const data = await getClass.getAddress(tokens);
-    setAddress(data);
-  }
-
   useEffect(() => {
+    async function getAddress() {
+      if (!token) return;
+      const data = await getClass.getAddress(token);
+
+      setAddress(data);
+    }
     if (!auth) {
       router.push('/login');
     }
     getAddress();
+    async function getCartItems() {
+      if (!token) return;
+      const data = await getClass.getCartItems(1, token);
+      setCartItems(data.items);
+    }
     getCartItems();
   }, [auth]);
 
@@ -129,7 +114,7 @@ export default function CheckoutPage() {
           <h2>Address</h2>
           <div className="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-3">
             {address.map(
-              (add: any) =>
+              (add: IAddress) =>
                 add.isDefault && (
                   <div className="rounded-2xl border stroke-1 p-2" key={add.id}>
                     <h4 className="truncate">
@@ -190,7 +175,6 @@ export default function CheckoutPage() {
                   <DatePicker
                     hideTimeZone
                     showMonthAndYearPickers
-                    defaultValue={now(getLocalTimeZone())}
                     label="Event Date"
                     variant="bordered"
                     value={selectedDataTime}
@@ -246,7 +230,7 @@ export default function CheckoutPage() {
             {isCustom && (
               <input
                 type="number"
-                onChange={(e) => setTipValue(e.target.value)}
+                onChange={(e) => setTipValue(Number(e.target.value))}
                 placeholder="Enter driver tip"
                 className="rounded-2xl border stroke-1 p-2"
               />
@@ -286,7 +270,7 @@ export default function CheckoutPage() {
                   type="number"
                   className="rounded-2xl border stroke-1 p-2"
                   placeholder="Enter recipient phone:"
-                  onChange={(e) => setRecipientPhone(e.target.value)}
+                  onChange={(e) => setRecipientPhone(Number(e.target.value))}
                 />
               </div>
             )}
@@ -294,7 +278,7 @@ export default function CheckoutPage() {
           <div className="flex flex-col gap-3">
             <h2>Note</h2>
             <textarea
-              rows="4"
+              rows={4}
               onChange={(e) => setNotes(e.target.value)}
               className="rounded-xl border stroke-1 p-2"
               placeholder="Enter your notes here"
@@ -359,7 +343,7 @@ export default function CheckoutPage() {
                     type="number"
                     placeholder="(Day in week) EX: 5"
                     className="border-warning mt-4 rounded-2xl border stroke-1 p-2"
-                    onChange={(e) => setSubscribtionDateWeekly(e.target.value)}
+                    onChange={(e) => setSubscribtionDateWeekly(Number(e.target.value))}
                   />
                   <input
                     type="text"
@@ -381,7 +365,7 @@ export default function CheckoutPage() {
                     type="number"
                     placeholder="(Day in month) EX: 15"
                     className="border-warning mt-4 rounded-2xl border stroke-1 p-2"
-                    onChange={(e) => setSubscribtionDateMonthly(e.target.value)}
+                    onChange={(e) => setSubscribtionDateMonthly(Number(e.target.value))}
                   />
                   <input
                     type="text"
@@ -399,13 +383,18 @@ export default function CheckoutPage() {
           </div>
           <h2 className="my-3">Products</h2>
           <div className="grid grid-cols-2 gap-3">
-            {cartItems.map((item: any) => {
+            {cartItems.map((item: Item) => {
               return (
                 <div key={item.id} className="mb-5 rounded-2xl border">
                   <div className="grid grid-cols-1 sm:grid-cols-8">
                     <div className="rounded-2xl sm:col-span-2">
                       <div className="relative aspect-square w-full overflow-hidden rounded-2xl">
-                        <Image src={item.image ?? IMAGE_PLACEHOLDER} alt={item.name} fill className="object-cover" />
+                        <Image
+                          src={item.product.images ?? IMAGE_PLACEHOLDER}
+                          alt={item.product.title}
+                          fill
+                          className="object-cover"
+                        />
                       </div>
                     </div>
                     <div className="flex flex-col justify-center gap-4 p-3 sm:col-span-2">

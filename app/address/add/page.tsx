@@ -19,6 +19,17 @@ const MapPicker = dynamic(() => import('@/components/MapPicker'), {
   ),
 });
 
+interface IAddressSubmit {
+  label: string;
+    street: string;
+    building: string;
+    floor: string;
+    apartment: string;
+    city: string;
+    other: string;
+    isDefault: boolean;
+}
+
 export default function AddAddress() {
   const router = useRouter();
   const [coordinates, setCoordinates] = useState<{ lat: number; lng: number } | null>(null);
@@ -66,7 +77,7 @@ export default function AddAddress() {
     }
   };
 
-  async function addAddress(myData: any) {
+  async function addAddress(myData: IAddressSubmit) {
     if (!coordinates) {
       alert('Please select a location on the map first.');
       return;
@@ -83,7 +94,6 @@ export default function AddAddress() {
 
     // Make sure getClass.addAddress points to /api/addresses/from-coordinates in your ApiServices!
     const data = await getClass.addAddress(finalData, token);
-    console.log('Address saved successfully:', data);
     router.push('/address');
   }
 

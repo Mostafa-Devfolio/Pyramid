@@ -13,6 +13,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { FaStar, FaStarHalfAlt, FaRegStar } from 'react-icons/fa';
 import ProductWishlistClient from './ProductWishlistClient';
+import { IWishList } from '@/app/interface/wishlist';
 
 type RatingStarsProps = {
   rating: number; // 0 - 5
@@ -25,8 +26,8 @@ export default async function ProductPage({ params }: { params: Promise<{ produc
   const token = await getLoginTo();
   const getWish = await getClass.getWishList(token);
   const getWishArr = getWish.data;
-  const data = getWishArr?.some((wish: any) => wish.product.id === products.id);
-  const data2 = getWishArr?.filter((wish: any) => wish.product.id === products.id);
+  const data = getWishArr?.some((wish: IWishList) => wish.product.id === products.id);
+  const data2 = getWishArr?.filter((wish: IWishList) => wish.product.id === products.id);
 
   return (
     <div className="container mx-auto my-4">

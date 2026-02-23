@@ -14,6 +14,7 @@ import Link from 'next/link';
 import FavoriteButton from '../Icons/FavouriteIcon';
 import { getClass } from '@/services/ApiServices';
 import { useAuth } from '@/lib/ContextAPI/authContext';
+import { IWishList } from '@/app/interface/wishlist';
 
 type Categories = {
   categories: IVendorPageCategory[];
@@ -45,32 +46,32 @@ export default function CategoriesPageComponent({ categories, coupons, banners, 
   };
 
   async function addToWishList(productId: number) {
+    if (!token) return;
     const body = {
       productId: productId,
     };
     const data = await getClass.addWishList(token, body);
     vendorPageProducts();
-    console.log(data);
-  }
-
-  async function getWishList() {
-    const data = await getClass.getWishList(token);
-    console.log(data);
-    setSaveWishList(data.data);
-    vendorPageProducts();
   }
 
   async function deleteWishList() {
+    if (!token) return;
     const data = await getClass.removeWishList(token, 121);
     vendorPageProducts();
   }
 
-  async function vendorPageProducts(){
+  async function vendorPageProducts() {
     const data = await getClass.getVendorProduct(id, whichSubCat);
     setProducts(data.data.products);
   }
 
   useEffect(() => {
+    async function getWishList() {
+      if (!token) return;
+      const data = await getClass.getWishList(token);
+      setSaveWishList(data.data);
+      vendorPageProducts();
+    }
     getWishList();
     vendorPageProducts();
   }, [whichSubCat, id, token]);
@@ -183,8 +184,8 @@ export default function CategoriesPageComponent({ categories, coupons, banners, 
           <h3>Products</h3>
           <div className="mt-3 grid grid-cols-2 gap-4 sm:grid-cols-3">
             {products.map((product: IVendorPageProduct) => {
-              const data = saveWishList?.some((wish: any) => wish.product.id == product.id);
-              const data2 = saveWishList?.filter((wish: any) => wish.product.id == product.id);
+              const data = saveWishList?.some((wish: IWishList) => wish.product.id == product.id);
+              const data2 = saveWishList?.filter((wish: IWishList) => wish.product.id == product.id);
               return (
                 <div key={product.id} className="relative text-center">
                   <Link href={`/vendors/${id}/${product.slug}`}>
@@ -197,7 +198,12 @@ export default function CategoriesPageComponent({ categories, coupons, banners, 
                     />
                   </Link>
                   <div className="absolute top-2 right-2">
-                    <FavoriteButton onAdd={() => addToWishList(product.id)} saveWishList={data} saveWishList2={data2} productId={product.id} />
+                    <FavoriteButton
+                      onAdd={() => addToWishList(product.id)}
+                      saveWishList={data}
+                      saveWishList2={data2}
+                      productId={product.id}
+                    />
                   </div>
                   <Link href={`/vendors/${id}/${product.slug}`}>
                     <h4 className="cursor-pointer">{product.title}</h4>
@@ -218,8 +224,8 @@ export default function CategoriesPageComponent({ categories, coupons, banners, 
         <h3 className="my-3">Discounted Products</h3>
         <div className="grid grid-cols-2 gap-5 sm:grid-cols-4">
           {discountedProduct.map((discountedProduct: IVendorPageProductDiscounted) => {
-            const data = saveWishList?.some((wish: any) => wish.product.id == discountedProduct.id);
-            const data2 = saveWishList?.filter((wish: any) => wish.product.id == discountedProduct.id);
+            const data = saveWishList?.some((wish: IWishList) => wish.product.id == discountedProduct.id);
+            const data2 = saveWishList?.filter((wish: IWishList) => wish.product.id == discountedProduct.id);
             return (
               <div key={discountedProduct.id} className="relative text-center">
                 <Link href={`/vendors/${id}/${discountedProduct.slug}`}>

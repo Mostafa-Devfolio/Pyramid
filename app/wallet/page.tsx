@@ -1,40 +1,47 @@
 'use client';
-import { authContext } from '@/lib/ContextAPI/authContext';
+import { authContext, useAuth } from '@/lib/ContextAPI/authContext';
 import React, { useContext, useEffect, useState } from 'react';
 import { getLoginTo } from '../login/login';
 import { getClass } from '@/services/ApiServices';
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from '@heroui/react';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
+import { IWallet } from '../interface/wallet';
 
 export default function Wallet() {
-  const { userData } = useContext(authContext);
-  const [wallet, setWallet] = useState([]);
+  const { token, userData } = useAuth();
+  const [wallet, setWallet] = useState<IWallet[]>([]);
   const [addWallet, setAddWallet] = useState(false);
   const [amount, setAmount] = useState(0);
   const router = useRouter();
 
-  async function getWallet() {
-    const token = await getLoginTo();
-    const data = await getClass.getWalletHistory(token);
-    setWallet(data.data);
-  }
+  // async function refreshWallet() {
+  //   if (!token) return;
+  //   const data = await getClass.getWalletHistory(token);
+  //   setWallet(data.data);
+  //   console.log(wallet);
+  // }
 
-  async function addWalletTo() {
-    const body = {
-      amount: amount,
-      type: 'credit',
-      reason: 'Top Up Wallet',
-    };
-    const token = await getLoginTo();
-    const data = await getClass.addToWallet(token, body);
-    getWallet();
-  }
+  // async function addWalletTo() {
+  //   if (!token) return;
+  //   const body = {
+  //     amount: amount,
+  //     type: 'credit',
+  //     reason: 'Top Up Wallet',
+  //   };
+  //   const data = await getClass.addToWallet(token, body);
+  //   refreshWallet();
+  // }
 
   useEffect(() => {
+    if (!token) return;
+    async function getWallet() {
+      if (!token) return;
+      const data = await getClass.getWalletHistory(token);
+      setWallet(data.data);
+    }
     getWallet();
-    console.log(userData);
-  }, [userData]);
+  }, [token]);
 
   return (
     <div className="container mx-auto">
@@ -63,7 +70,7 @@ export default function Wallet() {
               <TableColumn>Reason</TableColumn>
             </TableHeader>
             <TableBody>
-              {wallet.map((userWallet: any) => {
+              {wallet.map((userWallet: IWallet) => {
                 return (
                   <TableRow key={userWallet.id}>
                     <TableCell>{userWallet.id}</TableCell>

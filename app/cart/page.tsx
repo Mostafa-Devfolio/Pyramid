@@ -11,22 +11,32 @@ import { getClass } from '@/services/ApiServices';
 import { authContext, useAuth } from '@/lib/ContextAPI/authContext';
 import { getLoginTo } from '../login/login';
 import { cartCount } from '@/lib/ContextAPI/cartCount';
+import { ICartItems, Item } from '../interface/Cart/cartItems';
+import { ICoupon } from '../interface/coupon';
 
 export default function CartPage() {
   const cartItems = useSelector((state: any) => state.cart);
   const [businessId, setBusinessId] = useState(cartItems.businessType);
   const { auth, token } = useAuth();
-  const [cartApi, setCartApi] = useState([]);
-  const [subAndTotal, setSubAndTotal] = useState([]);
+  const [cartApi, setCartApi] = useState<Item[]>([]);
+  const [subAndTotal, setSubAndTotal] = useState<ICartItems | null>(null);
   const [couponCode, setCouponCode] = useState<string | null>(null);
-  const [couponError, setCouponError] = useState<string | null>('');
+  const [couponError, setCouponError] = useState<ICoupon | null>(null);
   const { countt, setCountt } = useContext(cartCount);
 
   const dispatch = useDispatch();
   const subtotal = cartItems.reduce((total: number, item: ICart) => total + item.price * item.quantity, 0);
 
+  async function getCart() {
+      setBusinessId(cartItems.businessType);
+      const getCart = await getClass.getCartItems(businessId, token);
+      const getItems = getCart.items;
+      setCartApi(getItems);
+      setSubAndTotal(getCart);
+    }
+
   async function removeItem(itemId: number) {
-    if (auth) {
+    if (token) {
       const data = await getClass.removeItemFromCart(itemId, token);
       getCart();
     } else {
@@ -35,9 +45,8 @@ export default function CartPage() {
   }
 
   async function changeCart(itemQuantity: number, itemId: number) {
-    if (!auth) {
-      return;
-    }
+    if (!token) return;
+
     const cart = {
       cartItemId: itemId,
       quantity: itemQuantity,
@@ -47,19 +56,21 @@ export default function CartPage() {
     getCart();
   }
 
-  async function applyCoupon(couponData) {
+  async function applyCoupon(couponData: string) {
+    if(!token) return;
     const coupon = {
-      businessTypeId: cartApi[0]?.product.businessType.id,
+      businessTypeId: cartApi[0].product.businessType.id,
       code: couponData,
     };
     const data = await getClass.applyCoupon(coupon, token);
-    setCouponError(data);
+    setCouponError(data.data);
     getCart();
   }
 
   async function clearCart() {
+    if(!token) return;
     const clear = {
-      businessTypeId: cartApi[0]?.product.businessType.id,
+      businessTypeId: cartApi[0].product.businessType.id,
     };
     const data = await getClass.clearCart(clear, token);
     setCountt(0);
@@ -70,6 +81,7 @@ export default function CartPage() {
     dispatch(decreaseQuantity(itemId));
   }
   async function decreaseQty(itemId: number) {
+    if(!token) return;
     const data = await getClass.cartUpdate(itemId, token);
   }
   function increase(itemId: number) {
@@ -78,17 +90,17 @@ export default function CartPage() {
 
   // setBusinessId(cartItems.businessType);
 
-  async function getCart() {
-    setBusinessId(cartItems.businessType);
-    const getCart = await getClass.getCartItems(businessId, token);
-    const getItems = getCart.items;
-    setCartApi(getItems);
-    setSubAndTotal(getCart);
-  }
-
+  
   useEffect(() => {
+    async function getCarts() {
+      setBusinessId(cartItems.businessType);
+      const getCart = await getClass.getCartItems(businessId, token);
+      const getItems = getCart.items;
+      setCartApi(getItems);
+      setSubAndTotal(getCart);
+    }
     setBusinessId(cartItems.businessType);
-    getCart();
+    getCarts();
     // setTimeout(() => {getCart()}, 7000);
     // getCart();
   }, [cartItems.businessType, getCart]);
@@ -105,15 +117,15 @@ export default function CartPage() {
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                 <div className="sm:col-span-2">
                   {' '}
-                  {cartApi.map((item: any) => {
+                  {cartApi.map((item: Item) => {
                     return (
                       <div key={item.id} className="mb-5 rounded-2xl border">
                         <div className="grid grid-cols-1 sm:grid-cols-3">
                           <div className="rounded-2xl sm:col-span-1">
                             <div className="relative aspect-square w-full overflow-hidden rounded-2xl">
                               <Image
-                                src={item.image ?? IMAGE_PLACEHOLDER}
-                                alt={item.name}
+                                src={item.product.images ?? IMAGE_PLACEHOLDER}
+                                alt={item.product.title}
                                 fill
                                 className="object-cover"
                               />
@@ -164,24 +176,24 @@ export default function CartPage() {
                   <div className="p-3">
                     <div className="flex justify-between">
                       <h3>Subtotal:</h3>
-                      <h3>{Math.round(subAndTotal.subtotal * 100) / 100}</h3>
+                      <h3>{Math.round((subAndTotal?.subtotal ?? 0) * 100) / 100}</h3>
                     </div>
                     <div className="flex justify-between">
                       <h3>Discount:</h3>
-                      {subAndTotal.discount != null ? (
-                        <h3>{Math.round(subAndTotal.discount * 100) / 100}</h3>
+                      {subAndTotal?.discount != null ? (
+                        <h3>{Math.round((subAndTotal?.discount ?? 0) * 100) / 100}</h3>
                       ) : (
                         <h3>0</h3>
                       )}
                     </div>
                     <div className="flex justify-between">
                       <h3>Delivery Fee:</h3>
-                      <h3>{Math.round(subAndTotal.deliveryFee * 100) / 100}</h3>
+                      <h3>{Math.round((subAndTotal?.deliveryFee ?? 0) * 100) / 100}</h3>
                     </div>
                     <div className="mt-3 border-b-2"></div>
                     <div className="mt-5 flex justify-between">
                       <h3>Total:</h3>
-                      <h3>{Math.round(subAndTotal.total * 100) / 100}</h3>
+                      <h3>{Math.round((subAndTotal?.total ?? 0) * 100) / 100}</h3>
                     </div>
                     <Link className="cursor-pointer" href={'/checkout'}>
                       <Button className="mt-5 w-full cursor-pointer">Checkout</Button>
@@ -197,17 +209,17 @@ export default function CartPage() {
                           className="rounded-2xl border p-4"
                           placeholder="Enter Coupon Code"
                         />
-                        <Button className={`cursor-pointer rounded-2xl p-7`} onClick={() => applyCoupon(couponCode)}>
+                        <Button className={`cursor-pointer rounded-2xl p-7`} onClick={() => {if(!couponCode) return; applyCoupon(couponCode)}}>
                           APPLY
                         </Button>
                       </div>
-                      {couponError?.data !== null && subAndTotal.discount !== 0 && (
+                      {couponError?.coupon !== null && subAndTotal?.discount !== 0 && (
                         <h4 className="mt-2 text-green-600">* Coupon is already applied!</h4>
                       )}
-                      {couponError?.data == null && (
+                      {couponError?.coupon == null && (
                         <h4 className="mt-2 text-red-600">{couponError?.error?.message}</h4>
                       )}
-                      {couponError?.data != null && (
+                      {couponError?.coupon != null && (
                         <h4 className="mt-2 text-green-600">* Coupon Applied Successfully</h4>
                       )}
                     </div>

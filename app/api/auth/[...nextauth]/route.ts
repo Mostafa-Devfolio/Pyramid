@@ -18,14 +18,11 @@ const handler = NextAuth({
         // You can also use the `req` object to obtain additional parameters
         // (i.e., the request IP address)
         const user = await getClass.login(credentials);
-        console.log('From next Auth:::: ', user);
 
         // If no error and we have user data, return it
         if (user) {
-          console.log('From next Auth:::: ', user);
           return user;
         } else {
-            console.log("Error from next auth");
           return null;
         }
         // Return null if user data could not be retrieved

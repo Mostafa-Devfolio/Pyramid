@@ -1,5 +1,5 @@
 'use client';
-import { IProductDetailsPage } from '@/app/interface/ProductDetailsPage/productDetailsPageInterface';
+import { IProductDetailsPage, RelatedProduct, VendorRandomProduct } from '@/app/interface/ProductDetailsPage/productDetailsPageInterface';
 import { Button } from '@/components/ui/button';
 import { IMAGE_PLACEHOLDER } from '@/lib/image';
 import Image from 'next/image';
@@ -75,7 +75,7 @@ export default function ProductDescription({ products }: products) {
       )}
       {selected2 && (
         <div className="my-5 grid grid-cols-2 gap-5 sm:grid-cols-4">
-          {products.relatedProducts.map((related) => {
+          {products.relatedProducts.map((related: RelatedProduct) => {
             return (
               <div key={related.id} className="text-center">
                 <Link href={`/vendors/${related.vendor.slug}/${related.slug}`}>
@@ -106,7 +106,7 @@ export default function ProductDescription({ products }: products) {
       <div className="mt-3">
         <h2 className="my-5">You Might Also Like</h2>
         <div className="grid grid-cols-2 gap-5 sm:grid-cols-4">
-          {products.vendorRandomProducts.map((random: any) => {
+          {products.vendorRandomProducts.map((random: VendorRandomProduct) => {
             return (
               <div key={random.id} className="">
                 <Link href={`/vendors/${random.vendor.slug}/${random.slug}`}>

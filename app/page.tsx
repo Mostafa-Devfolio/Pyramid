@@ -6,8 +6,8 @@ import { getClass } from '@/services/ApiServices';
 import { getLoginTo } from './login/login';
 import { IMAGE_PLACEHOLDER } from '@/lib/image';
 
-export const baseURL = 'http://devfolio.net/';
-export const baseURL2 = `https://devfolio.net/`;
+export const baseURL = 'http://localhost:1337';
+export const baseURL2 = `https://pyramid.devfolio.net/api/`;
 
 export default async function Home() {
   async function getBusinessType() {
@@ -20,7 +20,6 @@ export default async function Home() {
   const token = await getLoginTo();
   const businessData: IBusiness[] = await getBusinessType();
   const logisticsData = await getClass.getTaxiCourier(token);
-  console.log(logisticsData);
 
   return (
     <div className="container mx-auto pt-3">

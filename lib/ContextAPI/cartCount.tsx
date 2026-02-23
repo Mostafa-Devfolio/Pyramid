@@ -12,13 +12,13 @@ export const cartCount = createContext<cart | null>(null);
 export default function CartCountProvider({ children }: { children: React.ReactNode }) {
   const [countt, setCountt] = useState(0);
 
-  async function getCartCount() {
-    const tokens = await getLoginTo();
-    const data = await getClass.getCartItems(1, tokens);
-    setCountt(data.items.length);
-  }
-
+  
   useEffect(() => {
+    async function getCartCount() {
+      const tokens = await getLoginTo();
+      const data = await getClass.getCartItems(1, tokens);
+      setCountt(data.items.length);
+    }
     getCartCount();
   }, [countt, setCountt]);
 

@@ -2,15 +2,6 @@ import { baseURL2 } from '@/app/page';
 import React from 'react';
 import Image from 'next/image';
 import { ICategoryHome } from '@/app/interface/categoryHomeInterface';
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
 import { IMAGE_PLACEHOLDER } from '@/lib/image';
 import Link from 'next/link';
 import { getClass } from '@/services/ApiServices';
@@ -19,7 +10,6 @@ type id = { mainType: string };
 
 export default async function HomeCategory({ mainType }: id) {
   const categories: ICategoryHome[] = await getClass.getHomeCategories(mainType);
-  console.log(categories);
 
   return (
     <>

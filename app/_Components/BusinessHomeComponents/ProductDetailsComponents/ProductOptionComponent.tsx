@@ -11,8 +11,9 @@ import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
 import { getClass } from '@/services/ApiServices';
-import { authContext } from '@/lib/ContextAPI/authContext';
+import { useAuth } from '@/lib/ContextAPI/authContext';
 import { cartCount } from '@/lib/ContextAPI/cartCount';
+import { ICartItems, Item } from '@/app/interface/Cart/cartItems';
 
 type optiongroup = {
   products: IProductDetailsPage;
@@ -20,9 +21,8 @@ type optiongroup = {
 export default function ProductOptionComponent({ products }: optiongroup) {
   const cartItem = useSelector((state: any) => state.cart);
   const [errorMsg, setErrorMsg] = useState('');
-  const { auth, token } = useContext(authContext);
-  const [getCar, setGetCar] = useState([]);
-  console.log(products);
+  const { auth, token } = useAuth();
+  const [getCar, setGetCar] = useState<ICartItems|null>(null);
   const { countt, setCountt } = useContext(cartCount);
 
   // Check if a product has a variant
@@ -37,10 +37,8 @@ export default function ProductOptionComponent({ products }: optiongroup) {
   const dispatch = useDispatch();
 
   const cartPrice = useMemo(() => {
-    if (!auth) {
-      return;
-    }
-    const item = getCar?.items?.find((itemm: any) => products.id == itemm.product.id);
+    if (!token) return;
+    const item = getCar?.items?.find((itemm: Item) => products.id == itemm.product.id);
     if (!item) {
       return;
     }
@@ -59,20 +57,17 @@ export default function ProductOptionComponent({ products }: optiongroup) {
     const getCart = await getClass.getCartItems(1, token);
     setGetCar(getCart);
     setCountt(getCart.items.length);
-    console.log('cart itemssssssssssssssssssssssssssssssssss:', getCart);
   }
 
   // Function to add items to cart
 
-  async function addToCartt(productsId: any) {
-    if (!auth) {
-      return;
-    }
+  async function addToCartt(productsId: number) {
+    if (!token) return;
+
     const itemss = getCar?.items ?? [];
 
-    const alreadyExists = itemss.some((item: any) => item.product.id === productsId);
+    const alreadyExists = itemss.some((item: Item) => item.product.id === productsId);
     if (alreadyExists) {
-      console.log('Cannot add to the cart because it already exists');
       return;
     }
 
@@ -93,8 +88,8 @@ export default function ProductOptionComponent({ products }: optiongroup) {
   }
 
   async function removeItem(itemId: number) {
-    if (auth) {
-      const data = await getClass.removeItemFromCart(itemId);
+    if (token) {
+      const data = await getClass.removeItemFromCart(itemId, token);
       setCount(0);
       getCartItems();
     }
@@ -104,7 +99,7 @@ export default function ProductOptionComponent({ products }: optiongroup) {
   }
 
   async function changeCart(itemId: number, count: number) {
-    if (!auth) {
+    if (!token) {
       return;
     }
     if (count == 0) {
@@ -134,13 +129,13 @@ export default function ProductOptionComponent({ products }: optiongroup) {
           id: products.id,
           name: products.title,
           quantity: count || 1,
-          variantName: haveVariants.options.map((variant: any) => variant.label),
+          variantName: haveVariants.options.map((variant: Option) => variant.label),
           price:
             haveVariants.salePrice != 0 && haveVariants.salePrice != null ? haveVariants.salePrice : haveVariants.price,
           deliveryFee: products.vendor.deliveryFee,
           vendorName: products.vendor.name,
           businesstype: products.businessType.id,
-          variantId: haveVariants.options.map((variant: any) => variant.id),
+          variantId: haveVariants.options.map((variant: Option) => variant.id),
           selectedOptions: [],
         })
       );
@@ -196,27 +191,31 @@ export default function ProductOptionComponent({ products }: optiongroup) {
 
   // Setting the initial base price, sale price if available, stock and which variant is selected
   useEffect(() => {
-    getCartItems();
+    async function getCartItem() {
+    const getCart = await getClass.getCartItems(1, token);
+    setGetCar(getCart);
+    setCountt(getCart.items.length);
+  }
+    getCartItem();
     if (!haveVariants) return;
     setIsSelected(haveVariants.id);
     setSalePrice(haveVariants.salePrice);
     setBasePrice(haveVariants.price);
     setStock(haveVariants.stock);
-    setTimeout(() => console.log(getCar), 3000);
     // const cartId = getCar?.items.
   }, [haveVariants]);
 
   // Decrease quantity
   function decrease() {
-    if (count <= 0) {
+    if ((count ?? 0) <= 0) {
       return;
     }
-    setCount(count - 1);
+    setCount((count ?? 0) - 1);
   }
 
   // Increase quantity
   function increase() {
-    setCount(count + 1);
+    setCount((count ?? 0) + 1);
   }
 
   return (
@@ -282,10 +281,10 @@ export default function ProductOptionComponent({ products }: optiongroup) {
       <div className="mt-3 flex gap-3">
         <div className="flex items-center gap-2 rounded-2xl border">
           <div className="">
-            {(count == null || count == 0) && !getCar?.items?.some((ite: any) => products.id == ite.product.id) ? (
+            {(count == null || count == 0) && !getCar?.items?.some((ite: Item) => products.id == ite.product.id) ? (
               <Button
                 onClick={() => {
-                  setCount(count + 1);
+                  setCount((count ?? 0) + 1);
                   addItemToCart();
                   addToCartt(products.id);
                 }}
@@ -296,7 +295,7 @@ export default function ProductOptionComponent({ products }: optiongroup) {
               <div className="flex items-center gap-3">
                 {auth ? (
                   getCar?.items?.map(
-                    (itemm: any) =>
+                    (itemm: Item) =>
                       products.id == itemm.product.id && (
                         <Button
                           key={itemm.id}
@@ -321,14 +320,14 @@ export default function ProductOptionComponent({ products }: optiongroup) {
                 )}
                 {auth ? (
                   getCar?.items?.map(
-                    (itemm: any) => products.id == itemm.product.id && <p key={itemm.id}>{itemm.quantity}</p>
+                    (itemm: Item) => products.id == itemm.product.id && <p key={itemm.id}>{itemm.quantity}</p>
                   )
                 ) : (
                   <p>{count}</p>
                 )}
                 {auth ? (
                   getCar?.items?.map(
-                    (itemm: any) =>
+                    (itemm: Item) =>
                       products.id == itemm.product.id && (
                         <Button
                           key={itemm.id}
@@ -367,18 +366,18 @@ export default function ProductOptionComponent({ products }: optiongroup) {
             {salePrice != 0 && (
               <div className="flex gap-3">
                 {salePrice ? (
-                  <h3>{Math.round(salePrice * count * 100) / 100}</h3>
+                  <h3>{Math.round(salePrice * (count ?? 0) * 100) / 100}</h3>
                 ) : (
-                  <h3>{Math.round(basePrice * count * 100) / 100}</h3>
+                  <h3>{Math.round(basePrice * (count ?? 0) * 100) / 100}</h3>
                 )}
               </div>
             )}
             {!haveVariants && (
               <div className="flex gap-3">
                 {products.baseSalePrice ? (
-                  <h3>{Math.round(products.baseSalePrice * count * 100) / 100}</h3>
+                  <h3>{Math.round(products.baseSalePrice * (count ?? 0) * 100) / 100}</h3>
                 ) : (
-                  <h3 className="text-green-600">{Math.round(products.basePrice * count * 100) / 100}</h3>
+                  <h3 className="text-green-600">{Math.round(products.basePrice * (count ?? 0) * 100) / 100}</h3>
                 )}
               </div>
             )}

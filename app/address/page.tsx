@@ -6,22 +6,23 @@ import React, { useEffect, useState } from 'react';
 import { IAddress } from '../interface/addressInterface';
 import { getLoginTo } from '../login/login';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/lib/ContextAPI/authContext';
 
 export default function Address() {
-  const [addresses, setAddresses] = useState([]);
+  const [addresses, setAddresses] = useState<IAddress[]>([]);
   const router = useRouter();
+  const { token } = useAuth();
 
   async function getAddress() {
-    const token = await getLoginTo();
+    if(!token) return;
     const data = await getClass.getAddress(token);
-    console.log(data);
     setAddresses(data);
   }
 
-  async function updateAddress(addressId: any) {
+  async function updateAddress(addressId: number) {
     const token: string = await getLoginTo();
     await Promise.all(
-      addresses.map((address: any) =>
+      addresses.map((address: IAddress) =>
         address.isDefault ? getClass.updateAddress(address.id, { isDefault: false }, token) : Promise.resolve()
       )
     );
@@ -34,7 +35,12 @@ export default function Address() {
   }
 
   useEffect(() => {
-    getAddress();
+    async function getAddresses() {
+      if (!token) return;
+      const data = await getClass.getAddress(token);
+      setAddresses(data);
+    }
+    getAddresses();
   }, []);
 
   return (
@@ -58,7 +64,7 @@ export default function Address() {
       </Button>
 
       <div className="mt-5 grid grid-cols-3 gap-5">
-        {addresses.map((address: any) => {
+        {addresses.map((address: IAddress) => {
           return (
             <div key={address.id} className="relative truncate rounded-2xl border stroke-1 p-5 text-gray-500 shadow-sm">
               <h4 className="mb-2 truncate text-lg font-bold text-black">{address.label || 'Address'}</h4>

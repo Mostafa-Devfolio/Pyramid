@@ -2,13 +2,13 @@
 
 import FavoriteButton from '@/app/_Components/Icons/FavouriteIcon';
 import { getClass } from '@/services/ApiServices';
-import { useContext } from 'react';
-import { authContext } from '@/lib/ContextAPI/authContext';
+import { useAuth } from '@/lib/ContextAPI/authContext';
+import { IWishList } from '@/app/interface/wishlist';
 
 type Props = {
   productId: number;
   isWishlist: boolean;
-  wishlistItem: any[];
+  wishlistItem: IWishList;
 };
 
 export default function ProductWishlistClient({
@@ -16,7 +16,7 @@ export default function ProductWishlistClient({
   isWishlist,
   wishlistItem,
 }: Props) {
-  const { token } = useContext(authContext);
+  const { token } = useAuth();
 
   async function addToWishList() {
     if (!token) return;

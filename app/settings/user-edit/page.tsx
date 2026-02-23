@@ -1,9 +1,22 @@
 'use client';
 import { baseURL2 } from '@/app/page';
 import { Button } from '@/components/ui/button';
-import { authContext, useAuth } from '@/lib/ContextAPI/authContext';
-import React, { useContext, useEffect, useState } from 'react';
+import { useAuth } from '@/lib/ContextAPI/authContext';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+
+export interface IUserData {
+  username: string
+  email: string
+  phone: string
+  currentPassword: string
+  newPassword: string
+}
+export interface IUserData2 {
+  username: string
+  email: string
+  phone: string
+}
 
 export default function UserEdit() {
   const [userEdit, setUserEdit] = useState(true);
@@ -25,15 +38,14 @@ export default function UserEdit() {
     // resolver: zodResolver(updateSchema),
   });
 
-  async function sendData(data: any) {
-    console.log('Updated user data:', data);
+  async function sendData(data: IUserData) {
     const raw = localStorage.getItem('user');
     let token: string | null = raw;
     if (token && token.trim().startsWith('"')) {
       token = JSON.parse(token);
     }
     if (data.currentPassword && data.newPassword) {
-      const reData: any = {
+      const reData: IUserData = {
         username: data.username,
         email: data.email,
         phone: data.phone,
@@ -52,7 +64,7 @@ export default function UserEdit() {
       setUserData(dataa);
     }
 
-    const reData: any = {
+    const reData: IUserData2 = {
       username: data.username,
       email: data.email,
       phone: data.phone,

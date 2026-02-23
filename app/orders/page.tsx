@@ -7,28 +7,32 @@ import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
+import { IOrders, Item } from '../interface/orders';
 
 export default function Processing() {
-  const [saveOrders, setSaveOrders] = useState([]);
+  const [saveOrders, setSaveOrders] = useState<IOrders[]>([]);
   const { auth, token } = useAuth();
   const [open, setOpen] = useState(false);
   const [orderIDD, setOrderIDD] = useState(0);
   const router = useRouter();
+
   async function getOrder() {
+    if(!token) return;
     const data = await getClass.getOrders(token);
     const orders = data
       .filter(
-        (order: any) =>
+        (order: IOrders) =>
           order.fulfillmentStatus === 'pending' ||
           order.fulfillmentStatus === 'confirmed' ||
           order.fulfillmentStatus === 'processing' ||
           order.fulfillmentStatus === 'out_for_delivery'
       )
-      .sort((a: any, b: any) => b.id - a.id);
+      .sort((a: IOrders, b: IOrders) => b.id - a.id);
     setSaveOrders(orders);
   }
 
-  async function cancelOrder(orderId: number) {
+  async function cancelOrder(orderId: string) {
+    if(!token) return;
     const cancel = {
       status: 'cancelled',
       fulfillmentStatus: 'cancelled',
@@ -39,13 +43,27 @@ export default function Processing() {
   }
 
   useEffect(() => {
-    getOrder();
+    async function getOrders() {
+    if(!token) return;
+    const data = await getClass.getOrders(token);
+    const orders = data
+      .filter(
+        (order: IOrders) =>
+          order.fulfillmentStatus === 'pending' ||
+          order.fulfillmentStatus === 'confirmed' ||
+          order.fulfillmentStatus === 'processing' ||
+          order.fulfillmentStatus === 'out_for_delivery'
+      )
+      .sort((a: IOrders, b: IOrders) => b.id - a.id);
+    setSaveOrders(orders);
+  }
+    getOrders();
   }, [token]);
   return (
     <div>
       {saveOrders.length > 0 ? (
         <div className="mt-3 grid grid-cols-1 gap-3">
-          {saveOrders.map((order: any) => {
+          {saveOrders.map((order: IOrders) => {
             return (
               <div className="rounded border stroke-1 p-3" key={order.id}>
                 <div key={order.id} className="grid grid-cols-2 rounded p-4">
@@ -150,7 +168,7 @@ export default function Processing() {
                 <div>
                   <h2 className="m-4">Products</h2>
                   <div className="grid mx-4 grid-cols-2 gap-3">
-                    {order.subOrders[0].items.map((item: any) => {
+                    {order.subOrders[0].items.map((item: Item) => {
                       return (
                         <div key={item.id} className="flex">
                           <Image
@@ -158,7 +176,7 @@ export default function Processing() {
                             height={500}
                             width={500}
                             src={item.product?.images?.[0]?.url}
-                            alt={order}
+                            alt={order.recipientName}
                           />
                           <div className="flex flex-col">
                             <h3>{item.product.title}</h3>
