@@ -37,9 +37,8 @@ export default function Login() {
   const cartItems = useSelector((state: any) => state.cart);
 
   async function login(myData: login) {
-    if (!token) return;
     const login = await getClass.login(myData);
-
+    
     const items = {
       businessTypeId: cartItems.map((item: any) => item.businesstype),
       productId: cartItems.map((item: any) => item.id),
@@ -47,13 +46,13 @@ export default function Login() {
       variantId: null,
       selectedOptions: cartItems.map((item: any) => item.selectedOptions) ?? [],
     };
-
+    
     if (login.jwt) {
       // localStorage.setItem('user', JSON.stringify(login.jwt));
       loginTo(login.jwt);
       setToken(login.jwt);
       setAuth(true);
-      const cart = await getClass.cartAdd(items, token);
+      const cart = await getClass.cartAdd(items, login.jwt);
       router.push('/');
     } else {
       setAuth(false);

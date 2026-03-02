@@ -42,8 +42,8 @@ export default function Wishlist() {
       </div>
       <div className="mt-3 grid grid-cols-2 gap-4 sm:grid-cols-3">
         {saveWishList?.map((myWishlist: IWishList) => {
-          const data = saveWishList?.some((wish: IWishList) => wish.product.id == myWishlist.product.id);
-          const data2 = saveWishList?.filter((wish: IWishList) => wish.product.id == myWishlist.product.id);
+          const isWishlisted = saveWishList?.some((wish: IWishList) => wish.product.id === myWishlist.product.id);
+          const wishlistItems = saveWishList?.filter((wish: IWishList) => wish.product.id === myWishlist.product.id);
           return (
             <div key={myWishlist.id} className="relative text-center">
               <Link href={`/vendors/${myWishlist.product.vendor.id}/${myWishlist.product.slug}`}>
@@ -58,8 +58,8 @@ export default function Wishlist() {
               <div className="absolute top-2 right-2">
                 <FavoriteButton
                   onAdd={() => ''}
-                  saveWishList={data}
-                  saveWishList2={data2}
+                  isWishlisted={isWishlisted ?? false}
+                  wishlistItems={wishlistItems ?? []}
                   productId={myWishlist.product.id}
                 />
               </div>

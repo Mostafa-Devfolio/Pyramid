@@ -1,4 +1,3 @@
-import { IBanner } from '@/app/interface/bannerBusinessTypeInterface';
 export interface IBanner {
   id: number;
   documentId: string;

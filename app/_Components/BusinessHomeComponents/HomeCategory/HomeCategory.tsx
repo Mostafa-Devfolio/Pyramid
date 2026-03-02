@@ -5,6 +5,7 @@ import { ICategoryHome } from '@/app/interface/categoryHomeInterface';
 import { IMAGE_PLACEHOLDER } from '@/lib/image';
 import Link from 'next/link';
 import { getClass } from '@/services/ApiServices';
+import { getLoginTo } from '@/app/login/login';
 
 type id = { mainType: string };
 

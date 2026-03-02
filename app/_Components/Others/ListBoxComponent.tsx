@@ -3,8 +3,12 @@ import { useAuth } from '@/lib/ContextAPI/authContext';
 import { Listbox, ListboxItem, ListboxSection, cn } from '@heroui/react';
 import { useRouter } from 'next/navigation';
 import { logOutNow } from './Logout';
+import { SVGProps, ReactNode } from "react";
 
-export const AddNoteIcon = (props) => {
+
+type IconProps = SVGProps<SVGSVGElement>;
+
+export const AddNoteIcon = (props: IconProps) => {
   return (
     <svg width="3em" height="3em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
@@ -21,7 +25,7 @@ export const AddNoteIcon = (props) => {
   );
 };
 
-export const CopyDocumentIcon = (props) => {
+export const CopyDocumentIcon = (props: IconProps) => {
   return (
     <svg width="3em" height="3em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect x="5" y="4" width="14" height="18" rx="2" fill="#4A90E2" />
@@ -43,7 +47,7 @@ export const CopyDocumentIcon = (props) => {
   );
 };
 
-export const EditDocumentIcon = (props) => {
+export const EditDocumentIcon = (props: IconProps) => {
   return (
     <svg width="3em" height="3em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2Z" fill="#E53935" />
@@ -52,7 +56,7 @@ export const EditDocumentIcon = (props) => {
     </svg>
   );
 };
-export const WalletDocumentIcon = (props) => {
+export const WalletDocumentIcon = (props: IconProps) => {
   return (
     <svg width="3em" height="3em" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect x="16" y="40" width="96" height="64" rx="12" fill="#4A90E2" />
@@ -65,7 +69,7 @@ export const WalletDocumentIcon = (props) => {
     </svg>
   );
 };
-export const LoyaltyDocumentIcon = (props) => {
+export const LoyaltyDocumentIcon = (props: IconProps) => {
   return (
     <svg width="3em" height="3em" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
       <circle cx="64" cy="64" r="56" fill="#F4B400" />
@@ -80,7 +84,7 @@ export const LoyaltyDocumentIcon = (props) => {
   );
 };
 
-export const DeleteDocumentIcon = (props) => {
+export const DeleteDocumentIcon = (props: IconProps) => {
   return (
     <svg width="3em" height="3em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect x="4" y="4" width="16" height="16" rx="2" fill="#4A90E2" />
@@ -98,7 +102,7 @@ export const DeleteDocumentIcon = (props) => {
   );
 };
 
-export const WishListDocumentIcon = (props) => {
+export const WishListDocumentIcon = (props: IconProps) => {
   return (
     <svg width="3em" height="3em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect x="5" y="4" width="14" height="18" rx="2" fill="#4A90E2" />
@@ -118,7 +122,7 @@ export const WishListDocumentIcon = (props) => {
   );
 };
 
-export const ListboxWrapper = ({ children }) => (
+export const ListboxWrapper = ({ children }: { children: ReactNode }) => (
   <div className="border-small rounded-small border-default-200 dark:border-default-100 w-full max-w-[100%] px-1 py-2">
     {children}
   </div>

@@ -1,5 +1,5 @@
 'use client';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ICart } from '../interface/Cart/cart';
 import Image from 'next/image';
@@ -8,32 +8,44 @@ import { Button } from '@/components/ui/button';
 import { decreaseQuantity, increaseQuantity, removeFromCart } from '@/redux/slices/cartSlice';
 import Link from 'next/link';
 import { getClass } from '@/services/ApiServices';
-import { authContext, useAuth } from '@/lib/ContextAPI/authContext';
-import { getLoginTo } from '../login/login';
-import { cartCount } from '@/lib/ContextAPI/cartCount';
+import { useAuth } from '@/lib/ContextAPI/authContext';
+import { cartCount, useCartCount } from '@/lib/ContextAPI/cartCount';
 import { ICartItems, Item } from '../interface/Cart/cartItems';
 import { ICoupon } from '../interface/coupon';
+import { useBusiness } from '@/lib/ContextAPI/businessTypeId';
+
+interface CouponErrorResponse {
+  error?: {
+    message?: string;
+  };
+  coupon?: null;
+}
+
+type CouponResponse = ICoupon | CouponErrorResponse;
 
 export default function CartPage() {
   const cartItems = useSelector((state: any) => state.cart);
-  const [businessId, setBusinessId] = useState(cartItems.businessType);
+  const [businessIdd, setBusinessId] = useState(cartItems.businessType);
   const { auth, token } = useAuth();
   const [cartApi, setCartApi] = useState<Item[]>([]);
   const [subAndTotal, setSubAndTotal] = useState<ICartItems | null>(null);
   const [couponCode, setCouponCode] = useState<string | null>(null);
-  const [couponError, setCouponError] = useState<ICoupon | null>(null);
-  const { countt, setCountt } = useContext(cartCount);
+  const [couponError, setCouponError] = useState<CouponResponse | null>(null);
+  const { countt, setCountt } = useCartCount();
+  const { businessId } = useBusiness();
 
   const dispatch = useDispatch();
   const subtotal = cartItems.reduce((total: number, item: ICart) => total + item.price * item.quantity, 0);
 
   async function getCart() {
-      setBusinessId(cartItems.businessType);
-      const getCart = await getClass.getCartItems(businessId, token);
-      const getItems = getCart.items;
-      setCartApi(getItems);
-      setSubAndTotal(getCart);
-    }
+    if (!token) return;
+    if(businessId === null) return;
+    setBusinessId(cartItems.businessType);
+    const getCart = await getClass.getCartItems(businessId, token);
+    const getItems = getCart.items;
+    setCartApi(getItems);
+    setSubAndTotal(getCart);
+  }
 
   async function removeItem(itemId: number) {
     if (token) {
@@ -57,7 +69,7 @@ export default function CartPage() {
   }
 
   async function applyCoupon(couponData: string) {
-    if(!token) return;
+    if (!token) return;
     const coupon = {
       businessTypeId: cartApi[0].product.businessType.id,
       code: couponData,
@@ -68,7 +80,7 @@ export default function CartPage() {
   }
 
   async function clearCart() {
-    if(!token) return;
+    if (!token) return;
     const clear = {
       businessTypeId: cartApi[0].product.businessType.id,
     };
@@ -81,7 +93,7 @@ export default function CartPage() {
     dispatch(decreaseQuantity(itemId));
   }
   async function decreaseQty(itemId: number) {
-    if(!token) return;
+    if (!token) return;
     const data = await getClass.cartUpdate(itemId, token);
   }
   function increase(itemId: number) {
@@ -90,9 +102,10 @@ export default function CartPage() {
 
   // setBusinessId(cartItems.businessType);
 
-  
   useEffect(() => {
     async function getCarts() {
+      if (!token) return;
+      if(businessId === null) return;
       setBusinessId(cartItems.businessType);
       const getCart = await getClass.getCartItems(businessId, token);
       const getItems = getCart.items;
@@ -103,7 +116,7 @@ export default function CartPage() {
     getCarts();
     // setTimeout(() => {getCart()}, 7000);
     // getCart();
-  }, [cartItems.businessType, getCart]);
+  }, [cartItems.businessType, getCart, businessId]);
 
   return (
     <div className="container mx-auto p-4">
@@ -209,7 +222,13 @@ export default function CartPage() {
                           className="rounded-2xl border p-4"
                           placeholder="Enter Coupon Code"
                         />
-                        <Button className={`cursor-pointer rounded-2xl p-7`} onClick={() => {if(!couponCode) return; applyCoupon(couponCode)}}>
+                        <Button
+                          className={`cursor-pointer rounded-2xl p-7`}
+                          onClick={() => {
+                            if (!couponCode) return;
+                            applyCoupon(couponCode);
+                          }}
+                        >
                           APPLY
                         </Button>
                       </div>

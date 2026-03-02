@@ -1,5 +1,5 @@
 import CategoriesPageComponent from '@/app/_Components/VendorsPageComponents/CategoriesPageComponent';
-import Icon from '@/app/icon';
+import Icon from '@/components/Icon';
 import { IVendorPageBanner } from '@/app/interface/VendorPage/vendorPageBanners';
 import { IVendorPageCategory } from '@/app/interface/VendorPage/vendorPageCategory';
 import { IVendorPageCoupon } from '@/app/interface/VendorPage/vendorPageCoupon';
@@ -8,12 +8,16 @@ import { IVendorPageProduct } from '@/app/interface/VendorPage/vendorPageProduct
 import { IVendorPageProductDiscounted } from '@/app/interface/VendorPage/vendorPageProductsDiscounted';
 import { getClass } from '@/services/ApiServices';
 import React from 'react';
+import { getLoginTo } from '@/app/login/login';
+import FinalCartBusinessSolution from '@/app/_Components/BusinessHomeComponents/HomeBusiness/FinalCartBusinessSolution';
 
 export default async function VendorsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-
+  const token = await getLoginTo();
   const vendor: IVendorInfo = await getClass.vendorPageInfo(id);
-  
+  const business = vendor.businessType.id;
+  await getClass.getCartItems(business, token);
+
   const categories: IVendorPageCategory[] = await getClass.vendorPageCategory(id);
   const coupons: IVendorPageCoupon[] = await getClass.vendorPageCoupon(id);
   const banners: IVendorPageBanner[] = await getClass.vendorPageBanners(id);
@@ -21,6 +25,7 @@ export default async function VendorsPage({ params }: { params: Promise<{ id: st
 
   return (
     <>
+      <FinalCartBusinessSolution businessIdd = {business}/>
       <div className="container mx-auto mb-3 grid cursor-default grid-cols-1 rounded-br-2xl rounded-bl-2xl border-b bg-gray-800 p-3 text-white md:flex md:items-center md:gap-4">
         <h1 className="bg-linear-to-r from-purple-300 to-red-400 bg-clip-text text-center whitespace-nowrap text-transparent md:w-fit">
           {vendor.name}

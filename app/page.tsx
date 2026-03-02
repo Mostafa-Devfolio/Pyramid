@@ -5,8 +5,10 @@ import { CarouselHome } from './_Components/Carsoul/Carsoul';
 import { getClass } from '@/services/ApiServices';
 import { getLoginTo } from './login/login';
 import { IMAGE_PLACEHOLDER } from '@/lib/image';
+import SetBusiness from './_Components/BusinessHomeComponents/HomeBusiness/SetBusiness';
+import { IBooking } from './interface/booking';
 
-export const baseURL = 'http://localhost:1337';
+export const baseURL = 'https://pyramid.devfolio.net';
 export const baseURL2 = `https://pyramid.devfolio.net/api/`;
 
 export default async function Home() {
@@ -28,44 +30,25 @@ export default async function Home() {
       </div>
       <h2 className="my-5">Choose your type</h2>
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {businessData.map((business: IBusiness) => {
-          return (
-            <div className="text-center" key={business.id}>
-              <Link className="group" href={`${business.slug}`}>
-                <Image
-                  width={200}
-                  height={200}
-                  className="w-full duration-500 group-hover:rotate-y-180"
-                  src={`${baseURL}${business.icon.url}`}
-                  alt={business.icon.alternativeText}
-                />
-              </Link>
-
-              <Link href={`${business.slug}`}>
-                <h2 className="text-center">{business.name}</h2>
-              </Link>
-              <Link href={`${business.slug}`}>
-                <p>{business.description}</p>
-              </Link>
-            </div>
-          );
-        })}
+        {businessData.map((business: IBusiness) => (
+          <SetBusiness key={business.id} business={business} />
+        ))}
       </div>
-      <h2 className="my-5">Delivery and Booking</h2>
+      <h2 className="my-5">Delivery and Courier</h2>
       <div className="grid grid-cols-2 gap-4">
         <div>
           {logisticsData.isTaxiEnabled == true && (
-            <div className="text-center flex flex-col justify-center items-center">
-              <div className='w-[45%]'>
-              <Link className="group" href={`/taxi`}>
-                <Image
-                  width={2000}
-                  height={2000}
-                  className="w-full rounded-2xl duration-500 group-hover:rotate-y-180"
-                  src={'https://pyramid.devfolio.net/uploads/taxi.webp'}
-                  alt={'Taxi'}
-                />
-              </Link>
+            <div className="flex flex-col items-center justify-center text-center">
+              <div className="w-[45%]">
+                <Link className="group" href={`/taxi`}>
+                  <Image
+                    width={2000}
+                    height={2000}
+                    className="w-full rounded-2xl duration-500 group-hover:rotate-y-180"
+                    src={'https://pyramid.devfolio.net/uploads/taxi.webp'}
+                    alt={'Taxi'}
+                  />
+                </Link>
               </div>
               <Link href={`/taxi`}>
                 <h2 className="text-center">Taxi</h2>
@@ -78,8 +61,8 @@ export default async function Home() {
         </div>
         <div>
           {logisticsData.isCourierEnabled == true && (
-            <div className="text-center flex flex-col justify-center items-center">
-              <div className='w-[50%]'>
+            <div className="flex flex-col items-center justify-center text-center">
+              <div className="w-[50%]">
                 <Link className="group" href={`/courier`}>
                   <Image
                     width={2000}
@@ -98,6 +81,30 @@ export default async function Home() {
               </Link>
             </div>
           )}
+        </div>
+      </div>
+      <div className="my-5">
+        <h2>Bookings</h2>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="flex flex-col items-center justify-center text-center">
+            <div className="w-[50%]">
+              <Link className="group" href={`/bookings`}>
+                <Image
+                  width={2000}
+                  height={2000}
+                  className="w-full rounded-2xl duration-500 group-hover:rotate-y-180"
+                  src={'https://pyramid.devfolio.net/uploads/courier.png'}
+                  alt={'Booking'}
+                />
+              </Link>
+            </div>
+            <Link href={`/bookings`}>
+              <h2 className="text-center">Booking</h2>
+            </Link>
+            <Link href={`/bookings`}>
+              <p>Book hotels, villas, apartment or anything else.</p>
+            </Link>
+          </div>
         </div>
       </div>
     </div>

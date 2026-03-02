@@ -11,11 +11,7 @@ type Props = {
   wishlistItem: IWishList;
 };
 
-export default function ProductWishlistClient({
-  productId,
-  isWishlist,
-  wishlistItem,
-}: Props) {
+export default function ProductWishlistClient({ productId, isWishlist, wishlistItem }: Props) {
   const { token } = useAuth();
 
   async function addToWishList() {
@@ -27,8 +23,8 @@ export default function ProductWishlistClient({
   return (
     <FavoriteButton
       onAdd={addToWishList}
-      saveWishList={isWishlist}
-      saveWishList2={wishlistItem}
+      isWishlisted={isWishlist}
+      wishlistItems={wishlistItem ? [wishlistItem] : []} // needs to be an array
       productId={productId}
     />
   );

@@ -1,15 +1,14 @@
 'use client';
 import { usePathname } from 'next/navigation';
-import { useContext, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
 import React from 'react';
 import Link from 'next/link';
-import { cartCount } from '@/lib/ContextAPI/cartCount';
+import { cartCount, useCartCount } from '@/lib/ContextAPI/cartCount';
 
 export default function Statusbar() {
   const pathName = usePathname();
   const [isSelected, setIsSelected] = useState(-1);
-  const { countt, setCountt } = useContext(cartCount);
+  const { countt, setCountt } = useCartCount();
 
   useEffect(() => {
     if (pathName == '/') {

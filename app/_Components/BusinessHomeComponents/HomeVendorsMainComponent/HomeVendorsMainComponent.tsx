@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import Icon from '@/app/icon';
+import Icon from '@/components/Icon';
 import { IMAGE_PLACEHOLDER } from '@/lib/image';
 import Link from 'next/link';
 

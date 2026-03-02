@@ -16,6 +16,7 @@ import NavBar from './_Components/Navbar/Navbar';
 import { HeroUIProvider } from '@heroui/react';
 import Statusbar from './_Components/Statusbar/Statusbar';
 import CartCountProvider from '@/lib/ContextAPI/cartCount';
+import { BusinessContextProvider } from '@/lib/ContextAPI/businessTypeId';
 
 config.autoAddCss = false;
 
@@ -43,19 +44,21 @@ export default function RootLayout({
         <ReduxProviders>
           <CartSave />
           <AuthContextProvider>
-            <CartCountProvider>
-              <ReactQueryProviders>
-                <HeroUIProvider>
-                  <Toaster />
-                  <NavBar />
-                  <div className="mx-auto mb-15 w-[90%] sm:mb-0">
-                    {children}
-                    <Statusbar />
-                  </div>
-                  <Footer />
-                </HeroUIProvider>
-              </ReactQueryProviders>
-            </CartCountProvider>
+            <BusinessContextProvider>
+              <CartCountProvider>
+                <ReactQueryProviders>
+                  <HeroUIProvider>
+                    <Toaster />
+                    <NavBar />
+                    <div className="mx-auto mb-15 w-[90%] sm:mb-0">
+                      {children}
+                      <Statusbar />
+                    </div>
+                    <Footer />
+                  </HeroUIProvider>
+                </ReactQueryProviders>
+              </CartCountProvider>
+            </BusinessContextProvider>
           </AuthContextProvider>
         </ReduxProviders>
       </body>

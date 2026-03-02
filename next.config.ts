@@ -16,11 +16,6 @@ const nextConfig: NextConfig = {
         hostname: 'pyramid.devfolio.net',
         pathname: '/uploads/**',
       },
-      {
-        protocol: 'https',
-        hostname: 'pyramid.devfolio.net',
-        pathname: '/uploads/**',
-      },
     ]
   }
 };

@@ -10,22 +10,21 @@ const handler = NextAuth({
         email: { label: 'Email', type: 'email', placeholder: 'your-email@example.com' },
         password: { label: 'Password', type: 'password', placeholder: '********' },
       },
-      async authorize(credentials, req) {
-        // You need to provide your own logic here that takes the credentials
-        // submitted and returns either a object representing a user or value
-        // that is false/null if the credentials are invalid.
-        // e.g. return { id: 1, name: 'J Smith', email: 'jsmith@example.com' }
-        // You can also use the `req` object to obtain additional parameters
-        // (i.e., the request IP address)
-        const user = await getClass.login(credentials);
-
-        // If no error and we have user data, return it
-        if (user) {
-          return user;
-        } else {
+      async authorize(credentials) {
+        if (!credentials) {
           return null;
         }
-        // Return null if user data could not be retrieved
+
+        const user = await getClass.login({
+          email: credentials.email,
+          password: credentials.password,
+        });
+
+        if (user) {
+          return user;
+        }
+
+        return null;
       },
     }),
   ],

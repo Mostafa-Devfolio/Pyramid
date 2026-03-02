@@ -169,7 +169,7 @@ export interface placeCourier {
 
 export interface paymentPayload {
     moduleType: string;
-    moduleId: any;
+    moduleId: number;
     amountEgp: number | undefined;
     paymentMethod: "cash" | "online" | "wallet";
     couponCode: string | undefined;

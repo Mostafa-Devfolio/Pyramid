@@ -184,8 +184,8 @@ export default function CategoriesPageComponent({ categories, coupons, banners, 
           <h3>Products</h3>
           <div className="mt-3 grid grid-cols-2 gap-4 sm:grid-cols-3">
             {products.map((product: IVendorPageProduct) => {
-              const data = saveWishList?.some((wish: IWishList) => wish.product.id == product.id);
-              const data2 = saveWishList?.filter((wish: IWishList) => wish.product.id == product.id);
+              const isWishlisted = saveWishList?.some((wish: IWishList) => wish.product.id === product.id);
+              const wishlistItems = saveWishList?.filter((wish: IWishList) => wish.product.id === product.id);
               return (
                 <div key={product.id} className="relative text-center">
                   <Link href={`/vendors/${id}/${product.slug}`}>
@@ -200,8 +200,8 @@ export default function CategoriesPageComponent({ categories, coupons, banners, 
                   <div className="absolute top-2 right-2">
                     <FavoriteButton
                       onAdd={() => addToWishList(product.id)}
-                      saveWishList={data}
-                      saveWishList2={data2}
+                      isWishlisted={isWishlisted ?? false}
+                      wishlistItems={wishlistItems ?? []}
                       productId={product.id}
                     />
                   </div>
@@ -224,8 +224,8 @@ export default function CategoriesPageComponent({ categories, coupons, banners, 
         <h3 className="my-3">Discounted Products</h3>
         <div className="grid grid-cols-2 gap-5 sm:grid-cols-4">
           {discountedProduct.map((discountedProduct: IVendorPageProductDiscounted) => {
-            const data = saveWishList?.some((wish: IWishList) => wish.product.id == discountedProduct.id);
-            const data2 = saveWishList?.filter((wish: IWishList) => wish.product.id == discountedProduct.id);
+            const isWishlisted = saveWishList?.some((wish: IWishList) => wish.product.id === discountedProduct.id);
+            const wishlistItems = saveWishList?.filter((wish: IWishList) => wish.product.id === discountedProduct.id);
             return (
               <div key={discountedProduct.id} className="relative text-center">
                 <Link href={`/vendors/${id}/${discountedProduct.slug}`}>
@@ -239,7 +239,12 @@ export default function CategoriesPageComponent({ categories, coupons, banners, 
                 </Link>
                 <div className="absolute top-2 right-2">
                   <button onClick={() => addToWishList(discountedProduct.id)}>
-                    <FavoriteButton saveWishList={data} saveWishList2={data2} productId={discountedProduct.id} />
+                    <FavoriteButton
+                      onAdd={() => addToWishList(discountedProduct.id)}
+                      isWishlisted={isWishlisted ?? false}
+                      wishlistItems={wishlistItems ?? []}
+                      productId={discountedProduct.id}
+                    />
                   </button>
                 </div>
                 <Link href={`/vendors/${id}/${discountedProduct.slug}`}>

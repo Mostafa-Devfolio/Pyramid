@@ -1,14 +1,25 @@
 import React from 'react';
 import { CarouselHome } from '../../Carsoul/Carsoul';
 import HomeCategory from '../HomeCategory/HomeCategory';
-import { Button } from '@/components/ui/button';
 import HomeVendorsFetching from '../HomeVendorsFetching/HomeVendorsFetching';
+import { getClass } from '@/services/ApiServices';
+import { getLoginTo } from '@/app/login/login';
 
 type types = {
   id: string;
   busType?: string;
 };
-export default function ReuseBusinessTypes({ id, busType }: types) {
+export default async function ReuseBusinessTypes({ id, busType }: types) {
+  const token = await getLoginTo();
+  if (id == 'restaurants' && token){
+    const data = await getClass.getCartItems(1, token);
+  } else if (id == 'groceries' && token){
+    const data = await getClass.getCartItems(2, token);
+  } else if (id == 'pharmacies' && token){
+    const data = await getClass.getCartItems(3, token);
+  } else if (id == 'e-commerce' && token){
+    const data = await getClass.getCartItems(4, token);
+  }
   return (
     <>
       {id == busType && (

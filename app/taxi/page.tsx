@@ -53,7 +53,10 @@ export default function TaxiBookingPage() {
     async function loadData() {
       try {
         const token = await getLoginTo();
-        const headers = token ? { Authorization: `Bearer ${token}` } : {};
+        const headers: Record<string, string> = {
+          'Content-Type': 'application/json', // optional if needed
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        };
 
         const resPricing = await fetch('https://pyramid.devfolio.net/api/pricing-config', { headers });
         const jsonPricing = await resPricing.json();
@@ -90,7 +93,10 @@ export default function TaxiBookingPage() {
       if (tripData?.pickup) {
         try {
           const token = await getLoginTo();
-          const headers = token ? { Authorization: `Bearer ${token}` } : {};
+          const headers: Record<string, string> = {
+            'Content-Type': 'application/json', // optional if needed
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          };
           const res = await fetch(
             `https://pyramid.devfolio.net/api/pricing-config?lat=${tripData.pickup.lat}&lng=${tripData.pickup.lng}`,
             { headers }
@@ -260,7 +266,7 @@ export default function TaxiBookingPage() {
 
     try {
       const token = await getLoginTo();
-      const data = await getClass.cancelTrip(token, activeTrip.documentId, activeTrip.id)
+      const data = await getClass.cancelTrip(token, activeTrip.documentId, activeTrip.id);
 
       if (data.data) {
         setActiveTrip(null);
@@ -448,7 +454,9 @@ export default function TaxiBookingPage() {
                           />
                         </div>
                       )}
-                      <div className="mt-3 rounded-lg border border-green-100 bg-green-50 p-2 text-center text-md font-bold text-green-600">Your Trip will Cost{targetPrice} EGP.</div>
+                      <div className="text-md mt-3 rounded-lg border border-green-100 bg-green-50 p-2 text-center font-bold text-green-600">
+                        Your Trip will Cost{targetPrice} EGP.
+                      </div>
                     </div>
                   )}
 

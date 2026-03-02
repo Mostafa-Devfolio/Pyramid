@@ -1,8 +1,8 @@
 'use client';
 import { getLoginTo, getLogout } from '@/app/login/login';
-import { authContext, useAuth } from '@/lib/ContextAPI/authContext';
+import { useAuth } from '@/lib/ContextAPI/authContext';
 import { usePathname, useRouter } from 'next/navigation';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import React from 'react';
 import {
@@ -19,8 +19,9 @@ import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import { getClass } from '@/services/ApiServices';
-import { cartCount } from '@/lib/ContextAPI/cartCount';
+import { cartCount, useCartCount } from '@/lib/ContextAPI/cartCount';
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from '@heroui/react';
+import { useBusiness } from '@/lib/ContextAPI/businessTypeId';
 
 export default function NavBar() {
   const pathName = usePathname();
@@ -61,16 +62,20 @@ export default function NavBar() {
   }, []);
 
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-  const { countt, setCountt } = useContext(cartCount);
+  const { countt, setCountt } = useCartCount();
+  const { businessId } = useBusiness();
   async function getCartCount() {
+    if(businessId === null) return;
     const tokens = await getLoginTo();
-    const data = await getClass.getCartItems(1, tokens);
+    const data = await getClass.getCartItems(businessId, tokens);
     setApiCount(data.items.length);
   }
 
   useEffect(() => {
-    getCartCount();
-  }, [apiCount, setApiCount]);
+    if(businessId !== null){
+      getCartCount();
+    }
+  }, [apiCount, setApiCount, businessId]);
 
   const menuItems = [
     { name: 'Home', url: '/' },
@@ -140,7 +145,7 @@ export default function NavBar() {
           </NavbarItem>
         </NavbarContent>
         <NavbarContent justify="end">
-          <Link href={'/cart'}>
+          {(pathName !== '/' && pathName !== '/taxi' && pathName !== '/courier') && <Link href={'/cart'}>
             <div className="flex items-center gap-10">
               <div className="relative">
                 <h2 className="counter">
@@ -157,7 +162,7 @@ export default function NavBar() {
                 )}
               </div>
             </div>
-          </Link>
+          </Link>}
           {!auth ? (
             <>
               {' '}
@@ -258,7 +263,6 @@ export default function NavBar() {
                 className="w-full"
                 color={index === 2 ? 'primary' : index === menuItems.length - 1 ? 'danger' : 'foreground'}
                 href={`${item.url}`}
-                size="lg"
               >
                 {item.name}
               </Link>

@@ -123,7 +123,7 @@ const MapController = ({ setPosition, onLocationSelect, setLocateTrigger }: any)
 export default function MapPicker({ onLocationSelect }: MapPickerProps) {
   const [position, setPosition] = useState<L.LatLng | null>(null);
   const [isLocating, setIsLocating] = useState(false);
-  const [triggerLocate, setTriggerLocate] = useState<(() => void) | null>(null);
+  const [triggerLocate, setTriggerLocate] = useState<((onComplete?: () => void) => void) | null>(null);
 
   const handleManualLocate = (e: React.MouseEvent) => {
     e.preventDefault();

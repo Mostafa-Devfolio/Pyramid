@@ -1,10 +1,8 @@
 'use client';
-import { authContext, useAuth } from '@/lib/ContextAPI/authContext';
-import React, { useContext, useEffect, useState } from 'react';
-import { getLoginTo } from '../login/login';
+import { useAuth } from '@/lib/ContextAPI/authContext';
+import React, { useEffect, useState } from 'react';
 import { getClass } from '@/services/ApiServices';
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from '@heroui/react';
-import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import { IWallet } from '../interface/wallet';
 

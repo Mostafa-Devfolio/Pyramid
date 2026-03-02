@@ -1,3 +1,4 @@
+import { ISearchProperty } from '@/app/interface/booking';
 import {
   addAddress,
   addWishList2,
@@ -182,6 +183,7 @@ class ApiServices {
   }
 
   async login(userData: login) {
+    console.log(userData);
     const response = await fetch(`${this.baseUrl}auth/login`, {
       method: 'POST',
       headers: {
@@ -190,6 +192,7 @@ class ApiServices {
       body: JSON.stringify(userData),
     });
     const data = await response.json();
+    console.log(data);
     if (response.ok) {
       return data;
     } else {
@@ -258,7 +261,7 @@ class ApiServices {
   }
 
   async getCartItems(businessId: number, token: string) {
-    const response = await fetch(`${this.baseUrl}carts/me?businessTypeId=1`, {
+    const response = await fetch(`${this.baseUrl}carts/me?businessTypeId=${businessId}`, {
       method: 'GET',
       headers: {
         'content-type': 'application/json',
@@ -687,6 +690,43 @@ class ApiServices {
       },
     });
     const data = await response.json();
+    return data;
+  }
+
+  async properites() {
+    const response = await fetch(`${this.baseUrl}properties`, {
+      method: 'GET',
+      headers: {
+        'content-type': 'application/json',
+      },
+    });
+    const data = await response.json();
+    console.log(data);
+    return data;
+  }
+
+  async searchProperties(myData: any) {
+    const searchParams = new URLSearchParams(myData)
+    const response = await fetch(`${this.baseUrl}properties/search?${searchParams.toString()}`, {
+      method: 'GET',
+      headers: {
+        'content-type': 'application/json'
+      },
+    });
+    const data = await response.json();
+    console.log(data);
+    return data;
+  }
+
+  async getLocation(locationDetails: string){
+    const response = await fetch(`${this.baseUrl}properties/locations?query=${locationDetails}`,{
+      method: 'GET',
+      headers: {
+        'content-type': 'application/json'
+      }
+    });
+    const data = await response.json();
+    console.log(data);
     return data;
   }
 

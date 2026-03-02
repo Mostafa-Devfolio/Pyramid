@@ -12,18 +12,21 @@ import { useDispatch, useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
 import { getClass } from '@/services/ApiServices';
 import { useAuth } from '@/lib/ContextAPI/authContext';
-import { cartCount } from '@/lib/ContextAPI/cartCount';
+import { cartCount, useCartCount } from '@/lib/ContextAPI/cartCount';
 import { ICartItems, Item } from '@/app/interface/Cart/cartItems';
+import { businessContext, useBusiness } from '@/lib/ContextAPI/businessTypeId';
 
 type optiongroup = {
   products: IProductDetailsPage;
 };
 export default function ProductOptionComponent({ products }: optiongroup) {
+  console.log(products);
   const cartItem = useSelector((state: any) => state.cart);
   const [errorMsg, setErrorMsg] = useState('');
   const { auth, token } = useAuth();
-  const [getCar, setGetCar] = useState<ICartItems|null>(null);
-  const { countt, setCountt } = useContext(cartCount);
+  const [getCar, setGetCar] = useState<ICartItems | null>(null);
+  const { countt, setCountt } = useCartCount();
+  const { businessId, setBusinessId } = useBusiness();
 
   // Check if a product has a variant
   const haveVariants = useMemo(() => {
@@ -54,7 +57,10 @@ export default function ProductOptionComponent({ products }: optiongroup) {
   }, [getCar, products.id, auth]);
 
   async function getCartItems() {
-    const getCart = await getClass.getCartItems(1, token);
+    const businessIdd = products.businessType.id;
+    setBusinessId(products.businessType.id);
+    if (!token) return;
+    const getCart = await getClass.getCartItems(businessIdd, token);
     setGetCar(getCart);
     setCountt(getCart.items.length);
   }
@@ -115,7 +121,7 @@ export default function ProductOptionComponent({ products }: optiongroup) {
   }
 
   function addItemToCart() {
-    const sameVendor = cartItem.find((item) => item.vendorName != products.vendor.name);
+    const sameVendor = cartItem.find((item: any) => item.vendorName != products.vendor.name);
     if (sameVendor) {
       setCount(0);
       setErrorMsg('Please add products from the same vendor only. Clear the cart if you want to add from this vendor.');
@@ -192,10 +198,13 @@ export default function ProductOptionComponent({ products }: optiongroup) {
   // Setting the initial base price, sale price if available, stock and which variant is selected
   useEffect(() => {
     async function getCartItem() {
-    const getCart = await getClass.getCartItems(1, token);
-    setGetCar(getCart);
-    setCountt(getCart.items.length);
-  }
+      const businessIdd = products.businessType.id;
+      setBusinessId(products.businessType.id);
+      if (!token) return;
+      const getCart = await getClass.getCartItems(businessIdd, token);
+      setGetCar(getCart);
+      setCountt(getCart.items.length);
+    }
     getCartItem();
     if (!haveVariants) return;
     setIsSelected(haveVariants.id);

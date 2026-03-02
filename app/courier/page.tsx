@@ -2,13 +2,15 @@
 import { getClass } from '@/services/ApiServices';
 import React, { useContext, useEffect, useState } from 'react';
 import { getLoginTo } from '../login/login';
-import TaxiRoutingMap from '@/components/TaxiRoutingMap';
-import { authContext } from '@/lib/ContextAPI/authContext';
 import { Switch } from '@heroui/react';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import { ICourierTypes } from '../interface/Courier/courierTypes';
 import { IUser } from '../interface/userData';
+
+import dynamic from 'next/dynamic';
+
+const TaxiRoutingMap = dynamic(() => import('@/components/TaxiRoutingMap'), { ssr: false });
 
 type calculate = {
   baseFee: number;
@@ -191,9 +193,7 @@ export default function Courier() {
               </Switch>
             </div>
             <div className="flex items-center gap-5">
-              <h3 className="w-48">
-                Reciever name
-              </h3>
+              <h3 className="w-48">Reciever name</h3>
               <input
                 type="text"
                 value={isR ? userData?.username : receiverName}

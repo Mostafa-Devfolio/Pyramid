@@ -3,24 +3,24 @@ import { Button } from '@/components/ui/button';
 import { getClass } from '@/services/ApiServices';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { showToast } from 'nextjs-toast-notify';
 import { useAuth } from '@/lib/ContextAPI/authContext';
-import { getLoginTo } from '../login/login';
-import { cartCount } from '@/lib/ContextAPI/cartCount';
+import { cartCount, useCartCount } from '@/lib/ContextAPI/cartCount';
 import { IMAGE_PLACEHOLDER } from '@/lib/image';
 import Image from 'next/image';
 import { DatePicker } from '@heroui/react';
 import { now, getLocalTimeZone, DateValue } from '@internationalized/date';
 import { ICartItems, Item } from '../interface/Cart/cartItems';
 import { IAddress } from '../interface/addressInterface';
+import { useBusiness } from '@/lib/ContextAPI/businessTypeId';
 
 export default function CheckoutPage() {
   const [address, setAddress] = useState<IAddress[]>([]);
   const [payment, setPayment] = useState('cod');
   const router = useRouter();
   const { auth, token, userData } = useAuth();
-  const { countt, setCountt } = useContext(cartCount);
+  const { countt, setCountt } = useCartCount();
   const [cartItems, setCartItems] = useState<Item[]>([]);
   const [isCustom, setIsCustom] = useState(false);
   const [tipValue, setTipValue] = useState(0);
@@ -40,6 +40,7 @@ export default function CheckoutPage() {
   const [subscribtionDateDaily, setSubscribtionDateDaily] = useState<string | null>(null);
   const [subscribtionDateWeekly, setSubscribtionDateWeekly] = useState<number | null>(null);
   const [subscribtionDateMonthly, setSubscribtionDateMonthly] = useState<number | null>(null);
+  const { businessId } = useBusiness();
 
   async function checkout() {
     if (!token) return;
@@ -94,17 +95,18 @@ export default function CheckoutPage() {
 
       setAddress(data);
     }
-    if (!auth) {
+    if (!token) {
       router.push('/login');
     }
     getAddress();
     async function getCartItems() {
       if (!token) return;
-      const data = await getClass.getCartItems(1, token);
+      if(businessId===null) return;
+      const data = await getClass.getCartItems(businessId, token);
       setCartItems(data.items);
     }
     getCartItems();
-  }, [auth]);
+  }, [token, businessId]);
 
   return (
     <div className="container mx-auto my-3">
@@ -431,7 +433,7 @@ export default function CheckoutPage() {
               <option value="cod">Cash on delivery</option>
               <option value="wallet">Wallet</option>
             </select>
-            {userData?.walletBalance > 0 && (
+            {(userData?.walletBalance ?? 0) > 0 && (
               <div className="mt-3 flex gap-3">
                 <input type="checkbox" onClick={() => setDeductWallet(!deductWallet)} />
                 <h4>

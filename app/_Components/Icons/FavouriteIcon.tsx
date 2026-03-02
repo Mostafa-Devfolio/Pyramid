@@ -9,8 +9,8 @@ import { IWishList } from '@/app/interface/wishlist';
 
 interface FavoriteButtonProps {
   productId: string | number;
-  saveWishList: IWishList[];
-  saveWishList2: IWishList[];
+  isWishlisted: boolean;
+  wishlistItems: IWishList[];
   onAdd: () => void;
   initialIsFavorite?: boolean;
   onToggle?: (isFavorite: boolean) => void;
@@ -19,14 +19,14 @@ interface FavoriteButtonProps {
 const FavoriteButton: React.FC<FavoriteButtonProps> = ({
   onAdd,
   productId,
-  saveWishList,
-  saveWishList2,
+  isWishlisted,
+  wishlistItems,
   initialIsFavorite = false,
   onToggle,
 }) => {
   const [isFavorite, setIsFavorite] = useState(initialIsFavorite);
   const [isAvailablee, setIsAvailablee] = useState(false);
-  const [isAvailablee2, setIsAvailablee2] = useState(saveWishList2);
+  const [isAvailablee2, setIsAvailablee2] = useState(wishlistItems);
   const handleToggle = (e: React.MouseEvent) => {
     // Prevent clicking the heart from also clicking a "Product Card" link
     e.preventDefault();
@@ -42,19 +42,19 @@ const FavoriteButton: React.FC<FavoriteButtonProps> = ({
 
   async function removeWish(){
     const token = await getLoginTo();
-    setIsAvailablee2(saveWishList2);
+    setIsAvailablee2(wishlistItems);
     const data = await getClass.removeWishList(token, isAvailablee2[0].id);
     setIsAvailablee(false);
   }
 
   useEffect(() => {
     async function isAvailable() {
-      if (saveWishList) {
+      if (isWishlisted) {
         setIsAvailablee(true);
       }
     }
     isAvailable();
-  }, [saveWishList]);
+  }, [isWishlisted]);
 
   return (
     <>
