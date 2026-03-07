@@ -9,7 +9,7 @@ import SetBusiness from './_Components/BusinessHomeComponents/HomeBusiness/SetBu
 import { IBooking } from './interface/booking';
 
 export const baseURL = '***REMOVED***';
-export const baseURL2 = `***REMOVED***/api/`;
+  export const baseURL2 = `***REMOVED***/api/`;
 
 export default async function Home() {
   async function getBusinessType() {
