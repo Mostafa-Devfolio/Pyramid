@@ -33,6 +33,7 @@ export interface ISearchBooking {
   name: string
   propertyType: string
   city: string
+  slug: string
   government: string
   address: string
   latitude: number

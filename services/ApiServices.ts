@@ -64,6 +64,18 @@ class ApiServices {
     return response.data;
   }
 
+  async getModulesBanner(){
+    const response = await fetch(`${this.baseUrl}banners/app/booking/main`,{
+      'method': 'GET',
+      headers: {
+        'content-type': 'application/json'
+      }
+    });
+    const data = await response.json();
+    console.log(data);
+    return data;
+  }
+
   async getHomeCategories(mainType: string) {
     const response = await fetch(
       `${this.baseUrl}categories?filters[businessType][slug][$eq]=${mainType}&filters[parent][$null]=true&populate=*`,
@@ -724,6 +736,33 @@ class ApiServices {
       headers: {
         'content-type': 'application/json'
       }
+    });
+    const data = await response.json();
+    console.log(data);
+    return data;
+  }
+
+  async getProperty(propertyId: number, checkIn: string, checkOut: string){
+    const response = await fetch(`${this.baseUrl}properties/${propertyId}/availability?checkInDate=${checkIn}&checkOutDate=${checkOut}`, {
+      method: 'GET',
+      headers: {
+        'content-type': 'application/json'
+      }
+    });
+    const data = await response.json();
+    console.log(data);
+    return data;
+  }
+
+  async bookProperty(token: string, body: any){
+    console.log(body)
+    const response = await fetch(`${this.baseUrl}reservations`, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        ...(token ? {Authorization: `Bearer ${token}`} : {})
+      },
+      body: JSON.stringify({data: body})
     });
     const data = await response.json();
     console.log(data);

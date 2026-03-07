@@ -9,7 +9,7 @@ import SetBusiness from './_Components/BusinessHomeComponents/HomeBusiness/SetBu
 import { IBooking } from './interface/booking';
 
 export const baseURL = 'https://pyramid.devfolio.net';
-export const baseURL2 = `https://pyramid.devfolio.net/api/`;
+  export const baseURL2 = `https://pyramid.devfolio.net/api/`;
 
 export default async function Home() {
   async function getBusinessType() {
