@@ -120,3 +120,29 @@ export interface Vendor {
   updatedAt: string;
   publishedAt: string;
 }
+
+export interface IProductsInCategory {
+  createdAt: string;
+  id: number;
+  title: string;
+  slug: string;
+  basePrice: number;
+  baseSalePrice?: number;
+  stock: number;
+  isFeatured: boolean;
+  images: any;
+  vendor: Vendor;
+  brand: Brand;
+}
+
+export interface Vendor {
+  id: number;
+  name: string;
+  slug: string;
+}
+
+export interface Brand {
+  id: number;
+  name: string;
+  slug: string;
+}

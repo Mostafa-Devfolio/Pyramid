@@ -242,7 +242,7 @@ export default function ProductOptionComponent({ products }: optiongroup) {
             }}
             className={`rounded-2xl border p-4 ${isSelected == variant.id ? 'border-black' : ''}`}
           >
-            {variant.options[0].label}
+            {variant.options.length > 0 ? variant.options?.[0]?.label : 'No Options'}
           </li>
         ))}
       </ul>

@@ -4,9 +4,10 @@ import { IMAGE_PLACEHOLDER } from '@/lib/image';
 import Link from 'next/link';
 
 export default function HomeVendorsMainComponent({ vendor, businessTypee }: any) {
+  
   return (
     <>
-      <div className="my-3 flex flex-col rounded-2xl border shadow-lg">
+      {<div className="my-3 flex flex-col rounded-2xl border shadow-lg">
         <div className="relative aspect-square rounded-2xl">
           <Link href={`/vendors/${vendor.slug}`}>
             <Image
@@ -37,7 +38,7 @@ export default function HomeVendorsMainComponent({ vendor, businessTypee }: any)
             {vendor.rating} <Icon className="text-xl text-yellow-400" />
           </p>
         </div>
-      </div>
+      </div>}
     </>
   );
 }

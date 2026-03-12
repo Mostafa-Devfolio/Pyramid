@@ -47,6 +47,25 @@ export const CopyDocumentIcon = (props: IconProps) => {
   );
 };
 
+export const BookingDocumentIcon = (props: IconProps) => {
+  return (
+    <svg width="3em" height="3em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      {/* Calendar body */}
+      <rect x="4" y="5" width="16" height="15" rx="2" fill="#4A90E2" />
+
+      {/* Calendar header */}
+      <rect x="4" y="5" width="16" height="4" rx="2" fill="#357ABD" />
+
+      {/* Calendar rings */}
+      <rect x="7" y="3" width="2" height="4" rx="1" fill="white" />
+      <rect x="15" y="3" width="2" height="4" rx="1" fill="white" />
+
+      {/* Booking checkmark */}
+      <path d="M8 14L10.5 16.5L16 11" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+};
+
 export const EditDocumentIcon = (props: IconProps) => {
   return (
     <svg width="3em" height="3em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -161,6 +180,14 @@ export default function ListBoxComponent() {
             startContent={<CopyDocumentIcon className={iconClasses} />}
           >
             My Orders
+          </ListboxItem>
+          <ListboxItem
+            onClick={() => router.push('/orders/bookings')}
+            key="bookings"
+            description="View your bookings"
+            startContent={<BookingDocumentIcon className={iconClasses} />}
+          >
+            My Bookings
           </ListboxItem>
           <ListboxItem
             onClick={() => router.push('/address')}

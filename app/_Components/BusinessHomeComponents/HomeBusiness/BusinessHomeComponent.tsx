@@ -9,7 +9,7 @@ export default function BusinessHomeComponent({ id }: ID) {
       <ReuseBusinessTypes id={id} busType={'restaurants'} />
       <ReuseBusinessTypes id={id} busType={'groceries'} />
       <ReuseBusinessTypes id={id} busType={'pharmacies'} />
-      <ReuseBusinessTypes id={id} />
+      <ReuseBusinessTypes id={id} busType={'e-commerce'} />
     </>
   );
 }

@@ -25,7 +25,7 @@ export default function SetBusiness({ business }: { business: IBusiness }) {
         <h2 className="text-center">{business.name}</h2>
       </Link>
       <Link href={`${business.slug}`} onClick={() => setBusinessId(business.id)}>
-        <p>{business.description}</p>
+        <p className='truncate'>{business.description}</p>
       </Link>
     </div>
   );

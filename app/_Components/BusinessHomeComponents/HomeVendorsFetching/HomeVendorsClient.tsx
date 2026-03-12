@@ -14,8 +14,8 @@ export default function HomeVendorsClient({ mainType, businessTypee, vendors }: 
   return (
     <div>
       <div className="flex items-center justify-between">
-        {businessTypee == `discounted` && <h2 className="my-4">Shops with sales</h2>}
-        {businessTypee == `most` && <h2 className="my-4">Best Sellers</h2>}
+        {businessTypee == `discounted` && <h2 className="my-4">Vendors with sales</h2>}
+        {businessTypee == `most` && <h2 className="my-4">Best Vendors</h2>}
         {businessTypee == `top` && <h2 className="my-4">Top Rated Vendors</h2>}
         {businessTypee == `latest` && <h2 className="my-4">Latest Vendors</h2>}
         {businessTypee == `all` && <h2 className="my-4">All Vendors</h2>}

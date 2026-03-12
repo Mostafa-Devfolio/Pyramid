@@ -64,12 +64,12 @@ class ApiServices {
     return response.data;
   }
 
-  async getModulesBanner(){
-    const response = await fetch(`${this.baseUrl}banners/app/booking/main`,{
-      'method': 'GET',
+  async getModulesBanner() {
+    const response = await fetch(`${this.baseUrl}banners/app/booking/main`, {
+      method: 'GET',
       headers: {
-        'content-type': 'application/json'
-      }
+        'content-type': 'application/json',
+      },
     });
     const data = await response.json();
     console.log(data);
@@ -77,6 +77,7 @@ class ApiServices {
   }
 
   async getHomeCategories(mainType: string) {
+    console.log(mainType);
     const response = await fetch(
       `${this.baseUrl}categories?filters[businessType][slug][$eq]=${mainType}&filters[parent][$null]=true&populate=*`,
       {
@@ -86,12 +87,37 @@ class ApiServices {
     return response.data;
   }
 
-  async vendorsInCategory(businessId: string, categoryId: string) {
+  async vendorsAndProductsInCategory(businessId: string, categoryId: string) {
     const response = await fetch(`${this.baseUrl}business-types/${businessId}/categories/${categoryId}/target`, {
       method: 'get',
     }).then((res) => res.json());
-    return response.data?.vendors;
+    console.log(response.data);
+    return response.data;
   }
+
+  async brandProductsInCategory(businessId: string, categoryId: string) {
+    const response = await fetch(
+      `${this.baseUrl}products?filters[businessType][slug][$eq]=e-commerce&filters[brand][slug][$eq]=e-commerce-hp&populate=*`,
+      {
+        method: 'GET',
+      }
+    ).then((res) => res.json());
+    console.log(response);
+    return response.data;
+  }
+
+  async categoriesOfProducts() {
+    const response = await fetch(`${this.baseUrl}business-types/e-commerce/categories-with-products`, {
+      method: 'GET',
+      headers: {
+        'content-type': 'application/json'
+      }
+    });
+    const data = await response.json();
+    console.log(data.data.categories);
+    return data.data.categories;
+  }
+
   async categoryName(businessId: string, categoryId: string) {
     const response = await fetch(`${this.baseUrl}business-types/${businessId}/categories/${categoryId}/target`, {
       method: 'get',
@@ -718,11 +744,11 @@ class ApiServices {
   }
 
   async searchProperties(myData: any) {
-    const searchParams = new URLSearchParams(myData)
+    const searchParams = new URLSearchParams(myData);
     const response = await fetch(`${this.baseUrl}properties/search?${searchParams.toString()}`, {
       method: 'GET',
       headers: {
-        'content-type': 'application/json'
+        'content-type': 'application/json',
       },
     });
     const data = await response.json();
@@ -730,39 +756,67 @@ class ApiServices {
     return data;
   }
 
-  async getLocation(locationDetails: string){
-    const response = await fetch(`${this.baseUrl}properties/locations?query=${locationDetails}`,{
+  async getLocation(locationDetails: string) {
+    const response = await fetch(`${this.baseUrl}properties/locations?query=${locationDetails}`, {
       method: 'GET',
       headers: {
-        'content-type': 'application/json'
-      }
+        'content-type': 'application/json',
+      },
     });
     const data = await response.json();
     console.log(data);
     return data;
   }
 
-  async getProperty(propertyId: number, checkIn: string, checkOut: string){
-    const response = await fetch(`${this.baseUrl}properties/${propertyId}/availability?checkInDate=${checkIn}&checkOutDate=${checkOut}`, {
-      method: 'GET',
-      headers: {
-        'content-type': 'application/json'
+  async getProperty(propertyId: number, checkIn: string, checkOut: string) {
+    const response = await fetch(
+      `${this.baseUrl}properties/${propertyId}/availability?checkInDate=${checkIn}&checkOutDate=${checkOut}`,
+      {
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json',
+        },
       }
-    });
+    );
     const data = await response.json();
     console.log(data);
     return data;
   }
 
-  async bookProperty(token: string, body: any){
-    console.log(body)
+  async bookProperty(token: string, body: any) {
+    console.log(body);
     const response = await fetch(`${this.baseUrl}reservations`, {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
-        ...(token ? {Authorization: `Bearer ${token}`} : {})
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
       },
-      body: JSON.stringify({data: body})
+      body: JSON.stringify({ data: body }),
+    });
+    const data = await response.json();
+    console.log(data);
+    return data;
+  }
+
+  async getGeneralProperty(propertyId: number) {
+    const response = await fetch(`${this.baseUrl}properties/${propertyId}/details`, {
+      method: 'GET',
+      headers: {
+        'content-type': 'application/json',
+      },
+    });
+    const data = await response.json();
+    console.log(data);
+    return data;
+  }
+
+  async getReservations(token: string) {
+    const response = await fetch(`${this.baseUrl}reservations`, {
+      method: 'GET',
+      headers: {
+        'content-type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
     });
     const data = await response.json();
     console.log(data);

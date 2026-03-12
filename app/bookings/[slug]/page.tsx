@@ -58,6 +58,7 @@ export default function Property() {
   const [totalPrice, setTotalPrice] = useState<number>();
   const [subTotalPrice, setSubTotalPrice] = useState<number>();
   const [taxes, setTaxes] = useState<number>();
+  const [roomType, setRoomType] = useState('');
 
   function getDaysBetween(checkIn: string, checkOut: string) {
     const start = new Date(checkIn);
@@ -119,27 +120,9 @@ export default function Property() {
       const user = await getClass.userProfile(token);
       const days = getDaysBetween(checkIn!, checkOut!);
       const total = (subTotalPrice + taxes) * days;
-      console.log(user);
-      console.log(total);
-      const body = {
-        property: saveProperty?.documentId,
-        user: user.documentId,
-        checkInDate: checkIn,
-        checkOutDate: checkOut,
-        totalAmount: total,
-        status: 'pending',
-        bookedRooms: [
-          {
-            roomTypeId: roomId,
-            rateId: selectedOne,
-            quantity: 1,
-            price: total,
-            mealPlan: 'Breakfast Included',
-          },
-        ],
-        paymentMethod: 'cash',
-      };
-      const data = await getClass.bookProperty(token, body);
+      const checkoutUrl = `/checkout/book?property=${saveProperty?.documentId}&user=${user.documentId}&checkInDate=${checkIn}&checkOutDate=${checkOut}&totalAmount=${total}&status=pending&roomTypeId=${roomId}&rateId=${selectedOne}&quantity=1&price=${total}&mealPlan=BreakfastIncluded&propertyId=${saveProperty?.id}&days=${days}&adults=${adults}&childern=${children}&roomType=${roomType}`;
+      window.location.href = checkoutUrl;
+      // const data = await getClass.bookProperty(token, body);
     }
   }
 
@@ -571,6 +554,7 @@ export default function Property() {
 
                               setSelectedOne(e.target.value);
                               setRoomId(room.id);
+                              setRoomType(room.name);
                               setSubTotalPrice(Number(selected.dataset.price));
                               setTaxes(Number(selected.dataset.taxes));
                             }}
@@ -598,14 +582,16 @@ export default function Property() {
                             </div>
                           )}
                         </td>
-                        {(index <1) && <td className="border p-2 align-top">
-                          <button
-                            onClick={() => reserveNow()}
-                            className="rounded-md bg-blue-600 px-5 py-1 text-white hover:bg-blue-800"
-                          >
-                            I&apos;ll Reserve
-                          </button>
-                        </td>}
+                        {index < 1 && (
+                          <td className="border p-2 align-top">
+                            <button
+                              onClick={() => reserveNow()}
+                              className="rounded-md bg-blue-600 px-5 py-1 text-white hover:bg-blue-800"
+                            >
+                              I&apos;ll Reserve
+                            </button>
+                          </td>
+                        )}
                       </tr>
                     );
                   })}
@@ -691,7 +677,7 @@ export default function Property() {
         </div>
       )}
       {isFaciltiesOpened ? (
-        <div className="fixed inset-0 flex">
+        <div className="fixed inset-0 flex z-[2000]">
           <div onClick={() => setIsFaciltiesOpened(false)} className="w-[10%] bg-black/40"></div>
           <div
             className={`w-[90%] transform rounded-tl-md rounded-bl-md bg-white p-5 transition-transform duration-300 ease-in-out ${isFaciltiesOpened ? 'translate-x-0' : 'translate-x-full'}`}

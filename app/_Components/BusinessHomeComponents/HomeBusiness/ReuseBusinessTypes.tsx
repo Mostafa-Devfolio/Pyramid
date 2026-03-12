@@ -4,25 +4,30 @@ import HomeCategory from '../HomeCategory/HomeCategory';
 import HomeVendorsFetching from '../HomeVendorsFetching/HomeVendorsFetching';
 import { getClass } from '@/services/ApiServices';
 import { getLoginTo } from '@/app/login/login';
+import HomeProductsFetching from '../HomeProductsFetching/HomeProductsFetching';
 
 type types = {
   id: string;
   busType?: string;
+  myE?: string;
 };
-export default async function ReuseBusinessTypes({ id, busType }: types) {
+
+export default async function ReuseBusinessTypes({ id, busType, myE }: types) {
+  console.log(id);
   const token = await getLoginTo();
-  if (id == 'restaurants' && token){
+  if (id == 'restaurants' && token) {
     const data = await getClass.getCartItems(1, token);
-  } else if (id == 'groceries' && token){
+  } else if (id == 'groceries' && token) {
     const data = await getClass.getCartItems(2, token);
-  } else if (id == 'pharmacies' && token){
+  } else if (id == 'pharmacies' && token) {
     const data = await getClass.getCartItems(3, token);
-  } else if (id == 'e-commerce' && token){
+  } else if (id == 'e-commerce' && token) {
     const data = await getClass.getCartItems(4, token);
   }
+
   return (
     <>
-      {id == busType && (
+      {(id == busType) && (
         <div className="container mx-auto pt-3">
           <div className="mx-3 mx-auto w-[80%] md:w-full">
             <CarouselHome mainType={id} typee="business_home" />
@@ -33,24 +38,28 @@ export default async function ReuseBusinessTypes({ id, busType }: types) {
               <HomeCategory mainType={id} />
             </div>
           </div>
-          <div className="">
-            <HomeVendorsFetching businessTypee={'discounted'} mainType={id} />
-          </div>
-          <div className="">
-            <HomeVendorsFetching businessTypee="most" mainType={id} />
-          </div>
-          <div className="">
-            <HomeVendorsFetching businessTypee="top" mainType={id} />
-          </div>
-          <div className="">
-            <HomeVendorsFetching businessTypee="latest" mainType={id} />
-          </div>
-          <div className="">
-            <HomeVendorsFetching businessTypee="all" mainType={id} />
-          </div>
+          {id != 'e-commerce' ? <div>
+            <div className="">
+              <HomeVendorsFetching businessTypee={'discounted'} mainType={id} />
+            </div>
+            <div className="">
+              <HomeVendorsFetching businessTypee="most" mainType={id} />
+            </div>
+            <div className="">
+              <HomeVendorsFetching businessTypee="top" mainType={id} />
+            </div>
+            <div className="">
+              <HomeVendorsFetching businessTypee="latest" mainType={id} />
+            </div>
+            <div className="">
+              <HomeVendorsFetching businessTypee="all" mainType={id} />
+            </div>
+          </div> : <div className="">
+              <HomeProductsFetching mainType={id} />
+          </div> }
         </div>
       )}
-      {id == 'e-commerce' && (
+      {/* {id == myE && (
         <div className="container mx-auto">
           <div>
             <CarouselHome mainType={id} typee="business_home" />
@@ -102,7 +111,7 @@ export default async function ReuseBusinessTypes({ id, busType }: types) {
             </div>
           </div>
         </div>
-      )}
+      )} */}
     </>
   );
 }
