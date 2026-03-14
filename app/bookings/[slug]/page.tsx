@@ -13,10 +13,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Star } from 'lucide-react';
 import Image from 'next/image';
 import { baseURL } from '@/app/page';
-import { DateRangePicker, Slider, CheckboxGroup, Checkbox, Input } from '@heroui/react';
+import { Slider, CheckboxGroup, Checkbox, Input } from '@heroui/react';
 import { ArrowDown } from 'lucide-react';
 import { showToast } from 'nextjs-toast-notify';
 import { useAuth } from '@/lib/ContextAPI/authContext';
+import dynamic from 'next/dynamic';
 
 interface IDates {
   start: {
@@ -30,6 +31,8 @@ interface IDates {
     day: number;
   };
 }
+
+const DateRangePicker = dynamic(() => import("@heroui/react").then((mod) => mod.DateRangePicker), {ssr: false})
 
 export default function Property() {
   const params = useParams();
@@ -358,13 +361,14 @@ export default function Property() {
               See all 14 facilities
             </p>
           </div>
-          <div className="border-t-1 pt-2">
+          <div className="border-t-1 w-full pt-2">
             <h4>Availability</h4>
-            <div className="grid gap-3 rounded-lg bg-yellow-400 p-2 sm:grid-cols-5">
+            <div className="grid gap-3 rounded-lg bg-yellow-400 p-2 w-full sm:grid-cols-5">
               <div className="h-full sm:col-span-2">
                 <DateRangePicker
                   onChange={(newDate) => setDates(newDate)}
                   className="h-full w-full p-3"
+                  aria-label="Check-in and check-out date"
                   label="Check-in Date - Check-out date"
                 />
               </div>
@@ -445,7 +449,7 @@ export default function Property() {
                   </div>
                 )}
               </div>
-              <div className="sm:col-span-1">
+              <div className="sm:col-span-1 w-full">
                 <button
                   onClick={() => searchForProperty()}
                   className="h-full w-full cursor-pointer rounded-xl bg-blue-600 p-2 font-bold text-white hover:bg-blue-800"
@@ -455,7 +459,7 @@ export default function Property() {
               </div>
             </div>
             <h5 className="my-3">Book this property</h5>
-            <div className="">
+            <div className="w-full overflow-x-auto">
               <table className="w-full border-collapse rounded-md border">
                 <thead className="rounded-md border">
                   <tr className="rounded-md border">
@@ -563,15 +567,15 @@ export default function Property() {
                             <option value="null">0</option>
                             {room.rateOptions.map((option: RateOption2, index) => {
                               return (
-                                <div key={index} className="flex gap-1 p-2">
-                                  <option
-                                    value={option.rateId}
-                                    data-price={option.priceForStay}
-                                    data-taxes={option.taxesAndFees}
-                                  >
-                                    {index + 1}- EGP {option.priceForStay}
-                                  </option>
-                                </div>
+                                <option
+                                  key={index}
+                                  value={option.rateId}
+                                  data-price={option.priceForStay}
+                                  data-taxes={option.taxesAndFees}
+                                  className="flex gap-1 p-2"
+                                >
+                                  {index + 1}- EGP {option.priceForStay}
+                                </option>
                               );
                             })}
                           </select>
@@ -677,7 +681,7 @@ export default function Property() {
         </div>
       )}
       {isFaciltiesOpened ? (
-        <div className="fixed inset-0 flex z-[2000]">
+        <div className="fixed inset-0 z-[2000] flex">
           <div onClick={() => setIsFaciltiesOpened(false)} className="w-[10%] bg-black/40"></div>
           <div
             className={`w-[90%] transform rounded-tl-md rounded-bl-md bg-white p-5 transition-transform duration-300 ease-in-out ${isFaciltiesOpened ? 'translate-x-0' : 'translate-x-full'}`}

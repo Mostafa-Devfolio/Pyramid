@@ -6,12 +6,13 @@ import { Card, CardContent } from '@/components/ui/card';
 import { IMAGE_PLACEHOLDER } from '@/lib/image';
 import { IBanner } from '@/app/interface/bannerBusinessTypeInterface';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function CarsoulClient({ bannerFiltered }: { bannerFiltered: IBanner[] }) {
   const router = useRouter();
   console.log(bannerFiltered);
 
-  async function goToSection(
+  function goToSection(
     target: string,
     vSlug?: string,
     pSlug?: string,
@@ -35,36 +36,20 @@ export default function CarsoulClient({ bannerFiltered }: { bannerFiltered: IBan
   }
 
   return (
-    <Carousel className="w-full cursor-pointer">
+    <Carousel className="w-full">
       <CarouselContent>
         {bannerFiltered.map((banner: IBanner) => {
           if (!banner.image?.url) return null;
           return (
-            <CarouselItem
-              key={banner.id}
-              onClick={() =>
-                goToSection(
-                  banner.targetType,
-                  banner.targetVendor?.slug,
-                  banner.targetProduct?.slug,
-                  banner.targetProduct?.vendor?.slug,
-                  banner.targetProperty?.documentId,
-                  banner.targetProperty?.slug,
-                  banner.adults,
-                  banner.children,
-                  banner.checkin,
-                  banner.checkout
-                )
-              }
-            >
+            <CarouselItem className="relative" key={banner.id}>
               {/* <CarouselNext /> */}
               <div className="p-1">
                 <Card className="overflow-hidden">
-                  <CardContent className="flex aspect-3/2 h-64 items-center justify-center">
+                  <CardContent className="flex aspect-3/2 h-47 sm:h-64 items-center justify-center">
                     <Image
                       width={1000}
                       height={1000}
-                      className="w-full object-cover"
+                      className="w-full h-full object-cover rounded-md"
                       src={
                         banner.image.url == null ? IMAGE_PLACEHOLDER : `https://pyramid.devfolio.net${banner.image.url}`
                       }
@@ -73,6 +58,31 @@ export default function CarsoulClient({ bannerFiltered }: { bannerFiltered: IBan
                   </CardContent>
                 </Card>
                 {/* <CarouselPrevious /> */}
+              </div>
+              <div className="">
+                <h2 className="absolute text-center bg-amber-100 rounded-lg top-20 left-[50%] translate-x-[-50%] cursor-default p-2 text-sm text-nowrap sm:text-xl font-bold text-black shadow-lg">
+                  {banner.title}
+                </h2>
+
+                <button
+                  onClick={() =>
+                    goToSection(
+                      banner.targetType,
+                      banner.targetVendor?.slug,
+                      banner.targetProduct?.slug,
+                      banner.targetProduct?.vendor?.slug,
+                      banner.targetProperty?.documentId,
+                      banner.targetProperty?.slug,
+                      banner.adults,
+                      banner.children,
+                      banner.checkin,
+                      banner.checkout
+                    )
+                  }
+                  className="absolute bottom-10 left-[50%] z-1000 translate-x-[-50%] cursor-pointer rounded-md shadow-lg bg-black p-2 text-white hover:bg-blue-800 transition duration-300 ease-in-out"
+                >
+                  View here
+                </button>
               </div>
             </CarouselItem>
           );

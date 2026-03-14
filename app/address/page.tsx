@@ -51,9 +51,9 @@ export default function Address() {
             <path
               d="M16 12H8M8 12L12 8M8 12L12 16"
               stroke="black"
-              stroke-width="2.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
           </svg>
         </h2>

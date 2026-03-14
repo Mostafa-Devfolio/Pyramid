@@ -1,4 +1,4 @@
-import { baseURL2 } from '@/app/page';
+import { baseURL, baseURL2 } from '@/app/page';
 import React from 'react';
 import Image from 'next/image';
 import { ICategoryHome } from '@/app/interface/categoryHomeInterface';
@@ -11,6 +11,7 @@ type id = { mainType: string };
 
 export default async function HomeCategory({ mainType }: id) {
   const categories: ICategoryHome[] = await getClass.getHomeCategories(mainType);
+  console.log(categories)
 
   return (
     <>
@@ -25,7 +26,11 @@ export default async function HomeCategory({ mainType }: id) {
                       width={500}
                       height={500}
                       className="w-full rounded-2xl object-cover"
-                      src={category.homeImage == null || '' ? IMAGE_PLACEHOLDER : category.homeImage}
+                      src={
+                        category.homeImage == null
+                          ? IMAGE_PLACEHOLDER
+                          : `https://pyramids.devfolio.net/${category.homeImage}`
+                      }
                       alt={category.name}
                     />
                   </div>

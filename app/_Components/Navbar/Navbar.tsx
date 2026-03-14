@@ -68,7 +68,7 @@ export default function NavBar() {
     if(businessId === null) return;
     const tokens = await getLoginTo();
     const data = await getClass.getCartItems(businessId, tokens);
-    setApiCount(data.items.length);
+    setApiCount(data?.items.length);
   }
 
   useEffect(() => {

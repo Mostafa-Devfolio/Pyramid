@@ -20,7 +20,6 @@ type optiongroup = {
   products: IProductDetailsPage;
 };
 export default function ProductOptionComponent({ products }: optiongroup) {
-  console.log(products);
   const cartItem = useSelector((state: any) => state.cart);
   const [errorMsg, setErrorMsg] = useState('');
   const { auth, token } = useAuth();

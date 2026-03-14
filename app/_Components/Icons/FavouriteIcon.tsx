@@ -67,7 +67,7 @@ const FavoriteButton: React.FC<FavoriteButtonProps> = ({
           />
         </div>
       ) : (
-        <button
+        <div
           onClick={(e) => {handleToggle(e); onAdd()}}
           className="group relative p-2 transition-transform active:scale-90"
           aria-label={isFavorite ? 'Remove from wishlist' : 'Add to wishlist'}
@@ -80,7 +80,7 @@ const FavoriteButton: React.FC<FavoriteButtonProps> = ({
                 : 'fill-transparent stroke-gray-500 group-hover:stroke-gray-700'
             }`}
           />
-        </button>
+        </div>
       )}
     </>
   );

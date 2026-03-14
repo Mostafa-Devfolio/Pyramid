@@ -4,6 +4,7 @@ import { Listbox, ListboxItem, ListboxSection, cn } from '@heroui/react';
 import { useRouter } from 'next/navigation';
 import { logOutNow } from './Logout';
 import { SVGProps, ReactNode } from "react";
+import { SSRProvider } from '@react-aria/ssr';
 
 
 type IconProps = SVGProps<SVGSVGElement>;
@@ -12,8 +13,8 @@ export const AddNoteIcon = (props: IconProps) => {
   return (
     <svg width="3em" height="3em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
-        fill-rule="evenodd"
-        clip-rule="evenodd"
+        fillRule="evenodd"
+        clipRule="evenodd"
         d="M12 4C12.5523 4 13 4.44772 13 5V5.1C13.92 5.23 14.79 5.54 15.57 5.99L16.27 5.29C16.66 4.9 17.29 4.9 17.68 5.29L18.71 6.32C19.1 6.71 19.1 7.34 18.71 7.73L18.01 8.43C18.46 9.21 18.77 10.08 18.9 11H19C19.5523 11 20 11.4477 20 12C20 12.5523 19.5523 13 19 13H18.9C18.77 13.92 18.46 14.79 18.01 15.57L18.71 16.27C19.1 16.66 19.1 17.29 18.71 17.68L17.68 18.71C17.29 19.1 16.66 19.1 16.27 18.71L15.57 18.01C14.79 18.46 13.92 18.77 13 18.9V19C13 19.5523 12.5523 20 12 20C11.4477 20 11 19.5523 11 19V18.9C10.08 18.77 9.21 18.46 8.43 18.01L7.73 18.71C7.34 19.1 6.71 19.1 6.32 18.71L5.29 17.68C4.9 17.29 4.9 16.66 5.29 16.27L5.99 15.57C5.54 14.79 5.23 13.92 5.1 13H5C4.44772 13 4 12.5523 4 12C4 11.4477 4.44772 11 5 11H5.1C5.23 10.08 5.54 9.21 5.99 8.43L5.29 7.73C4.9 7.34 4.9 6.71 5.29 6.32L6.32 5.29C6.71 4.9 7.34 4.9 7.73 5.29L8.43 5.99C9.21 5.54 10.08 5.23 11 5.1V5C11 4.44772 11.4477 4 12 4Z"
         fill="#4A90E2"
       />
@@ -35,13 +36,13 @@ export const CopyDocumentIcon = (props: IconProps) => {
       <rect x="8" y="9" width="8" height="2" rx="1" fill="white" />
       <rect x="8" y="13" width="8" height="2" rx="1" fill="white" />
 
-      <path d="M7 10L7.8 10.8L9 9.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="M7 10L7.8 10.8L9 9.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
       <path
         d="M7 14L7.8 14.8L9 13.5"
         stroke="white"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );
@@ -98,7 +99,7 @@ export const LoyaltyDocumentIcon = (props: IconProps) => {
       <path d="M64 36L71.8 55.2L92 57.2L76 70.8L81 90L64 79.5L47 90L52 70.8L36 57.2L56.2 55.2L64 36Z" fill="#FFFFFF" />
 
       <circle cx="94" cy="34" r="14" fill="#34A853" />
-      <path d="M94 27V41M87 34H101" stroke="white" stroke-width="3" stroke-linecap="round" />
+      <path d="M94 27V41M87 34H101" stroke="white" strokeWidth="3" strokeLinecap="round" />
     </svg>
   );
 };
@@ -113,9 +114,9 @@ export const DeleteDocumentIcon = (props: IconProps) => {
       <path
         d="M7 12H15M15 12L11.5 8.5M15 12L11.5 15.5"
         stroke="white"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );
@@ -162,81 +163,83 @@ export default function ListBoxComponent() {
   }
 
   return (
-    <ListboxWrapper>
-      <Listbox aria-label="Listbox menu with sections" className="w-[100%]" variant="flat">
-        <ListboxSection showDivider title="Actions">
-          <ListboxItem
-            onClick={() => router.push('/settings')}
-            key="settings"
-            description="Change your account data."
-            startContent={<AddNoteIcon className={iconClasses} />}
-          >
-            Settings
-          </ListboxItem>
-          <ListboxItem
-            onClick={() => router.push('/orders')}
-            key="orders"
-            description="View your orders"
-            startContent={<CopyDocumentIcon className={iconClasses} />}
-          >
-            My Orders
-          </ListboxItem>
-          <ListboxItem
-            onClick={() => router.push('/orders/bookings')}
-            key="bookings"
-            description="View your bookings"
-            startContent={<BookingDocumentIcon className={iconClasses} />}
-          >
-            My Bookings
-          </ListboxItem>
-          <ListboxItem
-            onClick={() => router.push('/address')}
-            key="address"
-            description="add, edit or remove addresses"
-            startContent={<EditDocumentIcon className={iconClasses} />}
-          >
-            My Addresses
-          </ListboxItem>
-          <ListboxItem
-            onClick={() => router.push('/wishlist')}
-            key="wish"
-            description="Wishlisted products here"
-            startContent={<WishListDocumentIcon className={iconClasses} />}
-          >
-            Wishlist
-          </ListboxItem>
-          <ListboxItem
-            onClick={() => router.push('/loyalty')}
-            key="loyalty"
-            description="Check your loyalty points, withdraw or convert them"
-            startContent={<LoyaltyDocumentIcon className={iconClasses} />}
-          >
-            My Loyalty Points
-          </ListboxItem>
-          <ListboxItem
-            onClick={() => router.push('/wallet')}
-            key="wallet"
-            description="Check your balance here"
-            startContent={<WalletDocumentIcon className={iconClasses} />}
-          >
-            My Wallet
-          </ListboxItem>
-        </ListboxSection>
-        <ListboxSection title="Danger zone">
-          <ListboxItem
-            onClick={() => {
-              logout();
-            }}
-            key="logout"
-            className="text-danger"
-            color="danger"
-            description="Logout of your account"
-            startContent={<DeleteDocumentIcon className={cn(iconClasses, 'text-danger')} />}
-          >
-            Logout
-          </ListboxItem>
-        </ListboxSection>
-      </Listbox>
-    </ListboxWrapper>
+    <SSRProvider>
+      <ListboxWrapper>
+        <Listbox aria-label="Listbox menu with sections" className="w-[100%]" variant="flat">
+          <ListboxSection showDivider title="Actions">
+            <ListboxItem
+              onClick={() => router.push('/settings')}
+              key="settings"
+              description="Change your account data."
+              startContent={<AddNoteIcon className={iconClasses} />}
+            >
+              Settings
+            </ListboxItem>
+            <ListboxItem
+              onClick={() => router.push('/orders')}
+              key="orders"
+              description="View your orders"
+              startContent={<CopyDocumentIcon className={iconClasses} />}
+            >
+              My Orders
+            </ListboxItem>
+            <ListboxItem
+              onClick={() => router.push('/orders/bookings')}
+              key="bookings"
+              description="View your bookings"
+              startContent={<BookingDocumentIcon className={iconClasses} />}
+            >
+              My Bookings
+            </ListboxItem>
+            <ListboxItem
+              onClick={() => router.push('/address')}
+              key="address"
+              description="add, edit or remove addresses"
+              startContent={<EditDocumentIcon className={iconClasses} />}
+            >
+              My Addresses
+            </ListboxItem>
+            <ListboxItem
+              onClick={() => router.push('/wishlist')}
+              key="wish"
+              description="Wishlisted products here"
+              startContent={<WishListDocumentIcon className={iconClasses} />}
+            >
+              Wishlist
+            </ListboxItem>
+            <ListboxItem
+              onClick={() => router.push('/loyalty')}
+              key="loyalty"
+              description="Check your loyalty points, withdraw or convert them"
+              startContent={<LoyaltyDocumentIcon className={iconClasses} />}
+            >
+              My Loyalty Points
+            </ListboxItem>
+            <ListboxItem
+              onClick={() => router.push('/wallet')}
+              key="wallet"
+              description="Check your balance here"
+              startContent={<WalletDocumentIcon className={iconClasses} />}
+            >
+              My Wallet
+            </ListboxItem>
+          </ListboxSection>
+          <ListboxSection title="Danger zone">
+            <ListboxItem
+              onClick={() => {
+                logout();
+              }}
+              key="logout"
+              className="text-danger"
+              color="danger"
+              description="Logout of your account"
+              startContent={<DeleteDocumentIcon className={cn(iconClasses, 'text-danger')} />}
+            >
+              Logout
+            </ListboxItem>
+          </ListboxSection>
+        </Listbox>
+      </ListboxWrapper>
+    </SSRProvider>
   );
 }

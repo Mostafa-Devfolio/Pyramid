@@ -306,8 +306,10 @@ class ApiServices {
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
       },
     });
+    console.log(response)
     const data = await response.json();
     const datas = data.data;
+    console.log(datas)
     return datas;
   }
 

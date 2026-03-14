@@ -27,7 +27,7 @@ export default function CartCountProvider({ children }: { children: React.ReactN
       if(businessId===null) return;
       const tokens = await getLoginTo();
       const data = await getClass.getCartItems(businessId, tokens);
-      setCountt(data.items.length);
+      setCountt(data?.items.length);
     }
     getCartCount();
   }, [countt, setCountt,businessId]);

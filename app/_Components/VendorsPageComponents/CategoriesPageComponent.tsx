@@ -15,6 +15,7 @@ import FavoriteButton from '../Icons/FavouriteIcon';
 import { getClass } from '@/services/ApiServices';
 import { useAuth } from '@/lib/ContextAPI/authContext';
 import { IWishList } from '@/app/interface/wishlist';
+import { useRouter } from 'next/navigation';
 
 type Categories = {
   categories: IVendorPageCategory[];
@@ -34,6 +35,7 @@ export default function CategoriesPageComponent({ categories, coupons, banners, 
   const sectionRef = useRef<HTMLDivElement | null>(null);
   const { token } = useAuth();
   const [saveWishList, setSaveWishList] = useState([]);
+  const router = useRouter();
   const goToSection = () => {
     if (window.matchMedia('(max-width: 640px)').matches) {
       sectionRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -63,6 +65,29 @@ export default function CategoriesPageComponent({ categories, coupons, banners, 
   async function vendorPageProducts() {
     const data = await getClass.getVendorProduct(id, whichSubCat);
     setProducts(data.data.products);
+  }
+
+  function goTooSection(
+    target: string,
+    vSlug?: string,
+    pSlug?: string,
+    pVSlug?: string,
+    pId?: string,
+    pPSlug?: string,
+    adults?: number,
+    children?: number,
+    checkin?: string,
+    checkout?: string
+  ) {
+    if (target == 'vendor') {
+      router.push(`/vendors/${vSlug}`);
+    } else if (target == 'product') {
+      router.push(`/vendors/${pVSlug}/${pSlug}`);
+    } else if (target == 'property') {
+      router.push(
+        `/bookings/${pPSlug}?id=${pId}&checkin=${checkin}&checkout=${checkout}&adults=${adults}&children=${children}`
+      );
+    }
   }
 
   useEffect(() => {
@@ -101,31 +126,49 @@ export default function CategoriesPageComponent({ categories, coupons, banners, 
         })}
       </div>
       <div className="px-3 sm:col-span-3">
-        <div className="mx-10 mb-3">
+        <div className="mx-auto mb-3">
           <Carousel className="w-full">
             <CarouselContent>
               {banners.map((banner: IVendorPageBanner) => {
                 if (!banner.image?.url) return null;
                 return (
-                  <CarouselItem key={banner.id}>
+                  <CarouselItem className='relative' key={banner.id}>
                     <div className="">
                       <Card className="overflow-hidden">
-                        <CardContent className="flex aspect-[3/2] h-64 items-center justify-center">
+                        <CardContent className="flex aspect-3/2 h-64 items-center justify-center">
                           <Image
                             width={1000}
                             height={1000}
                             className="w-full object-cover"
                             src={IMAGE_PLACEHOLDER}
-                            alt={banner.image?.alternativeText}
+                            alt={banner.image?.alternativeText ?? 'Banner'}
                           />
                         </CardContent>
                       </Card>
                     </div>
+                    <div className="">
+                      <h2 className="absolute top-20 left-[50%] translate-x-[-50%] cursor-default rounded-lg bg-amber-100 p-2 text-xl font-bold text-black shadow-lg">
+                        {banner.title}
+                      </h2>
+
+                      <button
+                        onClick={() =>
+                          goTooSection(
+                            banner.targetType,
+                            banner.targetVendor?.slug,
+                            banner.targetProduct?.slug,
+                          )
+                        }
+                        className="absolute bottom-10 left-[50%] z-1000 translate-x-[-50%] cursor-pointer rounded-md bg-black p-2 text-white shadow-lg transition duration-300 ease-in-out hover:bg-blue-800"
+                      >
+                        View here
+                      </button>
+                    </div>
                   </CarouselItem>
                 );
               })}
-              <CarouselPrevious />
-              <CarouselNext />
+              {/* <CarouselPrevious />
+              <CarouselNext /> */}
             </CarouselContent>
           </Carousel>
         </div>
@@ -147,14 +190,14 @@ export default function CategoriesPageComponent({ categories, coupons, banners, 
                     {isCouponId == coupon.id && <p className="ml-3 text-white">Copied</p>}
                   </div>
                   <div className="flex justify-end text-white">
-                    <p className="mt-2 flex cursor-default gap-1">
+                    <div className="mt-2 flex cursor-default gap-1">
                       <p>*</p>Maximium discount: {coupon.maxDiscount}
-                    </p>
+                    </div>
                   </div>
                   <div className="flex items-end justify-end text-white">
-                    <p className="flex cursor-default gap-1">
+                    <div className="flex cursor-default gap-1">
                       <p>*</p>Minimuim order amount: {coupon.minSubtotal}
-                    </p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -234,7 +277,7 @@ export default function CategoriesPageComponent({ categories, coupons, banners, 
                     height={500}
                     className="w-full rounded-2xl object-cover"
                     src={IMAGE_PLACEHOLDER}
-                    alt={discountedProduct.title}
+                    alt={discountedProduct.title ?? 'Banner'}
                   />
                 </Link>
                 <div className="absolute top-2 right-2">

@@ -29,7 +29,7 @@ export default async function ReuseBusinessTypes({ id, busType, myE }: types) {
     <>
       {(id == busType) && (
         <div className="container mx-auto pt-3">
-          <div className="mx-3 mx-auto w-[80%] md:w-full">
+          <div className="mx-auto w-full">
             <CarouselHome mainType={id} typee="business_home" />
           </div>
           <div className="">

@@ -8,7 +8,7 @@ import { useBusiness } from '@/lib/ContextAPI/businessTypeId';
 
 export default function SetBusiness({ business }: { business: IBusiness }) {
 
-  const { businessId, setBusinessId } = useBusiness();
+  const { setBusinessId } = useBusiness();
   return (
     <div className="text-center">
       <Link className="group" href={`${business.slug}`} onClick={() => setBusinessId(business.id)}>
@@ -17,7 +17,7 @@ export default function SetBusiness({ business }: { business: IBusiness }) {
           height={200}
           className="w-full duration-500 group-hover:rotate-y-180"
           src={`${baseURL}${business.icon.url}`}
-          alt={business.icon.alternativeText}
+          alt={business.icon.alternativeText ?? 'Banner'}
         />
       </Link>
 

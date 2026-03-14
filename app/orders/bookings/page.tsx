@@ -30,7 +30,7 @@ export default function OrdersBooking() {
                 width={200}
                 height={200}
                 src={`${baseURL}${booked.property.images[0].url}`}
-                alt={booked.property.images[0].alternativeText}
+                alt={booked.property.images[0].alternativeText ?? 'Booking Orders'}
                 className="rounded"
               />
             </div>

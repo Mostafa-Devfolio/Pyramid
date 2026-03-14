@@ -8,6 +8,7 @@ import React, { useEffect, useState } from 'react';
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import { IOrders, Item } from '../interface/orders';
+import { IMAGE_PLACEHOLDER } from '@/lib/image';
 
 export default function Processing() {
   const [saveOrders, setSaveOrders] = useState<IOrders[]>([]);
@@ -170,13 +171,17 @@ export default function Processing() {
                   <div className="grid mx-4 grid-cols-2 gap-3">
                     {order.subOrders[0].items.map((item: Item) => {
                       return (
-                        <div key={item.id} className="flex">
+                        <div key={item.id} className="flex gap-3">
                           <Image
-                            className="w-[100px]"
+                            className="w-30 rounded-md"
                             height={500}
                             width={500}
-                            src={item.product?.images?.[0]?.url}
-                            alt={order.recipientName}
+                            src={
+                              item.product?.images?.[0]?.url
+                                ? `https://pyramids.devfolio.net${item.product?.images?.[0]?.url}`
+                                : IMAGE_PLACEHOLDER
+                            }
+                            alt={order.recipientName ?? 'Order'}
                           />
                           <div className="flex flex-col">
                             <h3>{item.product.title}</h3>

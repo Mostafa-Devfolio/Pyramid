@@ -39,7 +39,7 @@ export default function CartPage() {
 
   async function getCart() {
     if (!token) return;
-    if(businessId === null) return;
+    if (businessId === null) return;
     setBusinessId(cartItems.businessType);
     const getCart = await getClass.getCartItems(businessId, token);
     const getItems = getCart.items;
@@ -105,7 +105,7 @@ export default function CartPage() {
   useEffect(() => {
     async function getCarts() {
       if (!token) return;
-      if(businessId === null) return;
+      if (businessId === null) return;
       setBusinessId(cartItems.businessType);
       const getCart = await getClass.getCartItems(businessId, token);
       const getItems = getCart.items;
@@ -114,9 +114,7 @@ export default function CartPage() {
     }
     setBusinessId(cartItems.businessType);
     getCarts();
-    // setTimeout(() => {getCart()}, 7000);
-    // getCart();
-  }, [cartItems.businessType, getCart, businessId]);
+  }, [businessId, token]);
 
   return (
     <div className="container mx-auto p-4">
@@ -137,8 +135,12 @@ export default function CartPage() {
                           <div className="rounded-2xl sm:col-span-1">
                             <div className="relative aspect-square w-full overflow-hidden rounded-2xl">
                               <Image
-                                src={item.product.images ?? IMAGE_PLACEHOLDER}
-                                alt={item.product.title}
+                                src={
+                                  item.product?.images?.[0]?.url
+                                    ? `https://pyramids.devfolio.net${item.product?.images?.[0]?.url}`
+                                    : IMAGE_PLACEHOLDER
+                                }
+                                alt={item.product.title ?? 'Product'}
                                 fill
                                 className="object-cover"
                               />

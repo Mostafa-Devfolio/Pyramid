@@ -36,10 +36,10 @@ export default async function VendorsPage({ params }: { params: Promise<{ id: st
           </p>
           <p>Delivery Time: {vendor.deliveryTime}</p>
           <p>Delivery Fee: {vendor.deliveryFee} EGP</p>
-          <p className="flex gap-1">
+          <div className="flex gap-1">
             <p className="text-white">Status:</p>{' '}
             {vendor.isOpen ? <p className="text-green-400">Opened</p> : <p className="text-red-800">Closed</p>}
-          </p>
+          </div>
         </div>
       </div>
       <div className="container mx-auto grid grid-cols-1 gap-3 sm:grid-cols-4">

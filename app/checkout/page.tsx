@@ -69,6 +69,7 @@ export default function CheckoutPage() {
       subscriptionDayOfMonth: subscribtionDateMonthly,
     };
     const data = await getClass.checkout(body, token);
+    console.log(data);
     if (data.error) {
       setIsError(true);
     } else {
@@ -101,7 +102,7 @@ export default function CheckoutPage() {
     getAddress();
     async function getCartItems() {
       if (!token) return;
-      if(businessId===null) return;
+      if (businessId === null) return;
       const data = await getClass.getCartItems(businessId, token);
       setCartItems(data.items);
     }
@@ -392,7 +393,11 @@ export default function CheckoutPage() {
                     <div className="rounded-2xl sm:col-span-2">
                       <div className="relative aspect-square w-full overflow-hidden rounded-2xl">
                         <Image
-                          src={item.product.images ?? IMAGE_PLACEHOLDER}
+                          src={
+                            item.product?.images?.[0]?.url
+                              ? `https://pyramids.devfolio.net/${item.product?.images?.[0]?.url}`
+                              : IMAGE_PLACEHOLDER
+                          }
                           alt={item.product.title}
                           fill
                           className="object-cover"

@@ -11,7 +11,6 @@ export default function UserInfo() {
       <div className="my-5">
         <div className="grid grid-cols-1 gap-4 p-5">
           <div className="">
-            {/* User Info here if clicked on user information */}
             {userInfo && userData && (
               <div className="flex flex-col gap-3 p-5">
                 <h2>User Information</h2>

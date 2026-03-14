@@ -25,7 +25,7 @@ export default async function Home() {
 
   return (
     <div className="container mx-auto pt-3">
-      <div className="mx-3 mx-auto w-[80%] md:w-full">
+      <div className="mx-auto w-full">
         <CarouselHome typee="main_home" />
       </div>
       <h2 className="my-5">Choose your type</h2>
