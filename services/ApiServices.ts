@@ -1,4 +1,4 @@
-import { ISearchProperty } from '@/app/interface/booking';
+import { ISearchProperty } from '@/app/[locale]/interface/booking';
 import {
   addAddress,
   addWishList2,
@@ -20,7 +20,7 @@ import {
   updatedAddress,
   userType,
   Withdrawal,
-} from '@/app/interface/interfaceForApiService';
+} from '@/app/[locale]/interface/interfaceForApiService';
 
 class ApiServices {
   baseUrl = '***REMOVED***/api/';

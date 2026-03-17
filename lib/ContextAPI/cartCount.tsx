@@ -1,4 +1,4 @@
-import { getLoginTo } from '@/app/login/login';
+import { getLoginTo } from '@/app/[locale]/login/login';
 import { getClass } from '@/services/ApiServices';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useBusiness } from './businessTypeId';

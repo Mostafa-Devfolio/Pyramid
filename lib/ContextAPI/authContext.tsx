@@ -1,6 +1,6 @@
 'use client';
-import { IUser } from '@/app/interface/userData';
-import { getLoginTo } from '@/app/login/login';
+import { IUser } from '@/app/[locale]/interface/userData';
+import { getLoginTo } from '@/app/[locale]/login/login';
 import { getClass } from '@/services/ApiServices';
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 

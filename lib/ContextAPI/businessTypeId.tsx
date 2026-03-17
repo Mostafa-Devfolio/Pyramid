@@ -23,9 +23,10 @@ export function BusinessContextProvider({ children }: { children: React.ReactNod
   const [businessSlug, setBusinessSlug] = useState<string | null>(null);
   const pathName = usePathname();
   const segment = pathName.split('/').filter(Boolean);
-  const mainPath = segment[0];
+  const mainPath = segment[1];
 
   useEffect(() => {
+    console.log('Main Path',mainPath)
     function isOnPath() {
       if (mainPath == 'restaurants') {
         setBusinessId(1);
