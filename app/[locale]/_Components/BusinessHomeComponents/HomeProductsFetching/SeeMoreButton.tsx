@@ -12,7 +12,8 @@ import React, { useState, useEffect } from 'react';
 import FavoriteButton from '../../Icons/FavouriteIcon';
 import { Plus, X, ShoppingCart, Star, Zap, Loader2 } from 'lucide-react';
 import { showToast } from 'nextjs-toast-notify';
-
+import { LuLayoutGrid } from 'react-icons/lu';
+import { BsList } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '@/redux/slices/cartSlice';
 import { useCartCount } from '@/lib/ContextAPI/cartCount';
@@ -25,7 +26,7 @@ export default function SeeMoreButton({ categoriesOfProducts }: { categoriesOfPr
   const cartItem = useSelector((state: any) => state.cart);
   const dispatch = useDispatch();
   const { setCountt } = useCartCount();
-
+  const [isGrid, setIsGrid] = useState(true);
   const [quickAddProduct, setQuickAddProduct] = useState<any | null>(null);
   const [selectedVariant, setSelectedVariant] = useState<any>(null);
   const [quantity, setQuantity] = useState(1);
@@ -139,9 +140,14 @@ export default function SeeMoreButton({ categoriesOfProducts }: { categoriesOfPr
           <div key={categories.id} className="space-y-6">
             <div className="flex items-end justify-between border-b border-slate-100 pb-4">
               <h3 className="text-2xl font-black tracking-tight text-slate-900">{categories.name}</h3>
+              <button onClick={() => setIsGrid(!isGrid)}>
+                {isGrid ? <BsList size={24} color="blue" /> : <LuLayoutGrid size={24} color="blue" />}
+              </button>
             </div>
 
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            <div
+              className={`grid ${isGrid ? 'grid-cols-2' : 'grid-cols-1'} gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4`}
+            >
               {categories.products.slice(0, visibleCount).map((product: IProduct) => {
                 const isWishlisted = saveWishList?.some((wish: IWishList) => wish.product.id === product.id);
                 const wishlistItems = saveWishList?.filter((wish: IWishList) => wish.product.id === product.id);
@@ -277,7 +283,7 @@ export default function SeeMoreButton({ categoriesOfProducts }: { categoriesOfPr
                     className="object-cover"
                     src={
                       quickAddProduct.images?.[0]?.url
-                        ? `https://pyramids.devfolio.net${quickAddProduct.images[0].url}`
+                        ? `https://prism.devfolio.net${quickAddProduct.images[0].url}`
                         : IMAGE_PLACEHOLDER
                     }
                     alt={quickAddProduct.title}

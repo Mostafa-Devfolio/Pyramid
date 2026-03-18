@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
   /* config options here */
   images: {
     dangerouslyAllowLocalIP: true,
-    domains: ['pyramids.devfolio.net'],
+    domains: ['prism.devfolio.net'],
     remotePatterns: [
       {
         protocol: 'http',
@@ -20,7 +20,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'pyramids.devfolio.net',
+        hostname: 'prism.devfolio.net',
         pathname: '/uploads/**',
       },
     ],

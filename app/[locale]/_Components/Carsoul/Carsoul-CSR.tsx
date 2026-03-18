@@ -7,6 +7,7 @@ import { getClass } from '@/services/ApiServices';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { IBannerBooking } from '@/app/[locale]/interface/bannerBooking';
+import { baseURL } from '../../page';
 
 export function CarouselCSR() {
   const [bannerData, setBannerData] = useState<IBannerBooking[]>([]);
@@ -29,7 +30,7 @@ export function CarouselCSR() {
               return (
                 <CarouselItem className="relative pl-1" key={banner.id}>
                   <Card className="overflow-hidden rounded-[2.5rem] border-0 bg-transparent">
-                    <CardContent className="relative flex aspect-[21/9] min-h-[450px] w-full items-center justify-center p-0">
+                    <CardContent className="relative flex aspect-21/9 min-h-112.5 w-full items-center justify-center p-0">
                       <Image
                         fill
                         priority
@@ -37,7 +38,7 @@ export function CarouselCSR() {
                         src={
                           banner.image.url == null
                             ? IMAGE_PLACEHOLDER
-                            : `***REMOVED***${banner.image.url}`
+                            : `${baseURL}${banner.image.url}`
                         }
                         alt={banner.image?.alternativeText ?? 'Banner'}
                       />

@@ -77,7 +77,7 @@ export default function ListBoxComponent() {
     },
     { title: 'My Addresses', desc: 'Add, edit or remove delivery addresses.', icon: <MapPin />, path: '/address' },
     { title: 'Wishlist', desc: "Products you've saved for later.", icon: <Heart />, path: '/wishlist' },
-    { title: 'Loyalty Points', desc: 'Convert your pyramids points into credit.', icon: <Award />, path: '/loyalty' },
+    { title: 'Loyalty Points', desc: 'Convert your prism points into credit.', icon: <Award />, path: '/loyalty' },
     { title: 'My Wallet', desc: 'Check your balance and transaction history.', icon: <Wallet />, path: '/wallet' },
   ];
 

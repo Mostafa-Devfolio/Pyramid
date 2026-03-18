@@ -21,7 +21,9 @@ import {
   ShieldAlert,
   ChevronLeft,
   CheckCircle2,
+  User,
 } from 'lucide-react';
+import { baseURL2 } from '../page';
 
 const TaxiRoutingMap = dynamic(() => import('@/components/TaxiRoutingMap'), {
   ssr: false,
@@ -80,17 +82,17 @@ export default function TaxiBookingPage() {
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
         };
 
-        const resPricing = await fetch('***REMOVED***/api/pricing-config', { headers });
+        const resPricing = await fetch(`${baseURL2}pricing-config`, { headers });
         const jsonPricing = await resPricing.json();
         if (jsonPricing?.data) setPricing(jsonPricing.data);
 
-        const resWallet = await fetch('***REMOVED***/api/loyalty/me', { headers });
+        const resWallet = await fetch(`${baseURL2}loyalty/me`, { headers });
         const jsonWallet = await resWallet.json();
         if (jsonWallet?.data?.walletBalance) setWalletBalance(Number(jsonWallet.data.walletBalance));
 
         if (token) {
           const resActive = await fetch(
-            '***REMOVED***/api/rides?filters[status][$in][0]=pending&filters[status][$in][1]=accepted&filters[status][$in][2]=arrived&filters[status][$in][3]=in_progress&populate=*',
+            `${baseURL2}rides?filters[status][$in][0]=pending&filters[status][$in][1]=accepted&filters[status][$in][2]=arrived&filters[status][$in][3]=in_progress&populate=*`,
             { headers }
           );
           const jsonActive = await resActive.json();
@@ -119,7 +121,7 @@ export default function TaxiBookingPage() {
             ...(token ? { Authorization: `Bearer ${token}` } : {}),
           };
           const res = await fetch(
-            `***REMOVED***/api/pricing-config?lat=${tripData.pickup.lat}&lng=${tripData.pickup.lng}`,
+            `${baseURL2}pricing-config?lat=${tripData.pickup.lat}&lng=${tripData.pickup.lng}`,
             { headers }
           );
           const json = await res.json();
@@ -138,7 +140,7 @@ export default function TaxiBookingPage() {
       interval = setInterval(async () => {
         try {
           const token = await getLoginTo();
-          const res = await fetch(`***REMOVED***/api/rides/${activeTrip.documentId}?populate=*`, {
+          const res = await fetch(`${baseURL2}rides/${activeTrip.documentId}?populate=*`, {
             headers: { Authorization: `Bearer ${token}` },
           });
           const json = await res.json();
@@ -182,7 +184,7 @@ export default function TaxiBookingPage() {
     try {
       const token = await getLoginTo();
       const res = await fetch(
-        `***REMOVED***/api/bus-trips/searchNearMe?pickupLat=${tripData.pickup.lat}&pickupLng=${tripData.pickup.lng}&destLat=${tripData.dest.lat}&destLng=${tripData.dest.lng}`,
+        `${baseURL2}bus-trips/searchNearMe?pickupLat=${tripData.pickup.lat}&pickupLng=${tripData.pickup.lng}&destLat=${tripData.dest.lat}&destLng=${tripData.dest.lng}`,
         { headers: token ? { Authorization: `Bearer ${token}` } : {} }
       );
       const json = await res.json();
@@ -201,7 +203,7 @@ export default function TaxiBookingPage() {
     if (vehicle === 'bus' && selectedBus) {
       try {
         const busId = selectedBus.documentId || selectedBus.id;
-        const res = await fetch(`***REMOVED***/api/bus-trips/${busId}/book`, {
+        const res = await fetch(`${baseURL2}bus-trips/${busId}/book`, {
           method: 'POST',
           headers,
           body: JSON.stringify({ data: { paymentMethod } }),
@@ -209,7 +211,7 @@ export default function TaxiBookingPage() {
         const json = await res.json();
         if (json.error) return alert(`Booking Failed: ${json.error.message}`);
 
-        const payRes = await fetch('***REMOVED***/api/checkout/universal', {
+        const payRes = await fetch(`${baseURL2}checkout/universal`, {
           method: 'POST',
           headers,
           body: JSON.stringify({ moduleType: 'bus', moduleId: json.data.id, amountEgp: targetPrice, paymentMethod }),
@@ -242,7 +244,7 @@ export default function TaxiBookingPage() {
     };
 
     try {
-      const res = await fetch('***REMOVED***/api/rides', {
+      const res = await fetch(`${baseURL2}rides`, {
         method: 'POST',
         body: JSON.stringify({ data: payload }),
         headers,
@@ -253,7 +255,7 @@ export default function TaxiBookingPage() {
 
       if (json.data) {
         setActiveTrip(json.data);
-        const payRes = await fetch('***REMOVED***/api/checkout/universal', {
+        const payRes = await fetch(`${baseURL2}checkout/universal`, {
           method: 'POST',
           headers,
           body: JSON.stringify({
@@ -411,14 +413,14 @@ export default function TaxiBookingPage() {
               <p className="mt-1 font-medium text-slate-500">Pin your pickup and drop-off locations.</p>
             </div>
 
-            <div className="relative h-[60vh] min-h-[500px] w-full overflow-hidden rounded-[2.5rem] border border-slate-200 shadow-2xl shadow-slate-900/10">
+            <div className="relative h-[60vh] min-h-125 w-full overflow-hidden rounded-[2.5rem] border border-slate-200 shadow-2xl shadow-slate-900/10">
               <TaxiRoutingMap onRouteFound={(km, pickup, dest) => setTripData({ km, pickup, dest })} />
 
-              <div className="absolute bottom-6 left-1/2 w-full -translate-x-1/2 px-6">
+              <div className="absolute z-2000 bottom-6 left-1/2 w-full -translate-x-1/2 cursor-pointer px-6">
                 <button
                   onClick={vehicle === 'bus' ? handleFindBuses : () => setStep(3)}
                   disabled={!tripData}
-                  className="flex w-full items-center justify-center gap-2 rounded-full bg-black py-5 text-lg font-black text-white shadow-2xl transition-all hover:scale-[1.02] active:scale-95 disabled:transform-none disabled:cursor-not-allowed disabled:bg-slate-300"
+                  className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-black py-5 text-lg font-black text-white shadow-2xl transition-all hover:scale-[1.02] active:scale-95 disabled:transform-none disabled:cursor-not-allowed disabled:bg-slate-300"
                 >
                   <Navigation size={20} /> {vehicle === 'bus' ? 'Find Buses Near Me' : 'Confirm Route'}
                 </button>

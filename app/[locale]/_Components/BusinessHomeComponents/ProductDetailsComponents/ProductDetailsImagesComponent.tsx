@@ -1,5 +1,6 @@
 'use client';
 import { IProductDetailsPage } from '@/app/[locale]/interface/ProductDetailsPage/productDetailsPageInterface';
+import { baseURL } from '@/app/[locale]/page';
 import { IMAGE_PLACEHOLDER } from '@/lib/image';
 import Image from 'next/image';
 import React, { useState } from 'react';
@@ -22,7 +23,7 @@ export default function ProductDetailsImagesComponent({ products }: Product) {
           src={
             products.images == null || products.images.length === 0
               ? IMAGE_PLACEHOLDER
-              : `***REMOVED***${selectedImage}`
+              : `${baseURL}${selectedImage}`
           }
           alt={products.title}
           priority
@@ -45,7 +46,7 @@ export default function ProductDetailsImagesComponent({ products }: Product) {
                 <Image
                   fill
                   className="object-cover"
-                  src={`***REMOVED***${image.url}`}
+                  src={`${baseURL}${image.url}`}
                   alt={image.name}
                 />
               </button>

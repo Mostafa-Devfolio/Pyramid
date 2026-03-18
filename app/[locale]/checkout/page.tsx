@@ -441,7 +441,7 @@ export default function CheckoutPage() {
                       <Image
                         src={
                           item.product?.images?.[0]?.url
-                            ? `https://pyramids.devfolio.net/${item.product?.images?.[0]?.url}`
+                            ? `https://prism.devfolio.net/${item.product?.images?.[0]?.url}`
                             : IMAGE_PLACEHOLDER
                         }
                         alt={item.product.title}

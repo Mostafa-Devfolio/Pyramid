@@ -7,6 +7,7 @@ import { IMAGE_PLACEHOLDER } from '@/lib/image';
 import { IBanner } from '@/app/[locale]/interface/bannerBusinessTypeInterface';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { baseURL } from '../../page';
 
 export default function CarsoulClient({ bannerFiltered }: { bannerFiltered: IBanner[] }) {
   const t = useTranslations('PRISM');
@@ -49,7 +50,7 @@ export default function CarsoulClient({ bannerFiltered }: { bannerFiltered: IBan
                     height={800}
                     className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                     src={
-                      banner.image.url == null ? IMAGE_PLACEHOLDER : `***REMOVED***${banner.image.url}`
+                      banner.image.url == null ? IMAGE_PLACEHOLDER : `${baseURL}${banner.image.url}`
                     }
                     alt={banner.image?.alternativeText ?? 'Banner'}
                     priority

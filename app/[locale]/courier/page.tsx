@@ -432,7 +432,7 @@ export default function Courier() {
                     { id: 'cash', label: 'Cash on Delivery', icon: <Banknote size={20} />, color: 'emerald' },
                     {
                       id: 'wallet',
-                      label: 'Pyramids Wallet',
+                      label: 'Prism Wallet',
                       icon: <Wallet size={20} />,
                       sub: `${userData?.walletBalance.toFixed(2)} EGP`,
                       color: 'slate',

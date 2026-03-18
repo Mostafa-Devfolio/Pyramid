@@ -44,7 +44,13 @@ export default function CheckoutBooking() {
   const roomType = searchParams.get('roomType');
 
   const [propertyStore, setPropertyStore] = useState<IProperty>();
-  const [userProfile, setUserProfile] = useState();
+  const [userProfile, setUserProfile] = useState<{
+    documentId: string;
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    phone?: string;
+  } | null>(null);
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -527,7 +533,7 @@ export default function CheckoutBooking() {
               {[
                 { id: 'online', title: 'Pay now in full', sub: 'Credit Card / Visa', color: 'blue' },
                 { id: 'cash', title: 'Pay at the property', sub: 'No payment today', color: 'emerald' },
-                { id: 'wallet', title: 'Digital Wallet Balance', sub: 'Pay with Pyramids Wallet', color: 'slate' },
+                { id: 'wallet', title: 'Digital Wallet Balance', sub: 'Pay with Prism Wallet', color: 'slate' },
               ].map((pay) => (
                 <label
                   key={pay.id}

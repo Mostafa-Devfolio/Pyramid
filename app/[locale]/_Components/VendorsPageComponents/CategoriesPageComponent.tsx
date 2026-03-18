@@ -21,6 +21,8 @@ import { addToCart } from '@/redux/slices/cartSlice';
 import { useCartCount } from '@/lib/ContextAPI/cartCount';
 import { Plus, X, ShoppingCart, Star, Zap, Loader2 } from 'lucide-react';
 import { baseURL } from '@/app/[locale]/page';
+import { LuLayoutGrid } from 'react-icons/lu';
+import { BsList } from 'react-icons/bs';
 
 type Categories = {
   categories: IVendorPageCategory[];
@@ -49,6 +51,7 @@ export default function CategoriesPageComponent({ categories, coupons, banners, 
   const [selectedVariant, setSelectedVariant] = useState<any>(null);
   const [quantity, setQuantity] = useState(1);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [isGrid, setIsGrid] = useState(true);
   const [isLoadingVariants, setIsLoadingVariants] = useState(false);
 
   const goToSection = () => {
@@ -75,7 +78,7 @@ export default function CategoriesPageComponent({ categories, coupons, banners, 
   async function vendorPageProducts() {
     if (!whichSubCat) return;
     const data = await getClass.getVendorProduct(id, whichSubCat);
-    console.log(data)
+    console.log(data);
     if (data?.data?.products) {
       setProducts(data.data.products);
     }
@@ -304,7 +307,7 @@ export default function CategoriesPageComponent({ categories, coupons, banners, 
         {/* Sub-Categories */}
         <div ref={sectionRef} className="scroll-mt-32 space-y-6 pt-8">
           <h3 className="text-2xl font-black tracking-tight text-slate-900">Explore {categories[index]?.name}</h3>
-          <div className="no-scrollbar flex snap-x gap-3 overflow-x-auto pb-4">
+          <div className="no-scrollbar flex snap-x gap-3 overflow-x-auto pb-2">
             {categories[index]?.children.map((subcategory) => (
               <button
                 key={subcategory.id}
@@ -326,7 +329,12 @@ export default function CategoriesPageComponent({ categories, coupons, banners, 
 
         {/* Products Grid */}
         <div className="space-y-8">
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
+          <div className="flex justify-end">
+            <button onClick={() => setIsGrid(!isGrid)}>
+              {isGrid ? <BsList size={24} color="blue" /> : <LuLayoutGrid size={24} color="blue" />}
+            </button>
+          </div>
+          <div className={`grid ${isGrid ? 'grid-cols-2' : 'grid-cols-1'} gap-6 sm:grid-cols-2 md:grid-cols-3`}>
             {products.map((product: IVendorPageProduct) => {
               const isWishlisted = saveWishList?.some((wish: IWishList) => wish.product.id === product.id);
               const wishlistItems = saveWishList?.filter((wish: IWishList) => wish.product.id === product.id);
@@ -400,8 +408,11 @@ export default function CategoriesPageComponent({ categories, coupons, banners, 
           <div className="mt-16 space-y-8 border-t border-slate-100 pt-16">
             <h3 className="flex items-center gap-3 text-3xl font-black tracking-tight text-red-600">
               <Zap className="fill-red-600" /> Special Offers
+              <button onClick={() => setIsGrid(!isGrid)}>
+                {isGrid ? <BsList size={24} color="blue" /> : <LuLayoutGrid size={24} color="blue" />}
+              </button>
             </h3>
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
+            <div className={`${isGrid ? 'grid-cols-2' : 'grid-cols-1'} grid gap-6 sm:grid-cols-2 md:grid-cols-3`}>
               {discountedProduct.map((discounted: any) => {
                 const isWishlisted = saveWishList?.some((wish: IWishList) => wish.product.id === discounted.id);
                 const wishlistItems = saveWishList?.filter((wish: IWishList) => wish.product.id === discounted.id);
@@ -501,7 +512,7 @@ export default function CategoriesPageComponent({ categories, coupons, banners, 
                     className="object-cover"
                     src={
                       quickAddProduct.images?.[0]?.url
-                        ? `https://pyramids.devfolio.net${quickAddProduct.images[0].url}`
+                        ? `https://prism.devfolio.net${quickAddProduct.images[0].url}`
                         : IMAGE_PLACEHOLDER
                     }
                     alt={quickAddProduct.title}

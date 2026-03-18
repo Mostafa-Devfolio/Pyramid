@@ -554,7 +554,9 @@ export default function NavBar() {
                         </div>
                         <div className="mr-2 shrink-0 text-right">
                           <p className="rounded-xl border border-slate-100 bg-slate-50 px-3 py-1.5 font-black text-slate-900">
-                            {product.price} {t('egp')}
+                            {product.baseSalePrice
+                              ? `${product.baseSalePrice} ${t('egp')}`
+                              : `${product.basePrice} ${t('egp')}`}
                           </p>
                         </div>
                       </div>

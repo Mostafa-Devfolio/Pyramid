@@ -101,6 +101,17 @@ const simulateTrafficSegments = (geometry: any[]) => {
   return segments;
 };
 
+const getFallbackDistance = (lat1: number, lng1: number, lat2: number, lng2: number) => {
+  const R = 6371;
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLon = ((lng2 - lng1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return (R * c * 1.3).toFixed(2); 
+};
+
 const getRoute = async (pLat: number, pLng: number, dLat: number, dLng: number) => {
   try {
     const res = await fetch(
@@ -212,6 +223,21 @@ export default function TaxiRoutingMap({
           setDistanceKm(res.distanceKm);
           if (onRouteFound && res.distanceKm && !readOnly) {
             onRouteFound(Number(res.distanceKm), pickup, destination);
+          }
+        } else {
+          console.warn('OSRM API timed out. Using fallback distance calculation.');
+          const fallbackKm = getFallbackDistance(pickup.lat, pickup.lng, destination.lat, destination.lng);
+          const straightLine = [
+            [pickup.lat, pickup.lng],
+            [destination.lat, destination.lng],
+          ];
+
+          setDistanceKm(fallbackKm);
+          setRouteGeometry(straightLine);
+          setTrafficSegments([{ positions: straightLine, color: '#3b82f6' }]);
+
+          if (onRouteFound && !readOnly) {
+            onRouteFound(Number(fallbackKm), pickup, destination);
           }
         }
       });

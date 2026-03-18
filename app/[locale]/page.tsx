@@ -66,14 +66,14 @@ export default async function Home() {
                   width={2000}
                   height={2000}
                   className="h-full w-full object-contain drop-shadow-xl"
-                  src={'***REMOVED***/uploads/taxi.webp'}
+                  src={`${baseURL}/uploads/taxi.webp`}
                   alt={'Taxi'}
                 />
               </div>
-              <h3 className="mb-2 text-2xl font-black dark:text-white text-slate-900 transition-colors group-hover:text-amber-600">
+              <h3 className="mb-2 text-2xl font-black text-slate-900 transition-colors group-hover:text-amber-600 dark:text-white">
                 {t('taxi')}
               </h3>
-              <p className="font-medium dark:text-slate-300 text-slate-500">{t('book_taxi')}</p>
+              <p className="font-medium text-slate-500 dark:text-slate-300">{t('book_taxi')}</p>
             </Link>
           )}
 
@@ -87,14 +87,14 @@ export default async function Home() {
                   width={2000}
                   height={2000}
                   className="h-full w-full object-contain drop-shadow-xl"
-                  src={'***REMOVED***/uploads/courier.png'}
+                  src={`${baseURL}/uploads/courier.png`}
                   alt={'Courier'}
                 />
               </div>
-              <h3 className="mb-2 text-2xl font-black dark:text-white text-slate-900 transition-colors group-hover:text-blue-600">
+              <h3 className="mb-2 text-2xl font-black text-slate-900 transition-colors group-hover:text-blue-600 dark:text-white">
                 {t('courier')}
               </h3>
-              <p className="font-medium dark:text-slate-300 text-slate-500">{t('deliver_everything')}</p>
+              <p className="font-medium text-slate-500 dark:text-slate-300">{t('deliver_everything')}</p>
             </Link>
           )}
         </div>
@@ -118,14 +118,14 @@ export default async function Home() {
                 width={2000}
                 height={2000}
                 className="h-full w-full object-contain drop-shadow-xl"
-                src={'***REMOVED***/uploads/courier.png'}
+                src={`${baseURL}/uploads/booking.png`}
                 alt={'Booking'}
               />
             </div>
             <h3 className="mb-2 text-2xl font-black text-slate-900 transition-colors group-hover:text-emerald-600 dark:text-white dark:group-hover:text-emerald-300">
               {t('booking')}
             </h3>
-            <p className="font-medium dark:text-slate-300 text-slate-500 dark:text-slate-300">{t('book_hotels')}</p>
+            <p className="font-medium text-slate-500 dark:text-slate-300">{t('book_hotels')}</p>
           </Link>
         </div>
       </section>
